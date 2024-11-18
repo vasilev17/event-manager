@@ -5,11 +5,11 @@ namespace EventManager.Web.Setup
 {
     public static class DatabaseSetup
     {
-        public static void SetupDataBase(WebApplicationBuilder builder) 
+        public static void SetupDataBase(this IServiceCollection services, ConfigurationManager configurationManager) 
         {
-            var connectionString = builder.Configuration.GetConnectionString("ApplicationString");
+            var connectionString = configurationManager.GetConnectionString("ApplicationString");
 
-            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
         }
     }
 }

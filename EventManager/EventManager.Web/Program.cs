@@ -18,7 +18,9 @@ namespace EventManager.Web
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            DatabaseSetup.SetupDataBase(builder);
+            builder.Services.SetupDataBase(builder.Configuration);
+            builder.Services.SetupAuthentication(builder.Configuration);
+            builder.Services.SetupDependancyInjection(builder.Configuration);
 
             var app = builder.Build();
 
@@ -32,7 +34,6 @@ namespace EventManager.Web
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
