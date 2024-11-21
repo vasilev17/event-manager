@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EventManager.Web.Controllers
 {
+    /// <summary>
+    /// Controller containing the endpoints for handling requests about users
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class UserController : ControllerBase
@@ -21,6 +24,11 @@ namespace EventManager.Web.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// End point for registering new users in the platform
+        /// </summary>
+        /// <param name="registerWebModel">The model with the data for the new user</param>
+        /// <returns>A JWT token, that can be used for future validations</returns>
         [HttpPost]
         [AllowAnonymous]
         [Route("Register")]

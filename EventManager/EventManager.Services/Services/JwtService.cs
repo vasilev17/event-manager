@@ -8,9 +8,22 @@ namespace EventManager.Services.Services
 {
     public class JwtService : IJwtService
     {
+        private readonly byte[] _signingKey;
+        private readonly TimeSpan _tokenDuration;
+        private readonly string _issuer;
+        private readonly string _audience;
+
+        public JwtService(byte[] signingKey, TimeSpan tokenDuration, string issuer, string audience)
+        {
+            _signingKey = signingKey;
+            _tokenDuration = tokenDuration;
+            _issuer = issuer; 
+            _audience = audience;
+        }
+
         public string GenerateJwtToken(Guid userId, string username, List<string> roleNames)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("S8s5STbzFQ7itN0qA/ag8Sq+LNV9F2GXlR641LevMpGl0eKGaZhj/Dez8JUGo9oX"));
+            var securityKey = new SymmetricSecurityKey(_signingKey);
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             HashSet<Claim> claims = new()
@@ -24,10 +37,10 @@ namespace EventManager.Services.Services
 
             SecurityTokenDescriptor securityTokenDescriptor = new()
             {
-                Issuer = "https://localhost:44305",
-                Audience = "https://localhost:44305",
+                Issuer = _issuer,
+                Audience = _audience,
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Today.AddDays(7),
+                Expires = DateTime.Now.Add(_tokenDuration),
                 SigningCredentials = credentials,
             };
 
