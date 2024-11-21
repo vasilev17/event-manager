@@ -1,4 +1,5 @@
 ﻿using EventManager.Data.Models;
+using EventManager.Data.Models.Configurations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,8 @@ namespace EventManager.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            new UserConfigurations().Configure(builder.Entity<User>());
+
             base.OnModelCreating(builder);
         }
 

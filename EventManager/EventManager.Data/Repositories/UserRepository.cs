@@ -1,4 +1,5 @@
 ﻿using EventManager.Common.Constants;
+using EventManager.Data.Exceptions;
 using EventManager.Data.Models;
 using EventManager.Data.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -19,10 +20,10 @@ namespace EventManager.Data.Repositories
 
         public override Task<bool> AddAsync(User entity)
         {
-            return AddAsync(entity, RoleConstants.DefaultRole.ToString());
+            return AddAsync(entity, RoleConstants.DefaultRole);
         }
 
-        public async Task<bool> AddAsync(User entity, string roleName)
+        public async Task<bool> AddAsync(User entity, Roles role)
         {
             entity.PasswordHash = this._userManager.PasswordHasher.HashPassword(entity, entity.PasswordHash!).ToString();
             using var transaction = await DbContext.Database.BeginTransactionAsync();
@@ -31,21 +32,21 @@ namespace EventManager.Data.Repositories
                 // Add the user to the database without committing
                 var result = await _userManager.CreateAsync(entity);
                 if (!result.Succeeded)
-                    return false; // Handle error as needed
+                    throw new CreationDatabaseException(string.Format(ExceptionConstants.CanNotCreate, "user"));
 
                 // Add the user to a role
-                var roleExists = await _roleManager.RoleExistsAsync(roleName);
+                var roleExists = await _roleManager.RoleExistsAsync(role.ToString());
                 if (!roleExists)
                 {
                     // Optionally, create the role if it doesn't exist
-                    var roleResult = await _roleManager.CreateAsync(new Role(roleName));
+                    var roleResult = await _roleManager.CreateAsync(new Role(role.ToString()));
                     if (!roleResult.Succeeded)
-                        return false; // Handle error as needed
+                        throw new CreationDatabaseException(string.Format(ExceptionConstants.CanNotCreate, "role"));
                 }
 
-                var addToRoleResult = await _userManager.AddToRoleAsync(entity, roleName);
+                var addToRoleResult = await _userManager.AddToRoleAsync(entity, role.ToString());
                 if (!addToRoleResult.Succeeded)
-                    return false; // Handle error as needed
+                    throw new DatabaseException(ExceptionConstants.CantAddToRole);
 
                 // Commit the transaction
                 await transaction.CommitAsync();

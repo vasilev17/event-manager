@@ -10,7 +10,8 @@ namespace EventManager.Web.Setup.Mappings
         public UserMappings()
         {
             CreateMap<RegisterWebModel, RegisterUserServiceModel>();
-            CreateMap<RegisterUserServiceModel, User>();
+            CreateMap<RegisterUserServiceModel, User>()
+                .ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(src => src.Password));
         }
     }
 }

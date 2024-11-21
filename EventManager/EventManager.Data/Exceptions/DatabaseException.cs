@@ -1,4 +1,4 @@
-﻿namespace EventManager.Services.Exceptions
+﻿namespace EventManager.Data.Exceptions
 {
     public class DatabaseException : Exception
     {

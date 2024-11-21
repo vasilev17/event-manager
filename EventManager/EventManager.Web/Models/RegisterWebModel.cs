@@ -1,4 +1,5 @@
 ﻿using EventManager.Common.Constants;
+using System.ComponentModel.DataAnnotations;
 
 namespace EventManager.Web.Models
 {
@@ -14,6 +15,7 @@ namespace EventManager.Web.Models
         
         public required string LastName { get; set; }
 
-        public required string Role { get; set; }
+        [EnumDataType(typeof(Roles))]
+        public required Roles Role { get; set; }
     }
 }

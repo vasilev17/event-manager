@@ -23,14 +23,13 @@ namespace EventManager.Services.Services
         public async Task<TokenModel> RegisterUser(RegisterUserServiceModel userServiceModel)
         {
             User user = _mapper.Map<User>(userServiceModel);
-            var userResult = await _userRepository.AddAsync(user);
+            
+            await _userRepository.AddAsync(user, userServiceModel.Role);
 
-            if (!userResult)
-                throw new ArgumentException();
+            var createdUser = await _userRepository.GetByNameAsync(userServiceModel.UserName);
+            List<string?> roleNames = createdUser.Roles.Select(x => x.Name).ToList();
 
-            var craetedUser = await _userRepository.GetByNameAsync(userServiceModel.UserName);
-
-            return new TokenModel(_jwtService.GenerateJwtToken(craetedUser.Id, craetedUser.UserName!, new List<string>()));
+            return new TokenModel(_jwtService.GenerateJwtToken(createdUser.Id, createdUser.UserName!, roleNames!));
         }
     }
 }
