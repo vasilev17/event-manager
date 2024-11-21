@@ -2,6 +2,10 @@
 using EventManager.Data.Models;
 using EventManager.Data.Repositories;
 using EventManager.Data.Repositories.Interfaces;
+using EventManager.Services.Factories;
+using EventManager.Services.Factories.Interfaces;
+using EventManager.Services.Services;
+using EventManager.Services.Services.Interfaces;
 
 namespace EventManager.Web.Setup
 {
@@ -13,7 +17,10 @@ namespace EventManager.Web.Setup
                 .AddRoles<Role>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddScoped<IJwtService, JwtService>();
+            services.AddScoped<IUserServiceFactory, UserServiceFactory>();
+
+            services.AddScoped<IUserRepository, UserRepository>();
         }
     }
 }

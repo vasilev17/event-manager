@@ -21,6 +21,7 @@ namespace EventManager.Web
             builder.Services.SetupDataBase(builder.Configuration);
             builder.Services.SetupAuthentication(builder.Configuration);
             builder.Services.SetupDependancyInjection(builder.Configuration);
+            builder.Services.SetupMapper();
 
             var app = builder.Build();
 

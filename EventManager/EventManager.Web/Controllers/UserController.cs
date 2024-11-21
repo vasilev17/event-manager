@@ -1,5 +1,7 @@
-﻿using EventManager.Data.Models;
-using EventManager.Data.Repositories.Interfaces;
+﻿using AutoMapper;
+using EventManager.Services.Factories.Interfaces;
+using EventManager.Services.Models.User;
+using EventManager.Services.Services.Interfaces;
 using EventManager.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,11 +12,13 @@ namespace EventManager.Web.Controllers
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserService _userService;
+        private readonly IMapper _mapper;
 
-        public UserController(IUserRepository userRepository)
+        public UserController(IUserServiceFactory userServiceFactory, IMapper mapper)
         {
-            _userRepository = userRepository;
+            _userService = userServiceFactory.CreateUserService();
+            _mapper = mapper;
         }
 
         [HttpPost]
@@ -22,17 +26,9 @@ namespace EventManager.Web.Controllers
         [Route("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterWebModel registerWebModel)
         {
-            var user = new User
-            {
-                UserName = registerWebModel.UserName,
-                Email = registerWebModel.Email,
-                FirstName = registerWebModel.FirstName,
-                LastName = registerWebModel.LastName,
-                PasswordHash = registerWebModel.Password,
-                PictureURL = "Lorem ipsum"
-            };
+            RegisterUserServiceModel user = _mapper.Map<RegisterUserServiceModel>(registerWebModel);
 
-            return new CreatedResult("Register", await RegisterUser(user));
+            return new CreatedResult("Register", await _userService.RegisterUser(user));
         }
     }
 }

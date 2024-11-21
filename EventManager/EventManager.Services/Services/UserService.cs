@@ -20,7 +20,7 @@ namespace EventManager.Services.Services
             _mapper = mapper;
         }
 
-        public async Task<TokenModel> RegisterUser(UserServiceModel userServiceModel)
+        public async Task<TokenModel> RegisterUser(RegisterUserServiceModel userServiceModel)
         {
             User user = _mapper.Map<User>(userServiceModel);
             var userResult = await _userRepository.AddAsync(user);
@@ -30,7 +30,7 @@ namespace EventManager.Services.Services
 
             var craetedUser = await _userRepository.GetByNameAsync(userServiceModel.UserName);
 
-            return new TokenModel(_jwtService.GenerateJwtToken(craetedUser.Id, craetedUser.UserName, new List<string>()));
+            return new TokenModel(_jwtService.GenerateJwtToken(craetedUser.Id, craetedUser.UserName!, new List<string>()));
         }
     }
 }

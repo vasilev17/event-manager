@@ -1,6 +1,8 @@
-﻿namespace EventManager.Services.Models.User
+﻿using EventManager.Common.Constants;
+
+namespace EventManager.Services.Models.User
 {
-    public record UserServiceModel
+    public record RegisterUserServiceModel
     {
         public required string Password { get; set; }
 
@@ -11,5 +13,7 @@
         public required string FirstName { get; set; }
 
         public required string LastName { get; set; }
+
+        public required Roles Role { get; set;}
     }
 }
