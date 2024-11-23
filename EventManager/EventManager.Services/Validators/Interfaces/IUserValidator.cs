@@ -8,6 +8,6 @@ namespace EventManager.Services.Validators.Interfaces
         /// Validates if the given user model follows the requierments.
         /// </summary>
         /// <param name="model">The user model</param>
-        void ValidateRegisterUserModel(RegisterUserServiceModel model);
+        void ValidateRegisterUserModel(RegisterServiceModel model);
     }
 }

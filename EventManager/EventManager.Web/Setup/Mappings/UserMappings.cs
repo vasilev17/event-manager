@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using EventManager.Data.Models;
 using EventManager.Services.Models.User;
-using EventManager.Web.Models;
+using EventManager.Web.Models.User;
 
 namespace EventManager.Web.Setup.Mappings
 {
@@ -9,8 +9,10 @@ namespace EventManager.Web.Setup.Mappings
     {
         public UserMappings()
         {
-            CreateMap<RegisterWebModel, RegisterUserServiceModel>();
-            CreateMap<RegisterUserServiceModel, User>()
+            CreateMap<RegisterWebModel, RegisterServiceModel>();
+            CreateMap<LoginWebModel, LoginServiceModel>();
+
+            CreateMap<RegisterServiceModel, User>()
                 .ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(src => src.Password));
         }
     }

@@ -61,7 +61,17 @@ namespace EventManager.Data.Repositories
             }
         }
 
-        public async Task<User> GetByNameAsync(string username)
+        public async Task<User> LoginAsync(string userName, string password)
+        {
+            var user = await GetByUserNameAsync(userName);
+
+            if (user == null || !await _userManager.CheckPasswordAsync(user, password))
+                throw new InvalidDataException(ExceptionConstants.InvalidCredentials);
+
+            return user;
+        }
+
+        public async Task<User> GetByUserNameAsync(string username)
         {
             return await _userManager.Users
                 .FirstOrDefaultAsync(x => x.UserName == username);

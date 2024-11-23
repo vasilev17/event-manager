@@ -2,7 +2,7 @@
 
 namespace EventManager.Services.Models.User
 {
-    public record RegisterUserServiceModel
+    public record RegisterServiceModel
     {
         public required string Password { get; set; }
 

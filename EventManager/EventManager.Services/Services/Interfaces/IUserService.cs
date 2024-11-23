@@ -5,6 +5,8 @@ namespace EventManager.Services.Services.Interfaces
 {
     public interface IUserService
     {
-        Task<TokenModel> RegisterUser(RegisterUserServiceModel user);
+        Task<TokenModel> LoginAsync(LoginServiceModel loginServiceModel);
+
+        Task<TokenModel> RegisterAsync(RegisterServiceModel user);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using EventManager.Common.Constants;
 using System.ComponentModel.DataAnnotations;
 
-namespace EventManager.Web.Models
+namespace EventManager.Web.Models.User
 {
     public record RegisterWebModel
     {
@@ -10,9 +10,9 @@ namespace EventManager.Web.Models
         public required string UserName { get; set; }
 
         public required string Email { get; set; }
-        
+
         public required string FirstName { get; set; }
-        
+
         public required string LastName { get; set; }
 
         [EnumDataType(typeof(Roles))]

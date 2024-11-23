@@ -17,14 +17,27 @@ namespace EventManager.Services.Decorators.User
             _parent = parent;
         }
 
-        public Task<TokenModel> RegisterUser(RegisterUserServiceModel user)
+        public Task<TokenModel> LoginAsync(LoginServiceModel loginServiceModel)
+        {
+            ValidateLogin(loginServiceModel);
+
+            return _parent.LoginAsync(loginServiceModel);
+        }
+
+        private void ValidateLogin(LoginServiceModel model)
+        {
+            if(PropertiesAreNull(model))
+                throw new ArgumentException(ExceptionConstants.AllPropertiesRequiered);
+        }
+
+        public Task<TokenModel> RegisterAsync(RegisterServiceModel user)
         {
             ValidateRegisterModel(user);
 
-            return _parent.RegisterUser(user);
+            return _parent.RegisterAsync(user);
         }
 
-        private void ValidateRegisterModel(RegisterUserServiceModel user)
+        private void ValidateRegisterModel(RegisterServiceModel user)
         {
             ValidatePassword(user);
 
@@ -35,7 +48,7 @@ namespace EventManager.Services.Decorators.User
                 throw new ArgumentException(ExceptionConstants.AllPropertiesRequiered);
         }
 
-        private void ValidatePassword(RegisterUserServiceModel user)
+        private void ValidatePassword(RegisterServiceModel user)
         {
             if (user.Password.Length < 8)
                 throw new ArgumentException(ExceptionConstants.InvalidPasswordSize);

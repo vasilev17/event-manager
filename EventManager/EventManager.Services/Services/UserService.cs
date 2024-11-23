@@ -20,14 +20,22 @@ namespace EventManager.Services.Services
             _mapper = mapper;
         }
 
-        public async Task<TokenModel> RegisterUser(RegisterUserServiceModel userServiceModel)
+        public async Task<TokenModel> LoginAsync(LoginServiceModel loginServiceModel)
         {
-            User user = _mapper.Map<User>(userServiceModel);
+            var loggedUser = await _userRepository.LoginAsync(loginServiceModel.UserName, loginServiceModel.Password);
+            var roleNames = loggedUser.Roles.Select(x => x.Name).ToList();
+
+            return new TokenModel(_jwtService.GenerateJwtToken(loggedUser.Id, loggedUser.UserName!, roleNames!));
+        }
+
+        public async Task<TokenModel> RegisterAsync(RegisterServiceModel userServiceModel)
+        {
+            var user = _mapper.Map<User>(userServiceModel);
             
             await _userRepository.AddAsync(user, userServiceModel.Role);
 
-            var createdUser = await _userRepository.GetByNameAsync(userServiceModel.UserName);
-            List<string?> roleNames = createdUser.Roles.Select(x => x.Name).ToList();
+            var createdUser = await _userRepository.GetByUserNameAsync(userServiceModel.UserName);
+            var roleNames = createdUser.Roles.Select(x => x.Name).ToList();
 
             return new TokenModel(_jwtService.GenerateJwtToken(createdUser.Id, createdUser.UserName!, roleNames!));
         }
