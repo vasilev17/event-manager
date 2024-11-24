@@ -6,6 +6,7 @@ A project about finding Evends and Activities
 2.	Copy the connection string part from appsettings.json into it
 3.	Enter the missing values from the connection string for your MySQL server instalation
 4.	Run Update-Database command to update your database
+5.  Set up email sender (https://www.twilio.com/en-us/blog/send-emails-using-the-sendgrid-api-with-dotnetnet-6-and-csharp)
 
 # Build and Test
 TODO: Describe and show how to build your code and run the tests. 

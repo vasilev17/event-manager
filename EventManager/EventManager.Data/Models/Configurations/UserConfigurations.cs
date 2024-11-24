@@ -14,6 +14,10 @@ namespace EventManager.Data.Models.Configurations
             builder 
                 .Property(b => b.LastName)
                 .IsRequired();
+
+            builder
+                .HasIndex(u => u.Email)
+                .IsUnique();
         }
     }
 }

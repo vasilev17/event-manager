@@ -34,7 +34,7 @@ namespace EventManager.Web.Controllers
         [Route("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterWebModel registerWebModel)
         {
-            RegisterServiceModel user = _mapper.Map<RegisterServiceModel>(registerWebModel);
+            var user = _mapper.Map<RegisterServiceModel>(registerWebModel);
 
             return new CreatedResult("Register", await _userService.RegisterAsync(user));
         }
@@ -49,9 +49,21 @@ namespace EventManager.Web.Controllers
         [Route("Login")]
         public async Task<IActionResult> Login([FromBody] LoginWebModel loginWebModel)
         {
-            LoginServiceModel loginServiceModel = _mapper.Map<LoginServiceModel>(loginWebModel);
+            var loginServiceModel = _mapper.Map<LoginServiceModel>(loginWebModel);
 
             return Ok(await _userService.LoginAsync(loginServiceModel));
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("ResetPassword")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordWebModel resetPasswordWebModel)
+        {
+            var resetPasswordServiceModel = _mapper.Map<ResetPasswordServiceModel>(resetPasswordWebModel);
+
+            await _userService.SendResendPasswordAsync(resetPasswordServiceModel);
+
+            return Ok();
         }
     }
 }

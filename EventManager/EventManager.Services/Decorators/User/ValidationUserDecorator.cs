@@ -1,5 +1,6 @@
 ﻿using EventManager.Common.Constants;
 using EventManager.Common.Models;
+using EventManager.Data.Models;
 using EventManager.Services.Models.User;
 using EventManager.Services.Services.Interfaces;
 using System.Text.RegularExpressions;
@@ -41,11 +42,21 @@ namespace EventManager.Services.Decorators.User
         {
             ValidatePassword(user);
 
-            if (!Regex.IsMatch(user.Email, EmailRegex))
-                throw new ArgumentException(string.Format(ExceptionConstants.InvalidEmailFormat, user.Email));
-
             if (PropertiesAreNull(user))
                 throw new ArgumentException(ExceptionConstants.AllPropertiesRequiered);
+        }
+
+        public Task SendResendPasswordAsync(ResetPasswordServiceModel resetPasswordServiceModel)
+        {
+            ValidateEmail(resetPasswordServiceModel.Email);
+
+            return _parent.SendResendPasswordAsync(resetPasswordServiceModel);
+        }
+
+        private void ValidateEmail(string email)
+        {
+            if (!Regex.IsMatch(email, EmailRegex))
+                throw new ArgumentException(string.Format(ExceptionConstants.InvalidEmailFormat, email));
         }
 
         private void ValidatePassword(RegisterServiceModel user)

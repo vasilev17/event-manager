@@ -10,11 +10,13 @@ namespace EventManager.Services.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IEmailService _emailService;
         private readonly IJwtService _jwtService;
         private readonly IMapper _mapper;
 
-        public UserService(IUserRepository userRepository, IJwtService jwtService, IMapper mapper)
+        public UserService(IUserRepository userRepository, IEmailService emailService, IJwtService jwtService, IMapper mapper)
         {
+            _emailService = emailService;
             _jwtService = jwtService;
             _userRepository = userRepository;
             _mapper = mapper;
@@ -38,6 +40,13 @@ namespace EventManager.Services.Services
             var roleNames = createdUser.Roles.Select(x => x.Name).ToList();
 
             return new TokenModel(_jwtService.GenerateJwtToken(createdUser.Id, createdUser.UserName!, roleNames!));
+        }
+
+        public async Task SendResendPasswordAsync(ResetPasswordServiceModel resetPasswordServiceModel)
+        {
+            var token = await _userRepository.GeneratePasswordToken(resetPasswordServiceModel.Email);
+
+            var result = await _emailService.SendResetPasswordMailAsync(token);
         }
     }
 }

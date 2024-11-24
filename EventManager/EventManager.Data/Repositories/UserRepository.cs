@@ -76,5 +76,23 @@ namespace EventManager.Data.Repositories
             return await _userManager.Users
                 .FirstOrDefaultAsync(x => x.UserName == username);
         }
+
+        public async Task<UserPasswordResetModel> GeneratePasswordToken(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+                return null;
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            return new UserPasswordResetModel
+            {
+                Email = email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Token = token
+            };
+        }
     }
 }

@@ -24,6 +24,14 @@ namespace EventManager.Web.Setup
                     tokenDuration: TimeSpan.Parse(configuration.GetSection("Jwt").GetSection("tokenDuration").Value),
                     issuer: configuration.GetSection("Jwt").GetSection("validationIssuer").Value,
                     audience: configuration.GetSection("Jwt").GetSection("audience").Value)); 
+            
+            services.AddSingleton<IEmailService, EmailService>(options =>
+            new EmailService(
+                    apiKey: configuration.GetSection("EmailSender").GetSection("apiKey").Value,
+                    senderMail: configuration.GetSection("EmailSender").GetSection("senderMail").Value,
+                    senderName: configuration.GetSection("EmailSender").GetSection("senderName").Value,
+                    resetPasswordUri: configuration.GetSection("EmailSender").GetSection("resetPasswordUri").Value
+                ));
 
             services.AddIdentity<User, Role>()
                .AddRoles<Role>()
