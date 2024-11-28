@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using EventManager.Common.Constants;
 using EventManager.Common.Models;
 using EventManager.Data.Models;
 using EventManager.Data.Repositories.Interfaces;
+using EventManager.Services.Exceptions;
 using EventManager.Services.Models.User;
 using EventManager.Services.Services.Interfaces;
 
@@ -44,9 +46,29 @@ namespace EventManager.Services.Services
 
         public async Task SendResendPasswordAsync(ResetPasswordServiceModel resetPasswordServiceModel)
         {
-            var token = await _userRepository.GeneratePasswordToken(resetPasswordServiceModel.Email);
+            var passwordModel = await _userRepository.GeneratePasswordToken(resetPasswordServiceModel.Email);
 
-            var result = await _emailService.SendResetPasswordMailAsync(token);
+            if (passwordModel == null)
+                throw new ResetPasswordException(ExceptionConstants.PasswordToken);
+
+            var serviceModel = _mapper.Map<UserPasswordResetServiceModel>(passwordModel);
+
+            var result = await _emailService.SendResetPasswordMailAsync(serviceModel);
+
+            if (!result)
+                throw new EmailSenderException(ExceptionConstants.CantSendEmail);
+        }
+
+        public async Task ResetPasswordAsync(ResetPasswordTokenServiceModel resetPasswordTokenServiceModel)
+        {
+            var succeeded = await _userRepository.ResetPassword(
+                resetPasswordTokenServiceModel.Email,
+                resetPasswordTokenServiceModel.Token,
+                resetPasswordTokenServiceModel.Password);
+
+            if (!succeeded)
+                throw new ResetPasswordException(ExceptionConstants.FailedToRestorePassword);
+
         }
     }
 }

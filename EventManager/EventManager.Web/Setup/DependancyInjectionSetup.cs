@@ -6,6 +6,7 @@ using EventManager.Services.Factories;
 using EventManager.Services.Factories.Interfaces;
 using EventManager.Services.Services;
 using EventManager.Services.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using System.Text;
 
 namespace EventManager.Web.Setup
@@ -33,9 +34,13 @@ namespace EventManager.Web.Setup
                     resetPasswordUri: configuration.GetSection("EmailSender").GetSection("resetPasswordUri").Value
                 ));
 
-            services.AddIdentity<User, Role>()
+            services.AddIdentity<User, Role>(options =>
+            {
+                options.Tokens.PasswordResetTokenProvider = TokenOptions.DefaultProvider;
+            })
                .AddRoles<Role>()
-               .AddEntityFrameworkStores<ApplicationDbContext>();
+               .AddEntityFrameworkStores<ApplicationDbContext>()
+               .AddDefaultTokenProviders();
         }
     }
 }

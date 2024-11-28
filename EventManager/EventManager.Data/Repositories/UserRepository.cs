@@ -94,5 +94,17 @@ namespace EventManager.Data.Repositories
                 Token = token
             };
         }
+
+        public async Task<bool> ResetPassword(string email, string token, string newPassword)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+                return false;
+
+            var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+
+            return result.Succeeded;
+        }
     }
 }

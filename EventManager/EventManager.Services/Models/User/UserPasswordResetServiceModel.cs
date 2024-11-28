@@ -1,6 +1,6 @@
 ﻿namespace EventManager.Services.Models.User
 {
-    public class SendEmailServiceModel
+    public class UserPasswordResetServiceModel
     {
         public string? Email { get; set; }
 
