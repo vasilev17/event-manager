@@ -27,6 +27,14 @@ namespace EventManager.Data.Repositories.Interfaces
         Task<UserPasswordResetModel> GeneratePasswordToken(string email);
 
         /// <summary>
+        /// Resets the password of a user
+        /// </summary>
+        /// <param name="email">t</param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        Task<bool> ResetPassword(string email, string token, string newPassword);
+
+        /// <summary>
         /// Gets a user from the database using his user name
         /// </summary>
         /// <param name="userName">The user name</param>

@@ -48,9 +48,35 @@ namespace EventManager.Services.Decorators.User
 
         public Task SendResendPasswordAsync(ResetPasswordServiceModel resetPasswordServiceModel)
         {
-            ValidateEmail(resetPasswordServiceModel.Email);
+            ValidateSendResentPassword(resetPasswordServiceModel);
 
             return _parent.SendResendPasswordAsync(resetPasswordServiceModel);
+        }
+
+        private void ValidateSendResentPassword(ResetPasswordServiceModel resetPasswordServiceModel)
+        {
+            if (PropertiesAreNull(resetPasswordServiceModel))
+                throw new ArgumentException(ExceptionConstants.AllPropertiesRequiered);
+
+            ValidateEmail(resetPasswordServiceModel.Email);
+        }
+
+        public Task ResetPasswordAsync(ResetPasswordTokenServiceModel resetPasswordTokenServiceModel)
+        {
+            ValidateResetPassword(resetPasswordTokenServiceModel);
+
+            return _parent.ResetPasswordAsync(resetPasswordTokenServiceModel);
+        }
+
+        private void ValidateResetPassword(ResetPasswordTokenServiceModel resetPasswordTokenServiceModel)
+        {
+            if (PropertiesAreNull(resetPasswordTokenServiceModel))
+                throw new ArgumentException(ExceptionConstants.AllPropertiesRequiered);
+
+            if (resetPasswordTokenServiceModel.Password != resetPasswordTokenServiceModel.PasswordConfirm)
+                throw new ArgumentException(ExceptionConstants.PasswordMissMatch);
+
+            ValidateEmail(resetPasswordTokenServiceModel.Email);
         }
 
         private void ValidateEmail(string email)

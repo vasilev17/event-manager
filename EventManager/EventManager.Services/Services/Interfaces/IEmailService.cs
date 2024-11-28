@@ -4,6 +4,6 @@ namespace EventManager.Services.Services.Interfaces
 {
     public interface IEmailService
     {
-        Task<bool> SendResetPasswordMailAsync(SendEmailServiceModel emailMode);    
+        Task<bool> SendResetPasswordMailAsync(UserPasswordResetServiceModel emailMode);    
     }
 }

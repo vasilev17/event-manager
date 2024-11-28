@@ -20,17 +20,17 @@ namespace EventManager.Services.Services
             _apiKey = apiKey;
             _senderMail = senderMail;
             _senderName = senderName;
-            _resetPasswordUri = new Uri(resetPasswordUri);
+            _resetPasswordUri = new Uri("https://www.google.com/");
         }
 
-        public async Task<bool> SendResetPasswordMailAsync(SendEmailServiceModel emailMode)
+        public async Task<bool> SendResetPasswordMailAsync(UserPasswordResetServiceModel emailMode)
         {
             var client = new SendGridClient(_apiKey);
             var msg = new SendGridMessage()
             {
                 From = new EmailAddress(_senderMail, _senderName),
                 Subject = ResetPasswordSubject,
-                PlainTextContent = ResetPasswordContent + _resetPasswordUri + emailMode.Token
+                PlainTextContent = ResetPasswordContent + emailMode.Token
             };
 
             msg.AddTo(new EmailAddress(emailMode.Email, emailMode.FirstName + " " + emailMode.LastName));

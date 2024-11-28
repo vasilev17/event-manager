@@ -47,6 +47,7 @@ namespace EventManager.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("Login")]
+        //TODO: Handle ivalid login data 500
         public async Task<IActionResult> Login([FromBody] LoginWebModel loginWebModel)
         {
             var loginServiceModel = _mapper.Map<LoginServiceModel>(loginWebModel);
@@ -62,6 +63,18 @@ namespace EventManager.Web.Controllers
             var resetPasswordServiceModel = _mapper.Map<ResetPasswordServiceModel>(resetPasswordWebModel);
 
             await _userService.SendResendPasswordAsync(resetPasswordServiceModel);
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("ResetPassword")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordTokenWebModel resetPasswordWebModel)
+        {
+            var tokenServiceModel = _mapper.Map<ResetPasswordTokenServiceModel>(resetPasswordWebModel);
+
+            await _userService.ResetPasswordAsync(tokenServiceModel);
 
             return Ok();
         }
