@@ -42,6 +42,9 @@ namespace EventManager.Services.Decorators.User
         {
             ValidatePassword(user);
 
+            if (user.Role != Roles.User && user.Role != Roles.Organizer)
+                throw new ArgumentException(ExceptionConstants.InvalidRole);
+
             if (PropertiesAreNull(user))
                 throw new ArgumentException(ExceptionConstants.AllPropertiesRequiered);
         }
@@ -51,6 +54,13 @@ namespace EventManager.Services.Decorators.User
             ValidateSendResentPassword(resetPasswordServiceModel);
 
             return _parent.SendResendPasswordAsync(resetPasswordServiceModel);
+        }
+
+        public Task ResendPasswordLocalAsync(ResetPasswordServiceModel resetPasswordServiceModel)
+        {
+            ValidateSendResentPassword(resetPasswordServiceModel);
+
+            return _parent.ResendPasswordLocalAsync(resetPasswordServiceModel);
         }
 
         private void ValidateSendResentPassword(ResetPasswordServiceModel resetPasswordServiceModel)

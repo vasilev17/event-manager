@@ -9,6 +9,7 @@
         public const string AllPropertiesRequiered = "All properties are needed!";
         public const string InvalidCredentials = "Thre credentials were incorrect!";
         public const string PasswordMissMatch = "The password and the confirmation do not match";
+        public const string InvalidRole = "Invalid role is provided!";
 
         //Service Exceptions
         public const string CantSendEmail = "Could not send email!";
@@ -18,5 +19,6 @@
         //Database exceptions
         public const string CanNotCreate = "Can not create {0}!";
         public const string CantAddToRole = "Failed to add user to role!";
+        public const string UserNotFound = "User not found!";
     }
 }

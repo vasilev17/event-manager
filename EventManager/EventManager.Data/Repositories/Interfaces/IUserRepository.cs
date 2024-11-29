@@ -20,11 +20,18 @@ namespace EventManager.Data.Repositories.Interfaces
         Task<bool> AddAsync(User entity, Roles role);
 
         /// <summary>
+        /// Generates a password token model for a user
+        /// </summary>
+        /// <param name="email">The email of the user</param>
+        /// <returns>The token password</returns>
+        Task<UserPasswordResetModel> GeneratePasswordTokenModelAsync(string email);
+
+        /// <summary>
         /// Generates a password token for a user
         /// </summary>
         /// <param name="email">The email of the user</param>
         /// <returns>The token password</returns>
-        Task<UserPasswordResetModel> GeneratePasswordToken(string email);
+        Task<string> GeneratePasswordTokenAsync(string email);
 
         /// <summary>
         /// Resets the password of a user
