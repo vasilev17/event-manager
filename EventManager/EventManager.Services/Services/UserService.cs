@@ -6,6 +6,7 @@ using EventManager.Data.Repositories.Interfaces;
 using EventManager.Services.Exceptions;
 using EventManager.Services.Models.User;
 using EventManager.Services.Services.Interfaces;
+using SendGrid.Helpers.Mail;
 
 namespace EventManager.Services.Services
 {
@@ -15,13 +16,19 @@ namespace EventManager.Services.Services
         private readonly IEmailService _emailService;
         private readonly IJwtService _jwtService;
         private readonly IMapper _mapper;
+        private readonly string _localTokenLocation;
 
-        public UserService(IUserRepository userRepository, IEmailService emailService, IJwtService jwtService, IMapper mapper)
+        public UserService(IUserRepository userRepository, 
+            IEmailService emailService, 
+            IJwtService jwtService, 
+            IMapper mapper,
+            string localTokenLocation)
         {
             _emailService = emailService;
             _jwtService = jwtService;
             _userRepository = userRepository;
             _mapper = mapper;
+            _localTokenLocation = localTokenLocation;
         }
 
         public async Task<TokenModel> LoginAsync(LoginServiceModel loginServiceModel)
@@ -46,10 +53,7 @@ namespace EventManager.Services.Services
 
         public async Task SendResendPasswordAsync(ResetPasswordServiceModel resetPasswordServiceModel)
         {
-            var passwordModel = await _userRepository.GeneratePasswordToken(resetPasswordServiceModel.Email);
-
-            if (passwordModel == null)
-                throw new ResetPasswordException(ExceptionConstants.PasswordToken);
+            var passwordModel = await _userRepository.GeneratePasswordTokenModelAsync(resetPasswordServiceModel.Email);
 
             var serviceModel = _mapper.Map<UserPasswordResetServiceModel>(passwordModel);
 
@@ -69,6 +73,14 @@ namespace EventManager.Services.Services
             if (!succeeded)
                 throw new ResetPasswordException(ExceptionConstants.FailedToRestorePassword);
 
+        }
+
+        public async Task ResendPasswordLocalAsync(ResetPasswordServiceModel resetPasswordServiceModel)
+        {
+            var token = await _userRepository.GeneratePasswordTokenAsync(resetPasswordServiceModel.Email);
+
+            using (StreamWriter writer = new StreamWriter(_localTokenLocation, append: false))
+                writer.WriteLine(token);
         }
     }
 }

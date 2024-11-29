@@ -67,6 +67,18 @@ namespace EventManager.Web.Controllers
             return Ok();
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("ResetPasswordLocal")]
+        public async Task<IActionResult> ResetPasswordLocal([FromBody] ResetPasswordWebModel resetPasswordWebModel)
+        {
+            var resetPasswordServiceModel = _mapper.Map<ResetPasswordServiceModel>(resetPasswordWebModel);
+
+            await _userService.ResendPasswordLocalAsync(resetPasswordServiceModel);
+
+            return Ok();
+        }
+
         [HttpPost]
         [AllowAnonymous]
         [Route("ResetPassword")]

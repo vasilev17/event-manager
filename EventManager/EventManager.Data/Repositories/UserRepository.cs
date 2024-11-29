@@ -32,7 +32,7 @@ namespace EventManager.Data.Repositories
                 // Add the user to the database without committing
                 var result = await _userManager.CreateAsync(entity);
                 if (!result.Succeeded)
-                    throw new CreationDatabaseException(string.Format(ExceptionConstants.CanNotCreate, "user"));
+                    throw new CreationDatabaseException(string.Format(ExceptionConstants.CanNotCreate, "user") + "Inner exception: " + result.Errors.ToString());
 
                 // Add the user to a role
                 var roleExists = await _roleManager.RoleExistsAsync(role.ToString());
@@ -41,12 +41,12 @@ namespace EventManager.Data.Repositories
                     // Optionally, create the role if it doesn't exist
                     var roleResult = await _roleManager.CreateAsync(new Role(role.ToString()));
                     if (!roleResult.Succeeded)
-                        throw new CreationDatabaseException(string.Format(ExceptionConstants.CanNotCreate, "role"));
+                        throw new CreationDatabaseException(string.Format(ExceptionConstants.CanNotCreate, "role") + "Inner exception: " + roleResult.Errors.ToString());
                 }
 
                 var addToRoleResult = await _userManager.AddToRoleAsync(entity, role.ToString());
                 if (!addToRoleResult.Succeeded)
-                    throw new DatabaseException(ExceptionConstants.CantAddToRole);
+                    throw new DatabaseException(ExceptionConstants.CantAddToRole + "Inner exception: " + addToRoleResult.Errors.ToString());
 
                 // Commit the transaction
                 await transaction.CommitAsync();
@@ -77,12 +77,24 @@ namespace EventManager.Data.Repositories
                 .FirstOrDefaultAsync(x => x.UserName == username);
         }
 
-        public async Task<UserPasswordResetModel> GeneratePasswordToken(string email)
+        public async Task<bool> ResetPassword(string email, string token, string newPassword)
         {
             var user = await _userManager.FindByEmailAsync(email);
 
             if (user == null)
-                return null;
+                return false;
+
+            var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+
+            return result.Succeeded;
+        }
+
+        public async Task<UserPasswordResetModel> GeneratePasswordTokenModelAsync(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+                throw new DatabaseException(ExceptionConstants.UserNotFound);
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
@@ -95,16 +107,14 @@ namespace EventManager.Data.Repositories
             };
         }
 
-        public async Task<bool> ResetPassword(string email, string token, string newPassword)
+        public async Task<string> GeneratePasswordTokenAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
 
             if (user == null)
-                return false;
+                throw new DatabaseException(ExceptionConstants.UserNotFound);
 
-            var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
-
-            return result.Succeeded;
+            return await _userManager.GeneratePasswordResetTokenAsync(user);
         }
     }
 }

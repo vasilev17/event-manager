@@ -5,5 +5,7 @@
         public CreationDatabaseException() { }
 
         public CreationDatabaseException(string message) : base(message) { }
+
+        public CreationDatabaseException(string message, Exception ex) : base(message, ex) { }
     }
 }
