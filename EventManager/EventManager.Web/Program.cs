@@ -26,8 +26,8 @@ namespace EventManager.Web
             builder.Services.AddSwaggerGen();
 
             builder.Services.SetupDataBase(builder.Configuration);
-            builder.Services.SetupAuthentication(builder.Configuration);
             builder.Services.SetupDependancyInjection(builder.Configuration);
+            builder.Services.SetupAuthentication(builder.Configuration);
             builder.Services.SetupMapper();
 
             var app = builder.Build();
@@ -41,6 +41,7 @@ namespace EventManager.Web
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();  
             app.UseAuthorization();
 
             app.MapControllers();

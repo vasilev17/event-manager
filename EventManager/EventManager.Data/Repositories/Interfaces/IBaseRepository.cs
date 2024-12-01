@@ -12,6 +12,6 @@
         Task<bool> EditAsync(Guid id, TEntity newEntity);
 
         //Delete Entity from database
-        Task<bool> DeleteAsync(TEntity entity);
+        Task<bool> DeleteAsync(Guid entity);
     }
 }

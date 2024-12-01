@@ -10,6 +10,7 @@
         public const string InvalidCredentials = "Thre credentials were incorrect!";
         public const string PasswordMissMatch = "The password and the confirmation do not match";
         public const string InvalidRole = "Invalid role is provided!";
+        public const string Unauthorized = "User is unauthorized";
 
         //Service Exceptions
         public const string CantSendEmail = "Could not send email!";
@@ -20,5 +21,6 @@
         public const string CanNotCreate = "Can not create {0}!";
         public const string CantAddToRole = "Failed to add user to role!";
         public const string UserNotFound = "User not found!";
+        public const string FailedToDeleteUser = "Could not delete user!";
     }
 }

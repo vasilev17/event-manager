@@ -21,7 +21,7 @@ namespace EventManager.Data.Repositories
             return await SaveChangesAsync();
         }
 
-        public virtual Task<bool> DeleteAsync(TEntity entity)
+        public virtual Task<bool> DeleteAsync(Guid entity)
         {
             throw new NotImplementedException();
         }

@@ -56,5 +56,11 @@ namespace EventManager.Data.Repositories.Interfaces
         /// <returns>The logged in user</returns>
         /// <throws>InvalidDataException if the password does not match</throws>
         Task<User> LoginAsync(string userName, string password);
+        
+        /// <summary>
+        /// Deletes a user
+        /// </summary>
+        /// <param name="id">Id of the user</param>
+        Task<bool> DeleteAsync(Guid id);
     }
 }

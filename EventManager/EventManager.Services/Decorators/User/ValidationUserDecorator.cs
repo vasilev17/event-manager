@@ -116,5 +116,10 @@ namespace EventManager.Services.Decorators.User
                   .GetProperties()
                   .All(prop => prop.GetValue(obj) != null);
         }
+
+        public Task DeleteUserAsync(Guid id)
+        {
+            return _parent.DeleteUserAsync(id);
+        }
     }
 }

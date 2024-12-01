@@ -19,10 +19,10 @@ namespace EventManager.Web.Setup
 
             var signkeyBits = Encoding.ASCII.GetBytes(signingKey);
 
-            services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            services.AddAuthentication(options => {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
             .AddJwtBearer(x =>
             {
@@ -42,6 +42,8 @@ namespace EventManager.Web.Setup
                     ValidateAudience = false,
                 };
             });
+
+            services.AddAuthorization();
         }
     }
 }

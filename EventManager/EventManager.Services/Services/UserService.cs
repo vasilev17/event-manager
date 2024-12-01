@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EventManager.Common.Constants;
 using EventManager.Common.Models;
+using EventManager.Data.Exceptions;
 using EventManager.Data.Models;
 using EventManager.Data.Repositories.Interfaces;
 using EventManager.Services.Exceptions;
@@ -81,6 +82,14 @@ namespace EventManager.Services.Services
 
             using (StreamWriter writer = new StreamWriter(_localTokenLocation, append: false))
                 writer.WriteLine(token);
+        }
+
+        public async Task DeleteUserAsync(Guid id)
+        {
+            var result = await _userRepository.DeleteAsync(id);
+
+            if (!result)
+                throw new DatabaseException(ExceptionConstants.FailedToDeleteUser);
         }
     }
 }

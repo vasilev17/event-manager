@@ -18,6 +18,7 @@ namespace EventManager.Data.Repositories
             _roleManager = roleManager;
         }
 
+        #region Add
         public override Task<bool> AddAsync(User entity)
         {
             return AddAsync(entity, RoleConstants.DefaultRole);
@@ -60,22 +61,25 @@ namespace EventManager.Data.Repositories
                 throw;
             }
         }
+        #endregion
 
-        public async Task<User> LoginAsync(string userName, string password)
-        {
-            var user = await GetByUserNameAsync(userName);
-
-            if (user == null || !await _userManager.CheckPasswordAsync(user, password))
-                throw new InvalidDataException(ExceptionConstants.InvalidCredentials);
-
-            return user;
-        }
-
+        #region Read
         public async Task<User> GetByUserNameAsync(string username)
         {
             return await _userManager.Users
                 .FirstOrDefaultAsync(x => x.UserName == username);
         }
+
+        public override async Task<User> GetByIdAsync(Guid id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+
+            if (user == null)
+                throw new ArgumentException(ExceptionConstants.UserNotFound);
+
+            return user;
+        }
+        #endregion
 
         public async Task<bool> ResetPassword(string email, string token, string newPassword)
         {
@@ -87,6 +91,16 @@ namespace EventManager.Data.Repositories
             var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
 
             return result.Succeeded;
+        }
+
+        public async Task<User> LoginAsync(string userName, string password)
+        {
+            var user = await GetByUserNameAsync(userName);
+
+            if (user == null || !await _userManager.CheckPasswordAsync(user, password))
+                throw new InvalidDataException(ExceptionConstants.InvalidCredentials);
+
+            return user;
         }
 
         public async Task<UserPasswordResetModel> GeneratePasswordTokenModelAsync(string email)
@@ -115,6 +129,22 @@ namespace EventManager.Data.Repositories
                 throw new DatabaseException(ExceptionConstants.UserNotFound);
 
             return await _userManager.GeneratePasswordResetTokenAsync(user);
+        }
+
+        public async Task DeleteUserAsync(string userName)
+        {
+            var user = await GetByUserNameAsync(userName);
+
+            var result = await _userManager.DeleteAsync(user);
+        }
+
+        public override async Task<bool> DeleteAsync(Guid id)
+        {
+            var user = await GetByIdAsync(id);
+
+            var result = await _userManager.DeleteAsync(user);
+
+            return result.Succeeded;
         }
     }
 }

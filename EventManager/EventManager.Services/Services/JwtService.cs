@@ -2,7 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
+using System.Security.Principal;
 
 namespace EventManager.Services.Services
 {
@@ -12,6 +12,9 @@ namespace EventManager.Services.Services
         private readonly TimeSpan _tokenDuration;
         private readonly string _issuer;
         private readonly string _audience;
+
+        private const string Id = "ID";
+        private const string User = "Username";
 
         public JwtService(byte[] signingKey, TimeSpan tokenDuration, string issuer, string audience)
         {
@@ -28,8 +31,8 @@ namespace EventManager.Services.Services
 
             HashSet<Claim> claims = new()
             {
-                new Claim("ID", $"{userId}"),
-                new Claim("Username", username)
+                new Claim(Id, $"{userId}"),
+                new Claim(User, username)
             };
 
             foreach (var roleName in roleNames)
@@ -48,6 +51,35 @@ namespace EventManager.Services.Services
             SecurityToken token = tokenHandler.CreateToken(securityTokenDescriptor);
 
             return tokenHandler.WriteToken(token);
+        }
+
+        public bool ValidateJwtToken(Guid userId, string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var validationParameters = GetValidationParameters();
+
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(token);
+
+            IPrincipal principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
+            if (principal.Identity == null || !principal.Identity.IsAuthenticated)
+                return false;
+            else if (jwtToken.Claims.FirstOrDefault(x => x.Type == Id).Value != userId.ToString())
+                return false;
+            else
+                return true;
+        }
+
+        private TokenValidationParameters GetValidationParameters()
+        {
+            return new TokenValidationParameters()
+            {
+                ValidateLifetime = true,
+                ValidateAudience = true,
+                ValidateIssuer = true,
+                ValidIssuer = _issuer,
+                ValidAudience = _audience,
+                IssuerSigningKey = new SymmetricSecurityKey(this._signingKey)
+            };
         }
     }
 }
