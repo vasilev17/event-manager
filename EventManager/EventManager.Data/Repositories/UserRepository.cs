@@ -87,6 +87,7 @@ namespace EventManager.Data.Repositories
         }
         #endregion
 
+        #region Authentication
         public async Task<bool> ResetPassword(string email, string token, string newPassword)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -136,7 +137,19 @@ namespace EventManager.Data.Repositories
 
             return await _userManager.GeneratePasswordResetTokenAsync(user);
         }
+        #endregion
 
+        #region Update
+        public override async Task<bool> EditAsync(Guid id, User newEntity)
+        {
+            newEntity.Id = id;
+            IdentityResult result = await _userManager.UpdateAsync(newEntity);
+
+            return result.Succeeded;
+        }
+        #endregion
+
+        #region Delete
         public async Task DeleteUserAsync(string userName)
         {
             var user = await GetByUserNameAsync(userName);
@@ -152,5 +165,6 @@ namespace EventManager.Data.Repositories
 
             return result.Succeeded;
         }
+        #endregion
     }
 }

@@ -22,5 +22,6 @@
         public const string CantAddToRole = "Failed to add user to role!";
         public const string UserNotFound = "User not found!";
         public const string FailedToDeleteUser = "Could not delete user!";
+        public const string FailedToUpdateUser = "Could not update user!";
     }
 }

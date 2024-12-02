@@ -36,7 +36,14 @@ namespace EventManager.Services.Services.Interfaces
         /// </summary>
         /// <param name="resetPasswordTokenServiceModel">Model carying the email of the user that needs his password reset and the password token</param>
         Task ResetPasswordAsync(ResetPasswordTokenServiceModel resetPasswordTokenServiceModel);
-        
+
+        /// <summary>
+        /// Updates the user
+        /// </summary>
+        /// <param name="id">Id of the user</param>
+        /// <param name="updateUserServiceModel">Model carying the new user data</param>
+        Task UpdateUserAsync(Guid id, UpdateUserServiceModel updateUserServiceModel);
+
         /// <summary>
         /// Deletes a user
         /// </summary>

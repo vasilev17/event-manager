@@ -13,6 +13,7 @@ namespace EventManager.Web.Setup.Mappings
             CreateMap<LoginWebModel, LoginServiceModel>();
             CreateMap<ResetPasswordWebModel, ResetPasswordServiceModel>();
             CreateMap<ResetPasswordTokenWebModel, ResetPasswordTokenServiceModel>();
+            CreateMap<UpdateUserWebModel, UpdateUserServiceModel>();
 
             CreateMap<UserPasswordResetModel, UserPasswordResetServiceModel>();
 

@@ -1,6 +1,7 @@
 ﻿using EventManager.Services.Services.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Security.Principal;
 
@@ -55,6 +56,8 @@ namespace EventManager.Services.Services
 
         public bool ValidateJwtToken(Guid userId, string token)
         {
+            token = token.Substring("Bearer ".Length);
+
             var tokenHandler = new JwtSecurityTokenHandler();
             var validationParameters = GetValidationParameters();
 
@@ -65,8 +68,8 @@ namespace EventManager.Services.Services
                 return false;
             else if (jwtToken.Claims.FirstOrDefault(x => x.Type == Id).Value != userId.ToString())
                 return false;
-            else
-                return true;
+            
+            return true;
         }
 
         private TokenValidationParameters GetValidationParameters()
