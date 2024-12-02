@@ -35,7 +35,7 @@ namespace EventManager.Services.Services
         public async Task<TokenModel> LoginAsync(LoginServiceModel loginServiceModel)
         {
             var loggedUser = await _userRepository.LoginAsync(loginServiceModel.UserName, loginServiceModel.Password);
-            var roleNames = loggedUser.Roles.Select(x => x.Name).ToList();
+            var roleNames = await _userRepository.GerUserRoleAsync(loggedUser);
 
             return new TokenModel(_jwtService.GenerateJwtToken(loggedUser.Id, loggedUser.UserName!, roleNames!));
         }
@@ -47,7 +47,7 @@ namespace EventManager.Services.Services
             await _userRepository.AddAsync(user, userServiceModel.Role);
 
             var createdUser = await _userRepository.GetByUserNameAsync(userServiceModel.UserName);
-            var roleNames = createdUser.Roles.Select(x => x.Name).ToList();
+            var roleNames = await _userRepository.GerUserRoleAsync(createdUser);
 
             return new TokenModel(_jwtService.GenerateJwtToken(createdUser.Id, createdUser.UserName!, roleNames!));
         }

@@ -18,6 +18,10 @@ namespace EventManager.Data.Models.Configurations
             builder
                 .HasIndex(u => u.Email)
                 .IsUnique();
+
+            builder
+                .HasMany(x => x.Roles)
+                .WithMany(x => x.Users);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace EventManager.Services.Services
             _audience = audience;
         }
 
-        public string GenerateJwtToken(Guid userId, string username, List<string> roleNames)
+        public string GenerateJwtToken(Guid userId, string username, IList<string> roleNames)
         {
             var securityKey = new SymmetricSecurityKey(_signingKey);
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);

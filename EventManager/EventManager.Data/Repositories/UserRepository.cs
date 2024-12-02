@@ -67,6 +67,7 @@ namespace EventManager.Data.Repositories
         public async Task<User> GetByUserNameAsync(string username)
         {
             return await _userManager.Users
+                .Include(u => u.Roles)
                 .FirstOrDefaultAsync(x => x.UserName == username);
         }
 
@@ -78,6 +79,11 @@ namespace EventManager.Data.Repositories
                 throw new ArgumentException(ExceptionConstants.UserNotFound);
 
             return user;
+        }
+
+        public async Task<IList<string>> GerUserRoleAsync(User user)
+        {
+            return await _userManager.GetRolesAsync(user);
         }
         #endregion
 

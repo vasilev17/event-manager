@@ -110,7 +110,7 @@ namespace EventManager.Web.Controllers
         /// <param name="authorization">The token of the user</param>
         /// <returns>Ok result after deleting the user</returns>
         [HttpDelete("Delete/{id}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(Guid id, [FromHeader(Name = "Authorization")] string authorization)
         {
             authorization = authorization.Substring("Bearer ".Length);
