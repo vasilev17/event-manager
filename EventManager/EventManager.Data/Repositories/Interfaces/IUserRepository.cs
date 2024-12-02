@@ -3,15 +3,8 @@ using EventManager.Data.Models;
 
 namespace EventManager.Data.Repositories.Interfaces
 {
-    public interface IUserRepository
+    public interface IUserRepository : IBaseRepository<User>
     {
-        /// <summary>
-        /// Adds a user to the database with the default role.
-        /// </summary>
-        /// <param name="entity">The entity with the user data</param>
-        /// <returns>True if the user is added correctly</returns>
-        Task<bool> AddAsync(User entity);
-
         /// <summary>
         /// Adds a user to the database with the default role. If one operation fails (adding of the user, role assignment/creation) all fail
         /// </summary>
@@ -56,12 +49,6 @@ namespace EventManager.Data.Repositories.Interfaces
         /// <returns>The logged in user</returns>
         /// <throws>InvalidDataException if the password does not match</throws>
         Task<User> LoginAsync(string userName, string password);
-        
-        /// <summary>
-        /// Deletes a user
-        /// </summary>
-        /// <param name="id">Id of the user</param>
-        Task<bool> DeleteAsync(Guid id);
 
         /// <summary>
         /// Gets the role of a user

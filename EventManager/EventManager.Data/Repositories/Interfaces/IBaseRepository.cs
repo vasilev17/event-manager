@@ -1,6 +1,6 @@
 ﻿namespace EventManager.Data.Repositories.Interfaces
 {
-    internal interface IBaseRepository<TEntity> where TEntity : class
+    public interface IBaseRepository<TEntity> where TEntity : class
     {
         //Add Entity to database
         Task<bool> AddAsync(TEntity entity);

@@ -110,17 +110,38 @@ namespace EventManager.Web.Controllers
         /// <param name="authorization">The token of the user</param>
         /// <returns>Ok result after deleting the user</returns>
         [HttpDelete("Delete/{id}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(Guid id, [FromHeader(Name = "Authorization")] string authorization)
+        [Authorize()]
+        public async Task<IActionResult> Delete(Guid id, [FromHeader] string authorization)
         {
-            authorization = authorization.Substring("Bearer ".Length);
-
             var tokenResult = _jwtService.ValidateJwtToken(id, authorization);
 
             if(!tokenResult)
                 return Unauthorized(ExceptionConstants.Unauthorized);
 
             await _userService.DeleteUserAsync(id);
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// Endpoint for uptating a user
+        /// </summary>
+        /// <param name="id">Users id</param>
+        /// <param name="updateModel">The model. It's params can be null, in that case old once will be kept</param>
+        /// <param name="authorization">User's token</param>
+        /// <returns>Ok result</returns>
+        [HttpPut("Update/{id}")]
+        [Authorize()]
+        public async Task<IActionResult> Update(Guid id, [FromBody]UpdateUserWebModel updateModel, [FromHeader]string authorization)
+        {
+            var tokenResult = _jwtService.ValidateJwtToken(id, authorization);
+
+            if (!tokenResult)
+                return Unauthorized(ExceptionConstants.Unauthorized);
+
+            var serviceModel = _mapper.Map<UpdateUserServiceModel>(updateModel);
+
+            await _userService.UpdateUserAsync(id, serviceModel);
 
             return Ok();
         }

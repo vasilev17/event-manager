@@ -89,6 +89,19 @@ namespace EventManager.Services.Decorators.User
             ValidateEmail(resetPasswordTokenServiceModel.Email);
         }
 
+        public Task UpdateUserAsync(Guid id, UpdateUserServiceModel updateUserServiceModel)
+        {
+            if (!string.IsNullOrEmpty(updateUserServiceModel.Email))
+                ValidateEmail(updateUserServiceModel.Email);
+
+            return _parent.UpdateUserAsync(id, updateUserServiceModel);
+        }
+
+        public Task DeleteUserAsync(Guid id)
+        {
+            return _parent.DeleteUserAsync(id);
+        }
+
         private void ValidateEmail(string email)
         {
             if (!Regex.IsMatch(email, EmailRegex))
@@ -115,11 +128,6 @@ namespace EventManager.Services.Decorators.User
             return !obj.GetType()
                   .GetProperties()
                   .All(prop => prop.GetValue(obj) != null);
-        }
-
-        public Task DeleteUserAsync(Guid id)
-        {
-            return _parent.DeleteUserAsync(id);
         }
     }
 }

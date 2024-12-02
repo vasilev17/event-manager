@@ -7,7 +7,6 @@ using EventManager.Data.Repositories.Interfaces;
 using EventManager.Services.Exceptions;
 using EventManager.Services.Models.User;
 using EventManager.Services.Services.Interfaces;
-using SendGrid.Helpers.Mail;
 
 namespace EventManager.Services.Services
 {
@@ -19,9 +18,9 @@ namespace EventManager.Services.Services
         private readonly IMapper _mapper;
         private readonly string _localTokenLocation;
 
-        public UserService(IUserRepository userRepository, 
-            IEmailService emailService, 
-            IJwtService jwtService, 
+        public UserService(IUserRepository userRepository,
+            IEmailService emailService,
+            IJwtService jwtService,
             IMapper mapper,
             string localTokenLocation)
         {
@@ -43,7 +42,7 @@ namespace EventManager.Services.Services
         public async Task<TokenModel> RegisterAsync(RegisterServiceModel userServiceModel)
         {
             var user = _mapper.Map<User>(userServiceModel);
-            
+
             await _userRepository.AddAsync(user, userServiceModel.Role);
 
             var createdUser = await _userRepository.GetByUserNameAsync(userServiceModel.UserName);
@@ -84,12 +83,39 @@ namespace EventManager.Services.Services
                 writer.WriteLine(token);
         }
 
+        public async Task UpdateUserAsync(Guid id, UpdateUserServiceModel updateUserServiceModel)
+        {
+            var user = await _userRepository.GetByIdAsync(id);
+
+            PopulateUser(user, updateUserServiceModel);
+
+            var result = await _userRepository.EditAsync(id, user);
+
+            if (!result)
+                throw new DatabaseException(ExceptionConstants.FailedToDeleteUser);
+        }
+
+        private void PopulateUser(User user, UpdateUserServiceModel updateUserServiceModel)
+        {
+            if (!string.IsNullOrEmpty(updateUserServiceModel.UserName))
+                user.UserName = updateUserServiceModel.UserName;
+
+            if (!string.IsNullOrEmpty(updateUserServiceModel.FirstName))
+                user.FirstName = updateUserServiceModel.FirstName;
+
+            if (!string.IsNullOrEmpty(updateUserServiceModel.LastName))
+                user.LastName = updateUserServiceModel.LastName;
+
+            if (!string.IsNullOrEmpty(updateUserServiceModel.Email))
+                user.Email = updateUserServiceModel.Email;
+        }
+
         public async Task DeleteUserAsync(Guid id)
         {
             var result = await _userRepository.DeleteAsync(id);
 
             if (!result)
-                throw new DatabaseException(ExceptionConstants.FailedToDeleteUser);
+                throw new DatabaseException(ExceptionConstants.FailedToUpdateUser);
         }
     }
 }
