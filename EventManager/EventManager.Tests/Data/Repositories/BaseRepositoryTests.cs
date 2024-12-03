@@ -101,12 +101,14 @@ namespace BaseRepositoryTests
         }
 
         // UPDATED: Tests that AddAsync throws ArgumentNullException when a null entity is added.
+        // BUG: AddAsync does not handle null entities and needs to throw ArgumentNullException, or discuss it on 12/04
         [Fact]
         public async Task AddAsync_ShouldThrowArgumentNullException_WhenEntityIsNull()
         {
             // Act & Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => _repository.AddAsync(null));
         }
+
 
         // UPDATED: Tests that SaveChangesAsync returns false when no changes are saved to the DbContext.
         [Fact]
