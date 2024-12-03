@@ -1,4 +1,5 @@
 ﻿using EventManager.Common.Models;
+using EventManager.Services.Models.Picture;
 using EventManager.Services.Models.User;
 
 namespace EventManager.Services.Services.Interfaces
@@ -45,9 +46,22 @@ namespace EventManager.Services.Services.Interfaces
         Task UpdateUserAsync(Guid id, UpdateUserServiceModel updateUserServiceModel);
 
         /// <summary>
+        /// Uploading profile picture to cloudinary and safing it to the db
+        /// </summary>
+        /// <param name="profilePictureServiceModel"></param>
+        /// <returns></returns>
+        Task UploadProfilePictureAsync(ProfilePictureServiceModel profilePictureServiceModel);
+
+        /// <summary>
         /// Deletes a user
         /// </summary>
         /// <param name="id">The id of the user to be deleted</param>
         Task DeleteUserAsync(Guid id);
+
+        /// <summary>
+        /// Deletes the profile picture of the user
+        /// </summary>
+        /// <param name="id">Id of the user</param>
+        Task DeleteProfilePictureAsync(Guid id);
     }
 }

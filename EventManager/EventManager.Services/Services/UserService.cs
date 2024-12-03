@@ -3,8 +3,10 @@ using EventManager.Common.Constants;
 using EventManager.Common.Models;
 using EventManager.Data.Exceptions;
 using EventManager.Data.Models;
+using EventManager.Data.Models.Picture;
 using EventManager.Data.Repositories.Interfaces;
 using EventManager.Services.Exceptions;
+using EventManager.Services.Models.Picture;
 using EventManager.Services.Models.User;
 using EventManager.Services.Services.Interfaces;
 
@@ -13,20 +15,26 @@ namespace EventManager.Services.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IProfilePictureRepository _profilePictureRepository;
         private readonly IEmailService _emailService;
         private readonly IJwtService _jwtService;
+        private readonly ICloudinaryService _cloudinaryService;
         private readonly IMapper _mapper;
         private readonly string _localTokenLocation;
 
         public UserService(IUserRepository userRepository,
+            IProfilePictureRepository profilePictureRepository,
             IEmailService emailService,
             IJwtService jwtService,
+            ICloudinaryService cloudinaryService,
             IMapper mapper,
             string localTokenLocation)
         {
             _emailService = emailService;
+            _profilePictureRepository = profilePictureRepository;
             _jwtService = jwtService;
             _userRepository = userRepository;
+            _cloudinaryService = cloudinaryService;
             _mapper = mapper;
             _localTokenLocation = localTokenLocation;
         }
@@ -95,6 +103,39 @@ namespace EventManager.Services.Services
                 throw new DatabaseException(ExceptionConstants.FailedToDeleteUser);
         }
 
+        public async Task UploadProfilePictureAsync(ProfilePictureServiceModel model)
+        {
+            await DeleteProfilePictureAsync(model.UserId);
+
+            await SavePicture(model);
+        }
+
+        private async Task SavePicture(ProfilePictureServiceModel model)
+        {
+            model.Picture.Stream.Seek(0, SeekOrigin.Begin);
+            var cloudinaryResult = await _cloudinaryService.UploadPictureAsync(model.Picture);
+            
+            var profilePicture = new ProfilePicture
+            {
+                PublicId = cloudinaryResult.PublicId,
+                ResourceType = cloudinaryResult.ResourceType,
+                Url = cloudinaryResult.Url.AbsoluteUri
+            };
+            var user = await _userRepository.GetByIdAsync(model.UserId);
+
+            user.ProfilePicture = profilePicture;
+            profilePicture.User = user;
+            profilePicture.UserId = user.Id;
+
+            var pictureIsSaved = await _profilePictureRepository.AddAsync(profilePicture);
+            if (!pictureIsSaved)
+                throw new DatabaseException(ExceptionConstants.FailedToUploadProfilePicture);
+
+            var userResult = await _userRepository.EditAsync(user.Id, user);
+            if (!userResult)
+                throw new DatabaseException(ExceptionConstants.FailedToUpdateUser);
+        }
+
         private void PopulateUser(User user, UpdateUserServiceModel updateUserServiceModel)
         {
             if (!string.IsNullOrEmpty(updateUserServiceModel.UserName))
@@ -116,6 +157,27 @@ namespace EventManager.Services.Services
 
             if (!result)
                 throw new DatabaseException(ExceptionConstants.FailedToUpdateUser);
+        }
+
+        public async Task DeleteProfilePictureAsync(Guid id)
+        {
+            var picturte = await _profilePictureRepository.GetByUserIdAsync(id);
+
+            if (picturte != null)
+            {
+                var pictureServiceModel = _mapper.Map<PictureServiceModel>(picturte);
+                await _cloudinaryService.DeletePictureAsync(pictureServiceModel);
+            }
+
+            await _profilePictureRepository.DeleteAsync(picturte);
+
+            var user = await _userRepository.GetByIdAsync(id);
+            user.ProfilePicture = new ProfilePicture
+            {
+                Url = PictureConstants.DefaultPicture
+            };
+
+            await _userRepository.EditAsync(id, user);
         }
     }
 }

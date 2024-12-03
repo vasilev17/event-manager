@@ -20,8 +20,10 @@ namespace EventManager.Web.Setup
             services.AddScoped<IUserServiceFactory>(serviceProvider =>
             {
                 var userRepository = serviceProvider.GetRequiredService<IUserRepository>();
+                var profilePictureRepository = serviceProvider.GetRequiredService<IProfilePictureRepository>();
                 var emailService = serviceProvider.GetRequiredService<IEmailService>();
                 var jwtService = serviceProvider.GetRequiredService<IJwtService>();
+                var cloudinaryService = serviceProvider.GetRequiredService<ICloudinaryService>();
                 var mapper = serviceProvider.GetRequiredService<IMapper>();
 
                 var tokenLocation = configuration.GetSection("localTokenLocation").Value;
@@ -29,10 +31,12 @@ namespace EventManager.Web.Setup
                 if(tokenLocation == null)
                     tokenLocation = Environment.CurrentDirectory;
 
-                return new UserServiceFactory(userRepository, emailService, jwtService, mapper, tokenLocation);
+                return new UserServiceFactory(userRepository, profilePictureRepository,
+                    emailService, cloudinaryService, jwtService, mapper, tokenLocation);
             });
 
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IProfilePictureRepository, ProfilePictureRepository>();
 
             services.AddSingleton<IJwtService, JwtService>(options =>
             new JwtService(
@@ -48,6 +52,13 @@ namespace EventManager.Web.Setup
                     senderName: configuration.GetSection("EmailSender").GetSection("senderName").Value,
                     resetPasswordUri: configuration.GetSection("EmailSender").GetSection("resetPasswordUri").Value
                 ));
+
+            services.AddSingleton<ICloudinaryService, CloudinaryService>(options =>
+            new CloudinaryService(
+                cloudName: configuration.GetSection("Cloudinary").GetSection("Name").Value,
+                apiKey: configuration.GetSection("Cloudinary").GetSection("Key").Value,
+                apiSecret: configuration.GetSection("Cloudinary").GetSection("Secret").Value
+            ));
 
             services.AddIdentity<User, Role>(options =>
             {

@@ -56,5 +56,11 @@ namespace EventManager.Data.Repositories.Interfaces
         /// <param name="user">The user</param>
         /// <returns>List of the user's roles</returns>
         Task<IList<string>> GerUserRoleAsync(User user);
+
+        /// <summary>
+        /// Deletes a user
+        /// </summary>
+        /// <param name="id">user id</param>
+        Task<bool> DeleteAsync(Guid id);
     }
 }

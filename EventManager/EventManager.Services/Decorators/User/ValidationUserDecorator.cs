@@ -1,6 +1,6 @@
 ﻿using EventManager.Common.Constants;
 using EventManager.Common.Models;
-using EventManager.Data.Models;
+using EventManager.Services.Models.Picture;
 using EventManager.Services.Models.User;
 using EventManager.Services.Services.Interfaces;
 using System.Text.RegularExpressions;
@@ -128,6 +128,16 @@ namespace EventManager.Services.Decorators.User
             return !obj.GetType()
                   .GetProperties()
                   .All(prop => prop.GetValue(obj) != null);
+        }
+
+        public Task UploadProfilePictureAsync(ProfilePictureServiceModel profilePictureServiceModel)
+        {
+            return _parent.UploadProfilePictureAsync(profilePictureServiceModel);
+        }
+
+        public Task DeleteProfilePictureAsync(Guid id)
+        {
+            return _parent.DeleteProfilePictureAsync(id);
         }
     }
 }

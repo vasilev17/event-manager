@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using EventManager.Common.Constants;
 using EventManager.Services.Factories.Interfaces;
+using EventManager.Services.Models.Picture;
 using EventManager.Services.Models.User;
 using EventManager.Services.Services.Interfaces;
+using EventManager.Web.Models.Picture;
 using EventManager.Web.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -132,7 +134,7 @@ namespace EventManager.Web.Controllers
         /// <returns>Ok result</returns>
         [HttpPut("Update/{id}")]
         [Authorize()]
-        public async Task<IActionResult> Update(Guid id, [FromBody]UpdateUserWebModel updateModel, [FromHeader]string authorization)
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserWebModel updateModel, [FromHeader] string authorization)
         {
             var tokenResult = _jwtService.ValidateJwtToken(id, authorization);
 
@@ -142,6 +144,52 @@ namespace EventManager.Web.Controllers
             var serviceModel = _mapper.Map<UpdateUserServiceModel>(updateModel);
 
             await _userService.UpdateUserAsync(id, serviceModel);
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// Uploads a profile picture
+        /// </summary>
+        /// <param name="id">Id of the user</param>
+        /// <param name="model">Model with the file data</param>
+        /// <param name="authorization">JWT authorizaation token</param>
+        /// <returns></returns>
+        [HttpPut("UploadPicture/{id}")]
+        [Authorize()]
+        public async Task<IActionResult> UpdateProfilePicture(Guid id, [FromForm] UploadProfilePictureWebModel model, [FromHeader] string authorization)
+        {
+            var tokenResult = _jwtService.ValidateJwtToken(id, authorization);
+
+            if (!tokenResult)
+                return Unauthorized(ExceptionConstants.Unauthorized);
+
+            var ms = new MemoryStream();
+            model.Picture.CopyTo(ms);
+            var profilePictureServiceModel = new ProfilePictureServiceModel
+            {
+                Picture = new UploadPictureServiceModel
+                {
+                    FileName = model.Picture.FileName,
+                    Stream = ms
+                },
+                UserId = id
+            };
+
+            await _userService.UploadProfilePictureAsync(profilePictureServiceModel);
+            return Ok();
+        }
+
+        [HttpDelete("DeleteProfilePicture/{id}")]
+        [Authorize()]
+        public async Task<IActionResult> DeleteProfilePicture(Guid id, [FromHeader] string authorization)
+        {
+            var tokenResult = _jwtService.ValidateJwtToken(id, authorization);
+
+            if (!tokenResult)
+                return Unauthorized(ExceptionConstants.Unauthorized);
+
+            await _userService.DeleteProfilePictureAsync(id);
 
             return Ok();
         }
