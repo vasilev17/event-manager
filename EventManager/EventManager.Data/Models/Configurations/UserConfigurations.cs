@@ -12,7 +12,7 @@ namespace EventManager.Data.Models.Configurations
                 .Property(b => b.FirstName)
                 .IsRequired();
 
-            builder 
+            builder
                 .Property(b => b.LastName)
                 .IsRequired();
 

@@ -2,6 +2,7 @@
 {
     public static class PictureConstants
     {
-        public const string DefaultPicture = "DefaultPicture";
+        public const string DefaultUserPicture = "DefaultUserPicture";
+        public const string DefaultEventPicture = "DefaultEventPicture";
     }
 }

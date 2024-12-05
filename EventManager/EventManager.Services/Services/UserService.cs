@@ -174,7 +174,7 @@ namespace EventManager.Services.Services
             var user = await _userRepository.GetByIdAsync(id);
             user.ProfilePicture = new ProfilePicture
             {
-                Url = PictureConstants.DefaultPicture
+                Url = PictureConstants.DefaultUserPicture
             };
 
             await _userRepository.EditAsync(id, user);

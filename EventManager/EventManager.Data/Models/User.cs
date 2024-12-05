@@ -12,7 +12,7 @@ namespace EventManager.Data.Models
 
         public string? LastName { get; set; }
 
-        public ProfilePicture ProfilePicture { get; set; } = new() { Url = PictureConstants.DefaultPicture };
+        public ProfilePicture ProfilePicture { get; set; } = new() { Url = PictureConstants.DefaultUserPicture };
 
         public HashSet<Role> Roles { get; set; } = new();
     }
