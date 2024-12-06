@@ -8,6 +8,8 @@ namespace EventManager.Data.Models
     public class Event
     {
         public required Guid Id { get; set; } = Guid.NewGuid();
+        public required User User { get; set; }
+        public Guid UserId { get; set; }
         public required string Name { get; set; }
         public string? Description { get; set; }
         public DateTime StartDateTime { get; set; }

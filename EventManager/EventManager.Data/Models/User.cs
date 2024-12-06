@@ -15,5 +15,7 @@ namespace EventManager.Data.Models
         public ProfilePicture ProfilePicture { get; set; } = new() { Url = PictureConstants.DefaultUserPicture };
 
         public HashSet<Role> Roles { get; set; } = new();
+
+        public HashSet<Event> Events { get; set; } = new();
     }
 }
