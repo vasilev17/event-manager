@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace EventManager.Services.Factories
 {
-    internal class EventServiceFactory : IEventServiceFactory
+    public class EventServiceFactory : IEventServiceFactory
     {
         private readonly IEventRepository _eventRepository;
         private readonly IEventPictureRepository _eventPictureRepository;

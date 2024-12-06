@@ -8,6 +8,7 @@ namespace EventManager.Data.Models.Configurations
         public void Configure(EntityTypeBuilder<EventType> builder)
         {
             builder.HasKey(e => e.Id);
+
         }
     }
 }

@@ -6,11 +6,15 @@ namespace EventManager.Data.Models
     [Table("EventTypes")]
     public class EventType
     {
-        public required Guid Id { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; }
         public string Name { get; set; }
+
+        public EventType() { }
+
+        public EventType(string name) { this.Name = name; }
 
         public HashSet<Event> Events { get; set; } = new();
 
-        public EventType(string name) { this.Name = name; }
+
     }
 }

@@ -7,7 +7,7 @@ namespace EventManager.Data.Models
     [Table("Events")]
     public class Event
     {
-        public required Guid Id { get; set; } = Guid.NewGuid();
+        public required Guid Id { get; set; }
         public required User User { get; set; }
         public Guid UserId { get; set; }
         public required string Name { get; set; }
@@ -18,9 +18,9 @@ namespace EventManager.Data.Models
         public HashSet<EventType> Types { get; set; } = new();
         public string? Webpage { get; set; }
         public required string Address { get; set; }
-        public required bool IsActivity { get; set; } = false;
-        public required bool IsThirdParty { get; set; } = false;
-        public required short Rating { get; set; }
+        public bool IsActivity { get; set; } = false;
+        public bool IsThirdParty { get; set; } = false;
+        public short Rating { get; set; }
 
         //TODO Tickets
     }

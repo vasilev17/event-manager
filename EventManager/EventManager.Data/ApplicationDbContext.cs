@@ -14,6 +14,9 @@ namespace EventManager.Data
         {
             new UserConfigurations().Configure(builder.Entity<User>());
             new EventConfigurations().Configure(builder.Entity<Event>());
+            new EventPictureConfigurations().Configure(builder.Entity<EventPicture>());
+            new EventTypeConfigurations().Configure(builder.Entity<EventType>());
+
             base.OnModelCreating(builder);
         }
 
