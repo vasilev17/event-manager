@@ -28,6 +28,21 @@ namespace EventManager.Services.Decorators.Event
             {
                 throw new ArgumentException(ExceptionConstants.InvalidEventDataInput);
             }
+
+            if ((newEvent.StartDateTime != null || newEvent.EndDateTime != null) && newEvent.IsActivity == true)
+            {
+                throw new ArgumentException(ExceptionConstants.InvalidActivityDateTimes);
+            }
+
+            if ((newEvent.StartDateTime == null || newEvent.EndDateTime == null) && newEvent.IsActivity == false)
+            {
+                throw new ArgumentException(ExceptionConstants.InvalidEventDateTimes);
+            }
+        }
+
+        public Task DeleteEventAsync(Guid eventID)
+        {
+            return _parent.DeleteEventAsync(eventID);
         }
 
     }

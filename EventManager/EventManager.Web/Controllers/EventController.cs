@@ -34,16 +34,21 @@ namespace EventManager.Web.Controllers
         /// <summary>
         /// End point for creating a new event in the platform
         /// </summary>
-        /// <param name="userId">Id of the user</param>
         /// <param name="newEventModel">The model with the data for the new event</param>
         /// <param name="pictureModel">Model with the file data</param>
         /// <param name="authorization">JWT authorization token</param>
         /// <returns>A JWT token for future authentication</returns>
-        [HttpPost("CreateEvent/{userId}")]
+        [HttpPost("CreateEvent")]
         [Authorize(Roles = RoleConstants.Creators)]
-        public async Task<IActionResult> CreateEvent(Guid userId, [FromForm] CreateEventWebModel newEventModel, [FromForm] UploadPictureWebModel pictureModel, [FromHeader] string authorization)
+        public async Task<IActionResult> CreateEvent([FromForm] CreateEventWebModel newEventModel, [FromForm] UploadPictureWebModel pictureModel, [FromHeader] string authorization)
         {
-            var tokenResult = _jwtService.ValidateJwtToken(userId, authorization);
+
+            if (!User.IsInRole(Roles.Admin.ToString()) && newEventModel.IsThirdParty == true)
+            {
+                return Unauthorized(ExceptionConstants.UnauthorizedThirdPartyCreation);
+            }
+
+            var tokenResult = _jwtService.ValidateJwtToken(newEventModel.UserId, authorization);
 
             if (!tokenResult)
                 return Unauthorized(ExceptionConstants.Unauthorized);
@@ -67,9 +72,30 @@ namespace EventManager.Web.Controllers
             }
 
             var newEvent = _mapper.Map<CreateEventServiceModel>(newEventModel);
-            newEvent.UserId = userId;
 
             await _eventService.CreateEventAsync(newEvent, eventPictureServiceModel);
+
+            return Ok();
+        }
+
+
+        /// <summary>
+        /// End point for creating a new event in the platform
+        /// </summary>
+        /// <param name="eventId">Id of the event to be deleted</param>
+        /// <param name="userId">The id of the user deleting the event</param>
+        /// <param name="authorization">JWT authorization token</param>
+        /// <returns>A JWT token for future authentication</returns>
+        [HttpDelete("DeleteEvent/{eventId}")]
+        [Authorize(Roles = RoleConstants.Creators)]
+        public async Task<IActionResult> DeleteEvent(Guid eventId, [FromBody] Guid userId, [FromHeader] string authorization)
+        {
+            var tokenResult = _jwtService.ValidateJwtToken(userId, authorization);
+
+            if (!tokenResult)
+                return Unauthorized(ExceptionConstants.Unauthorized);
+
+            await _eventService.DeleteEventAsync(eventId);
 
             return Ok();
         }

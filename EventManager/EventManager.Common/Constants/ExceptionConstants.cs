@@ -11,6 +11,7 @@
         public const string PasswordMissMatch = "The password and the confirmation do not match";
         public const string InvalidRole = "Invalid role is provided!";
         public const string Unauthorized = "User is unauthorized";
+        public const string UnauthorizedThirdPartyCreation = "Role unauthorized to create third party events/activities!";
 
         //Service Exceptions
         public const string CantSendEmail = "Could not send email!";
@@ -29,9 +30,12 @@
         public const string FailedToUpdateEvent = "Could not update event!";
         public const string FailedToUploadProfilePicture = "Could not upload profile picture!";
         public const string FailedToUploadEventPicture = "Could not upload event picture!";
+        public const string FailedToDeleteEvent = "Could not delete event!";
 
         //Event Validation Exceptions
         public const string InvalidEventDataInput = "The data you have entered seems invalid!";
+        public const string InvalidActivityDateTimes = "Activities can not have start and/or end dates/times!";
+        public const string InvalidEventDateTimes = "Events must have start and end dates/times! If there are no such consider creating an activity.";
 
         //Controller Exceptions
         public const string PictureNotUploaded = "Required field Picture is not uploaded!";

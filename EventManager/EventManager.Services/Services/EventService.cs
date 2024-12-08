@@ -57,6 +57,14 @@ namespace EventManager.Services.Services
             await _eventRepository.AddAsync(newEvent);
         }
 
+        public async Task DeleteEventAsync(Guid eventId)
+        {
+            var result = await _eventRepository.DeleteAsync(eventId);
+
+            if (!result)
+                throw new DatabaseException(ExceptionConstants.FailedToDeleteEvent);
+        }
+
         public async Task UploadEventPictureAsync(EventPictureServiceModel model)
         {
             await SavePicture(model);

@@ -17,5 +17,12 @@ namespace EventManager.Data.Repositories.Interfaces
         /// <returns>True if the user is added correctly</returns>
         Task<bool> AddAsync(Event entity);
 
+        /// <summary>
+        /// Deletes an event from the database
+        /// </summary>
+        /// <param name="eventId">Id of the event to be deleted</param>
+        /// <returns>True if the event is deleted correctly</returns>
+        Task<bool> DeleteAsync(Guid eventId);
+
     }
 }

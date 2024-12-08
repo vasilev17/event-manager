@@ -21,10 +21,12 @@ namespace EventManager.Data.Models.Configurations
                 .HasMaxLength(1000);
 
             builder
-                .Property(b => b.StartDateTime);
+                .Property(b => b.StartDateTime)
+                .IsRequired(false);
 
             builder
-                .Property(b => b.EndDateTime);
+                .Property(b => b.EndDateTime)
+                .IsRequired(false);
 
             builder
                 .HasOne(x => x.EventPicture)

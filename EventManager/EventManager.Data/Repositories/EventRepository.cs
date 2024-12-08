@@ -75,10 +75,9 @@ namespace EventManager.Data.Repositories
             return result;
         }
 
-        public override async Task<bool> DeleteAsync(Event eventToDel)
+        public async Task<bool> DeleteAsync(Guid eventId)
         {
-            var eventInDb = await GetByIdAsync(eventToDel.Id);
-
+            var eventInDb = await GetByIdAsync(eventId);
 
             if (eventInDb == null)
             {

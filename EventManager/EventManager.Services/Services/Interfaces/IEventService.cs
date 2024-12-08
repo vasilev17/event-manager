@@ -18,5 +18,10 @@ namespace EventManager.Services.Services.Interfaces
         /// <param name="createEventServiceModel">Model carying event data</param>
         Task CreateEventAsync(CreateEventServiceModel createEventServiceModel, EventPictureServiceModel pictureModel);
 
+        /// <summary>
+        /// Deletes an event
+        /// </summary>
+        /// <param name="eventId">Id of the event to be deleted</param>
+        Task DeleteEventAsync(Guid eventId);
     }
 }
