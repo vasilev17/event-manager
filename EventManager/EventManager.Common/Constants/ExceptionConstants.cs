@@ -23,12 +23,18 @@
         public const string AlreadyExists = "This {0} already exists!";
         public const string CantAddToRole = "Failed to add user to role!";
         public const string UserNotFound = "User not found!";
+        public const string EventNotFound = "Event not found!";
         public const string FailedToDeleteUser = "Could not delete user!";
         public const string FailedToUpdateUser = "Could not update user!";
+        public const string FailedToUpdateEvent = "Could not update event!";
         public const string FailedToUploadProfilePicture = "Could not upload profile picture!";
+        public const string FailedToUploadEventPicture = "Could not upload event picture!";
 
         //Event Validation Exceptions
         public const string InvalidEventDataInput = "The data you have entered seems invalid!";
+
+        //Controller Exceptions
+        public const string PictureNotUploaded = "Required field Picture is not uploaded!";
 
     }
 }

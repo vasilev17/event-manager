@@ -9,6 +9,8 @@ namespace EventManager.Data.Models.Configurations
         {
             builder.HasKey(e => e.Id);
 
+            builder.HasIndex(e => e.Name)
+                .IsUnique();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using EventManager.Common.Models;
 using EventManager.Services.Models.Event;
+using EventManager.Services.Models.Picture;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace EventManager.Services.Services.Interfaces
         /// Creates an event
         /// </summary>
         /// <param name="createEventServiceModel">Model carying event data</param>
-        Task CreateEventAsync(CreateEventServiceModel createEventServiceModel);
+        Task CreateEventAsync(CreateEventServiceModel createEventServiceModel, EventPictureServiceModel pictureModel);
 
     }
 }
