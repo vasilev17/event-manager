@@ -143,10 +143,8 @@ namespace EventManager.Web.Controllers
             if (!tokenResult)
                 return Unauthorized(ExceptionConstants.Unauthorized);
 
-
             var rating = _mapper.Map<RateEventServiceModel>(ratingModel);
             rating.EventId = eventId;
-
 
             return Ok(await _eventService.RateEventAsync(rating));
         }

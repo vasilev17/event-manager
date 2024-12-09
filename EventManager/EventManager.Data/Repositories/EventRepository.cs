@@ -79,6 +79,21 @@ namespace EventManager.Data.Repositories
 
         public async Task<bool> AddEventRatingAsync(Rating entity)
         {
+
+            //Check if this is an event (and not an activity) and it has started.
+
+            var eventToRate = await GetByIdAsync(entity.EventId);
+
+            if (eventToRate == null) {
+            throw new DatabaseException(ExceptionConstants.EventNotFound);
+            }
+
+
+            if (!eventToRate.IsActivity && DateTime.Now < eventToRate.StartDateTime)
+            {
+                throw new ArgumentException(ExceptionConstants.InvalidRatingTime);
+            }
+
             var existingRating = await DbContext.Ratings
                 .FirstOrDefaultAsync(e => e.UserId == entity.UserId && e.EventId == entity.EventId);
 

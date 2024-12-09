@@ -38,6 +38,7 @@
         public const string InvalidEventDateTimes = "Events must have start and end dates/times! If there are no such consider creating an activity.";
         public const string InvalidRatingValue = "The rating value should be between 0 and 5";
         public const string InvalidRatingValueStep = "The rating value step is 0.5";
+        public const string InvalidRatingTime = "The event must have started in order to be rated!";
 
         //Controller Exceptions
         public const string PictureNotUploaded = "Required field Picture is not uploaded!";
