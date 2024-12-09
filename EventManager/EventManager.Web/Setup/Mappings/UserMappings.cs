@@ -19,6 +19,7 @@ namespace EventManager.Web.Setup.Mappings
 
             CreateMap<UserPasswordResetModel, UserPasswordResetServiceModel>();
             CreateMap<ProfilePicture, PictureServiceModel>();
+            CreateMap<User, GetUserServiceModel>();
 
             CreateMap<RegisterServiceModel, User>()
                 .ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(src => src.Password));

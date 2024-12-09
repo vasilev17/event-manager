@@ -64,6 +64,11 @@ namespace EventManager.Data.Repositories
         #endregion
 
         #region Read
+        public async Task<bool> IsInRoleAsync(User user, string roleName)
+        {
+            return await _userManager.IsInRoleAsync(user, roleName);
+        }
+
         public async Task<User> GetByUserNameAsync(string username)
         {
             return await _userManager.Users

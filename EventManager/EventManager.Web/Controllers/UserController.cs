@@ -57,6 +57,13 @@ namespace EventManager.Web.Controllers
             return Ok(await _userService.LoginAsync(loginServiceModel));
         }
 
+        [HttpGet("GetOrganizerByName")]
+        [Authorize()]
+        public async Task<IActionResult> GetOrganizerByName(GetOrganizerByNameModel model)
+        {
+            return new OkObjectResult(await _userService.GetOrganizerAsync(model.Name));
+        }
+
         /// <summary>
         /// Request a token (via mail) to reset a password
         /// </summary>

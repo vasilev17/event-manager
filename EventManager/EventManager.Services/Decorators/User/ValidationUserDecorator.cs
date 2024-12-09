@@ -139,5 +139,13 @@ namespace EventManager.Services.Decorators.User
         {
             return _parent.DeleteProfilePictureAsync(id);
         }
+
+        public Task<GetUserServiceModel> GetOrganizerAsync(string oganizerName)
+        {
+            if(oganizerName == null)
+                throw new ArgumentException(ExceptionConstants.AllPropertiesRequiered);
+
+            return _parent.GetOrganizerAsync(oganizerName);
+        }
     }
 }

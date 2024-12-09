@@ -62,5 +62,13 @@ namespace EventManager.Data.Repositories.Interfaces
         /// </summary>
         /// <param name="id">user id</param>
         Task<bool> DeleteAsync(Guid id);
+
+        /// <summary>
+        /// Checks if the user is in the given role
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="roleName"></param>
+        /// <returns></returns>
+        Task<bool> IsInRoleAsync(User user, string roleName);
     }
 }

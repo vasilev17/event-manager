@@ -59,6 +59,21 @@ namespace EventManager.Services.Services
             return new TokenModel(_jwtService.GenerateJwtToken(createdUser.Id, createdUser.UserName!, roleNames!));
         }
 
+        public async Task<GetUserServiceModel> GetOrganizerAsync(string oganizerName)
+        {
+            var user = await _userRepository.GetByUserNameAsync(oganizerName);
+
+            if (user == null)
+                throw new DatabaseException(ExceptionConstants.UserNotFound);
+
+            var isOrganizer = await _userRepository.IsInRoleAsync(user, Roles.Organizer.ToString());
+
+            if(!isOrganizer)
+                throw new DatabaseException(ExceptionConstants.UserNotFound);
+
+            return _mapper.Map<GetUserServiceModel>(user);
+        }
+
         public async Task SendResendPasswordAsync(ResetPasswordServiceModel resetPasswordServiceModel)
         {
             var passwordModel = await _userRepository.GeneratePasswordTokenModelAsync(resetPasswordServiceModel.Email);

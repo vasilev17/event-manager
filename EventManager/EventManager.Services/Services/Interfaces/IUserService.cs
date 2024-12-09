@@ -21,6 +21,13 @@ namespace EventManager.Services.Services.Interfaces
         Task<TokenModel> RegisterAsync(RegisterServiceModel user);
 
         /// <summary>
+        /// Gets an organizator by name
+        /// </summary>
+        /// <param name="organizatorName">The name of the orgnizator</param>
+        /// <returns>The organizator</returns>
+        Task<GetUserServiceModel> GetOrganizerAsync(string oganizerName);
+
+        /// <summary>
         /// Generates password token for a user and sends him an email with it
         /// </summary>
         /// <param name="resetPasswordServiceModel">The model carying the data</param>
