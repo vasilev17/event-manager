@@ -57,18 +57,17 @@ namespace EventManager.Data.Repositories
             return true;
         }
 
-
         public override async Task<Event> GetByIdAsync(Guid id)
         {
             var searchedEvent = await base.GetByIdAsync(id);
 
             if (searchedEvent == null)
-                throw new ArgumentException(ExceptionConstants.EventNotFound);
+                throw new DatabaseException(ExceptionConstants.EventNotFound);
 
             return searchedEvent;
         }
 
-        public async Task<List<Event>> GetAllEvents()
+        public async Task<List<Event>> GetAllEventsAsync()
         {
             var events = await DbContext.Events
                 .Include(e => e.User)
@@ -76,6 +75,53 @@ namespace EventManager.Data.Repositories
                 .ToListAsync();
 
             return events;
+        }
+
+        public async Task<bool> AddEventRatingAsync(Rating entity)
+        {
+            var existingRating = await DbContext.Ratings
+                .FirstOrDefaultAsync(e => e.UserId == entity.UserId && e.EventId == entity.EventId);
+
+            if (existingRating != null)
+            {
+                throw new CreationDatabaseException(string.Format(ExceptionConstants.AlreadyExists, "rating"));
+            }
+
+            // Add the new Rating to the context
+            DbContext.Ratings.Add(entity);
+            var result = await DbContext.SaveChangesAsync();
+
+            if (result <= 0)
+            {
+                throw new CreationDatabaseException(string.Format(ExceptionConstants.CanNotCreate, "rating"));
+            }
+
+            return true;
+        }
+
+        public async Task<float> UpdateEventAverageRatingAsync(Guid eventId)
+        {
+
+            var eventEntity = await DbContext.Events
+                                    .Include(e => e.Ratings)
+                                    .FirstOrDefaultAsync(e => e.Id == eventId);
+
+            if (eventEntity == null)
+            {
+                throw new DatabaseException(ExceptionConstants.EventNotFound);
+            }
+
+            float avgRating = 0f;
+
+            if (eventEntity.Ratings.Any())
+            {
+                avgRating = eventEntity.Ratings.Average(r => r.RatingValue);
+            }
+
+            eventEntity.AverageRating = avgRating;
+            await DbContext.SaveChangesAsync();
+
+            return avgRating;
         }
 
         public override async Task<bool> EditAsync(Guid id, Event newEntity)
@@ -92,14 +138,12 @@ namespace EventManager.Data.Repositories
 
             if (eventInDb == null)
             {
-                throw new ArgumentException(ExceptionConstants.EventNotFound);
+                throw new DatabaseException(ExceptionConstants.EventNotFound);
             }
 
             return await base.DeleteAsync(eventInDb);
 
         }
-
-
 
     }
 }

@@ -20,7 +20,8 @@ namespace EventManager.Data.Models
         public required string Address { get; set; }
         public bool IsActivity { get; set; } = false;
         public bool IsThirdParty { get; set; } = false;
-        public short Rating { get; set; } = 0;
+        public List<Rating> Ratings { get; set; } = new();
+        public float AverageRating { get; set; } = 0f;
 
         //TODO Tickets
     }

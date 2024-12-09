@@ -46,15 +46,34 @@ namespace EventManager.Services.Decorators.Event
             return _parent.DeleteEventAsync(eventID);
         }
 
-        public Task<List<Data.Models.Event>> GetFilteredEvents(EventFilterServiceModel filter)
+        public Task<List<Data.Models.Event>> GetFilteredEventsAsync(EventFilterServiceModel filter)
         {
-            return _parent.GetFilteredEvents(filter);
+            return _parent.GetFilteredEventsAsync(filter);
         }
 
-        public Task<Data.Models.Event> GetEvent(Guid eventID)
+        public Task<Data.Models.Event> GetEventAsync(Guid eventID)
         {
-            return _parent.GetEvent(eventID);
+            return _parent.GetEventAsync(eventID);
         }
 
+        public Task<float> RateEventAsync(RateEventServiceModel ratingModel)
+        {
+            ValidateRateEventModel(ratingModel);
+            return _parent.RateEventAsync(ratingModel);
+
+        }
+
+        public void ValidateRateEventModel(RateEventServiceModel ratingModel)
+        {
+            if (ratingModel.RatingValue < 0 || ratingModel.RatingValue > 5)
+            {
+                throw new ArgumentException(ExceptionConstants.InvalidRatingValue);
+            }
+
+            if (ratingModel.RatingValue % 0.5 != 0)
+            {
+                throw new ArgumentException(ExceptionConstants.InvalidRatingValueStep);
+            }
+        }
     }
 }

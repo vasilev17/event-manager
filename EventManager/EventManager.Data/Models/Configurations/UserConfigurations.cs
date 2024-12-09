@@ -33,6 +33,11 @@ namespace EventManager.Data.Models.Configurations
                 .HasMany(x => x.Events)
                 .WithOne(x => x.User)
                 .HasForeignKey(x => x.UserId);
+
+            builder
+                .HasMany(x => x.EventRatings)
+                .WithOne(x => x.User)
+                .HasForeignKey(x => x.UserId);
         }
     }
 }

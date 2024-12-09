@@ -27,5 +27,7 @@ namespace EventManager.Data
         public DbSet<EventPicture> EventPictures { get; set; }
 
         public DbSet<Event> Events { get; set; }
+
+        public DbSet<Rating> Ratings { get; set; }
     }
 }

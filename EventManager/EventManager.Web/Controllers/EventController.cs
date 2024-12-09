@@ -37,7 +37,7 @@ namespace EventManager.Web.Controllers
         /// <param name="newEventModel">The model with the data for the new event</param>
         /// <param name="pictureModel">Model with the file data</param>
         /// <param name="authorization">JWT authorization token</param>
-        /// <returns>A JWT token for future authentication</returns>
+        /// <returns>Action result status</returns>
         [HttpPost("CreateEvent")]
         [Authorize(Roles = RoleConstants.Creators)]
         public async Task<IActionResult> CreateEvent([FromForm] CreateEventWebModel newEventModel, [FromForm] UploadPictureWebModel pictureModel, [FromHeader] string authorization)
@@ -85,7 +85,7 @@ namespace EventManager.Web.Controllers
         /// <param name="eventId">Id of the event to be deleted</param>
         /// <param name="userId">The id of the user deleting the event</param>
         /// <param name="authorization">JWT authorization token</param>
-        /// <returns>A JWT token for future authentication</returns>
+        /// <returns>Action result status</returns>
         [HttpDelete("DeleteEvent/{eventId}")]
         [Authorize(Roles = RoleConstants.Creators)]
         public async Task<IActionResult> DeleteEvent(Guid eventId, [FromBody] Guid userId, [FromHeader] string authorization)
@@ -104,23 +104,51 @@ namespace EventManager.Web.Controllers
         /// Endpoint for getting events
         /// </summary>
         /// <param name="filter">Model containing filters to be applied</param>
+        /// <returns>Filtered list of events</returns>
         [HttpGet("GetFilteredEvents")]
         [AllowAnonymous]
         public async Task<IActionResult> GetFilteredEvents([FromQuery] EventFilterWebModel filter)
         {
             var filterServiceModel = _mapper.Map<EventFilterServiceModel>(filter);
 
-            return Ok(await _eventService.GetFilteredEvents(filterServiceModel));
+            return Ok(await _eventService.GetFilteredEventsAsync(filterServiceModel));
         }
 
         /// <summary>
         /// Endpoint for getting a single event by Id
         /// </summary>
+        /// /// <param name="eventId">Id of the event to be retrieved</param>
+        /// <returns>Event object</returns>
         [HttpGet("GetEvent/{eventId}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetEvent(Guid eventId)
         {
-            return Ok(await _eventService.GetEvent(eventId));
+            return Ok(await _eventService.GetEventAsync(eventId));
+        }
+
+        /// <summary>
+        /// End point for creating a new event in the platform
+        /// </summary>
+        /// <param name="eventId">Id of the event to be rated</param>
+        /// <param name="ratingModel">Model containing rating and user data</param>
+        /// <param name="authorization">JWT authorization token</param>
+        /// <returns>New Event Average Rating</returns>
+        [HttpPost("RateEvent/{eventId}")]
+        [Authorize()]
+        public async Task<IActionResult> RateEvent(Guid eventId, [FromBody] RateEventWebModel ratingModel, [FromHeader] string authorization)
+        {
+
+            var tokenResult = _jwtService.ValidateJwtToken(ratingModel.UserId, authorization);
+
+            if (!tokenResult)
+                return Unauthorized(ExceptionConstants.Unauthorized);
+
+
+            var rating = _mapper.Map<RateEventServiceModel>(ratingModel);
+            rating.EventId = eventId;
+
+
+            return Ok(await _eventService.RateEventAsync(rating));
         }
 
     }

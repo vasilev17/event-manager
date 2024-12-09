@@ -66,9 +66,9 @@ namespace EventManager.Services.Services
                 throw new DatabaseException(ExceptionConstants.FailedToDeleteEvent);
         }
 
-        public async Task<List<Event>> GetFilteredEvents(EventFilterServiceModel filter)
+        public async Task<List<Event>> GetFilteredEventsAsync(EventFilterServiceModel filter)
         {
-            var events = await _eventRepository.GetAllEvents();
+            var events = await _eventRepository.GetAllEventsAsync();
 
             //if (filter.MinPrice.HasValue)
             //{
@@ -109,9 +109,24 @@ namespace EventManager.Services.Services
             return events;
         }
 
-        public async Task<Event> GetEvent(Guid eventId)
+        public async Task<Event> GetEventAsync(Guid eventId)
         {
             return await _eventRepository.GetByIdAsync(eventId);
+        }
+
+        public async Task<float> RateEventAsync(RateEventServiceModel ratingModel)
+        {
+            var rating = _mapper.Map<Rating>(ratingModel);
+
+            var savedRating = await _eventRepository.AddEventRatingAsync(rating);
+
+            if (!savedRating)
+            {
+                throw new DatabaseException(string.Format(ExceptionConstants.CanNotCreate, "rating"));
+            }
+
+            return await _eventRepository.UpdateEventAverageRatingAsync(rating.EventId);
+
         }
 
         public async Task UploadEventPictureAsync(EventPictureServiceModel model)

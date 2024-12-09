@@ -34,8 +34,8 @@ namespace EventManager.Data.Models.Configurations
                 .HasForeignKey<EventPicture>(x => x.EventId);
 
             builder
-                .HasMany(x => x.Types)
-                .WithMany(x => x.Events);
+                .HasMany(b => b.Types)
+                .WithMany(b => b.Events);
 
             builder
                 .Property(b => b.Webpage)
@@ -55,8 +55,9 @@ namespace EventManager.Data.Models.Configurations
                 .IsRequired();
 
             builder
-                .Property(b => b.Rating)
-                .IsRequired();
+                .HasMany(b => b.Ratings)
+                .WithOne(b => b.Event)
+                .HasForeignKey(b => b.EventId);
 
         }
     }

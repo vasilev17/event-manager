@@ -30,12 +30,20 @@ namespace EventManager.Services.Services.Interfaces
         /// </summary>
         /// <param name="filter">Model carying the filters to be applied</param>
         /// <returns>List of filtered events</returns>
-        Task<List<Event>> GetFilteredEvents(EventFilterServiceModel filter);
+        Task<List<Event>> GetFilteredEventsAsync(EventFilterServiceModel filter);
 
         /// <summary>
         /// Gets event based on the Id provided
         /// </summary>
         /// <returns>Single Event object</returns>
-        Task<Event> GetEvent(Guid eventId);
+        Task<Event> GetEventAsync(Guid eventId);
+
+        /// <summary>
+        /// Creates a new event rating in the database
+        /// </summary>
+        /// <returns>The new event average rating</returns>
+        Task<float> RateEventAsync(RateEventServiceModel ratingModel);
+
+        
     }
 }

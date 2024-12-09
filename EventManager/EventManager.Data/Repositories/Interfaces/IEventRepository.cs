@@ -28,7 +28,19 @@ namespace EventManager.Data.Repositories.Interfaces
         /// Gets all events from the database
         /// </summary>
         /// <returns>List containing all events</returns>
-        Task<List<Event>> GetAllEvents();
+        Task<List<Event>> GetAllEventsAsync();
+
+        /// <summary>
+        /// Adds a rating to the database
+        /// </summary>
+        /// <returns>True if the rating is added correctly</returns>
+        Task<bool> AddEventRatingAsync(Rating entity);
+
+        /// <summary>
+        /// Updates the average rating of an event
+        /// </summary>
+        /// <returns>The new average rating</returns>
+        Task<float> UpdateEventAverageRatingAsync(Guid eventId);
 
     }
 }
