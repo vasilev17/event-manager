@@ -10,5 +10,6 @@
     public static class RoleConstants
     {
         public const Roles DefaultRole = Roles.User;
+        public const string Creators = "Organizer, Admin";
     }
 }

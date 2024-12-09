@@ -4,6 +4,7 @@ using EventManager.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241206222934_AddEventTables")]
+    partial class AddEventTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,14 +51,11 @@ namespace EventManager.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<float>("AverageRating")
-                        .HasColumnType("float");
-
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
                         .HasColumnType("varchar(1000)");
 
-                    b.Property<DateTime?>("EndDateTime")
+                    b.Property<DateTime>("EndDateTime")
                         .HasColumnType("datetime(6)");
 
                     b.Property<bool>("IsActivity")
@@ -69,7 +69,10 @@ namespace EventManager.Data.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
-                    b.Property<DateTime?>("StartDateTime")
+                    b.Property<short>("Rating")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("StartDateTime")
                         .HasColumnType("datetime(6)");
 
                     b.Property<Guid>("UserId")
@@ -94,12 +97,9 @@ namespace EventManager.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
 
                     b.ToTable("EventTypes");
                 });
@@ -154,30 +154,6 @@ namespace EventManager.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("ProfilePictures");
-                });
-
-            modelBuilder.Entity("EventManager.Data.Models.Rating", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("EventId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<float>("RatingValue")
-                        .HasColumnType("float");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Ratings");
                 });
 
             modelBuilder.Entity("EventManager.Data.Models.Role", b =>
@@ -449,25 +425,6 @@ namespace EventManager.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("EventManager.Data.Models.Rating", b =>
-                {
-                    b.HasOne("EventManager.Data.Models.Event", "Event")
-                        .WithMany("Ratings")
-                        .HasForeignKey("EventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EventManager.Data.Models.User", "User")
-                        .WithMany("EventRatings")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Event");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("EventManager.Data.Models.Role", null)
@@ -538,14 +495,10 @@ namespace EventManager.Data.Migrations
                 {
                     b.Navigation("EventPicture")
                         .IsRequired();
-
-                    b.Navigation("Ratings");
                 });
 
             modelBuilder.Entity("EventManager.Data.Models.User", b =>
                 {
-                    b.Navigation("EventRatings");
-
                     b.Navigation("Events");
 
                     b.Navigation("ProfilePicture")

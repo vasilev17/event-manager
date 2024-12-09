@@ -13,12 +13,21 @@ namespace EventManager.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             new UserConfigurations().Configure(builder.Entity<User>());
+            new EventConfigurations().Configure(builder.Entity<Event>());
+            new EventPictureConfigurations().Configure(builder.Entity<EventPicture>());
+            new EventTypeConfigurations().Configure(builder.Entity<EventType>());
 
             base.OnModelCreating(builder);
         }
 
-        public DbSet<Tag> Tags { get; set; }
+        public DbSet<EventType> Types { get; set; }
 
         public DbSet<ProfilePicture> ProfilePictures { get; set; }
+
+        public DbSet<EventPicture> EventPictures { get; set; }
+
+        public DbSet<Event> Events { get; set; }
+
+        public DbSet<Rating> Ratings { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace EventManager.Data.Models.Configurations
                 .Property(b => b.FirstName)
                 .IsRequired();
 
-            builder 
+            builder
                 .Property(b => b.LastName)
                 .IsRequired();
 
@@ -28,6 +28,16 @@ namespace EventManager.Data.Models.Configurations
                 .HasOne(x => x.ProfilePicture)
                 .WithOne(x => x.User)
                 .HasForeignKey<ProfilePicture>(x => x.UserId);
+
+            builder
+                .HasMany(x => x.Events)
+                .WithOne(x => x.User)
+                .HasForeignKey(x => x.UserId);
+
+            builder
+                .HasMany(x => x.EventRatings)
+                .WithOne(x => x.User)
+                .HasForeignKey(x => x.UserId);
         }
     }
 }
