@@ -113,7 +113,15 @@ namespace EventManager.Web.Controllers
             return Ok(await _eventService.GetFilteredEvents(filterServiceModel));
         }
 
-        
+        /// <summary>
+        /// Endpoint for getting a single event by Id
+        /// </summary>
+        [HttpGet("GetEvent/{eventId}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetEvent(Guid eventId)
+        {
+            return Ok(await _eventService.GetEvent(eventId));
+        }
 
     }
 }
