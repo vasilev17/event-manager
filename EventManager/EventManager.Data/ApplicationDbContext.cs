@@ -1,5 +1,6 @@
 ﻿using EventManager.Data.Models;
 using EventManager.Data.Models.Configurations;
+using EventManager.Data.Models.Picture;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,5 +18,7 @@ namespace EventManager.Data
         }
 
         public DbSet<Tag> Tags { get; set; }
+
+        public DbSet<ProfilePicture> ProfilePictures { get; set; }
     }
 }

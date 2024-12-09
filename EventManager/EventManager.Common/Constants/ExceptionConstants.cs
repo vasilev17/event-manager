@@ -16,6 +16,7 @@
         public const string CantSendEmail = "Could not send email!";
         public const string PasswordToken = "Failed to generate password token!";
         public const string FailedToRestorePassword = "Failed to reset the password!";
+        public const string CloudinaryError = "Cloudinary error: \"{0}\"";
 
         //Database exceptions
         public const string CanNotCreate = "Can not create {0}!";
@@ -23,5 +24,6 @@
         public const string UserNotFound = "User not found!";
         public const string FailedToDeleteUser = "Could not delete user!";
         public const string FailedToUpdateUser = "Could not update user!";
+        public const string FailedToUploadProfilePicture = "Could not upload profile picture!";
     }
 }

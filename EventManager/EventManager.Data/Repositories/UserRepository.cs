@@ -157,7 +157,14 @@ namespace EventManager.Data.Repositories
             var result = await _userManager.DeleteAsync(user);
         }
 
-        public override async Task<bool> DeleteAsync(Guid id)
+        public override async Task<bool> DeleteAsync(User user)
+        {
+            var result = await _userManager.DeleteAsync(user);
+
+            return result.Succeeded;
+        }
+
+        public async Task<bool> DeleteAsync(Guid id)
         {
             var user = await GetByIdAsync(id);
 

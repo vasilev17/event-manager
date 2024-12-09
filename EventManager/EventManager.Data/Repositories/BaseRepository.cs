@@ -5,14 +5,14 @@ namespace EventManager.Data.Repositories
 {
     public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
     {
-        private readonly DbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public BaseRepository(DbContext context)
+        public BaseRepository(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        protected DbContext DbContext { get { return _context; } }
+        protected ApplicationDbContext DbContext { get { return _context; } }
 
         public async virtual Task<bool> AddAsync(TEntity entity)
         {
@@ -21,19 +21,29 @@ namespace EventManager.Data.Repositories
             return await SaveChangesAsync();
         }
 
-        public virtual Task<bool> DeleteAsync(Guid entity)
+        public async virtual Task<bool> DeleteAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            this._context.Remove(entity);
+
+            return await this.SaveChangesAsync();
         }
 
-        public virtual Task<bool> EditAsync(Guid id, TEntity newEntity)
+        public async virtual Task<bool> EditAsync(Guid id, TEntity newEntity)
         {
-            throw new NotImplementedException();
+            var entry = this._context.Entry(newEntity);
+            if (entry.State == EntityState.Detached)
+                this._context.Attach(newEntity);
+
+            entry.State = EntityState.Modified;
+
+            return await this.SaveChangesAsync();
         }
 
-        public virtual Task<TEntity> GetByIdAsync(Guid id)
+        public async virtual Task<TEntity> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await this._context
+                .Set<TEntity>()
+                .FindAsync(id);
         }
 
         public virtual async Task<bool> SaveChangesAsync()

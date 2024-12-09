@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using EventManager.Common.Constants;
+using EventManager.Data.Models.Picture;
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EventManager.Data.Models
@@ -10,7 +12,7 @@ namespace EventManager.Data.Models
 
         public string? LastName { get; set; }
 
-        public string? PictureURL { get; set; }
+        public ProfilePicture ProfilePicture { get; set; } = new() { Url = PictureConstants.DefaultPicture };
 
         public HashSet<Role> Roles { get; set; } = new();
     }

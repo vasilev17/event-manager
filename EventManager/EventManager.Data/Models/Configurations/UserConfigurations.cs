@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EventManager.Data.Models.Picture;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EventManager.Data.Models.Configurations
@@ -22,6 +23,11 @@ namespace EventManager.Data.Models.Configurations
             builder
                 .HasMany(x => x.Roles)
                 .WithMany(x => x.Users);
+
+            builder
+                .HasOne(x => x.ProfilePicture)
+                .WithOne(x => x.User)
+                .HasForeignKey<ProfilePicture>(x => x.UserId);
         }
     }
 }
