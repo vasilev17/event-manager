@@ -124,7 +124,7 @@ namespace EventManager.Web.Controllers
         {
             var tokenResult = _jwtService.ValidateJwtToken(id, authorization);
 
-            if(!tokenResult)
+            if (!tokenResult)
                 return Unauthorized(ExceptionConstants.Unauthorized);
 
             await _userService.DeleteUserAsync(id);
@@ -164,8 +164,13 @@ namespace EventManager.Web.Controllers
         /// <returns></returns>
         [HttpPut("UploadPicture/{id}")]
         [Authorize()]
-        public async Task<IActionResult> UpdateProfilePicture(Guid id, [FromForm] UploadProfilePictureWebModel model, [FromHeader] string authorization)
+        public async Task<IActionResult> UpdateProfilePicture(Guid id, [FromForm] UploadPictureWebModel model, [FromHeader] string authorization)
         {
+            if (model.Picture == null)
+            {
+                throw new InvalidDataException(ExceptionConstants.PictureNotUploaded);
+            }
+
             var tokenResult = _jwtService.ValidateJwtToken(id, authorization);
 
             if (!tokenResult)

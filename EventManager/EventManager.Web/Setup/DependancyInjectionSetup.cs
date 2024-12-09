@@ -37,6 +37,10 @@ namespace EventManager.Web.Setup
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IProfilePictureRepository, ProfilePictureRepository>();
+            services.AddScoped<IEventServiceFactory, EventServiceFactory>();
+            services.AddScoped<IEventRepository, EventRepository>();
+            services.AddScoped<IEventService, EventService>();
+            services.AddScoped<IEventPictureRepository, EventPictureRepository>();
 
             services.AddSingleton<IJwtService, JwtService>(options =>
             new JwtService(

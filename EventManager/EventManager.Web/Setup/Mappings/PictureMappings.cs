@@ -10,7 +10,7 @@ namespace EventManager.Web.Setup.Mappings
         public PictureMappings()
         {
             CreateMap<ProfilePicture, PictureServiceModel>();
-            CreateMap<UploadProfilePictureWebModel, UploadPictureServiceModel>();
+            CreateMap<UploadPictureWebModel, UploadPictureServiceModel>();
         }
     }
 }

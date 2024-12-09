@@ -14,6 +14,8 @@ namespace EventManager.Web.Setup
                 {
                     // Add all profiles manually
                     cfg.AddProfile<UserMappings>();
+                    cfg.AddProfile<PictureMappings>();
+                    cfg.AddProfile<EventMappings>();
                 });
 
                 // Create and return the mapper

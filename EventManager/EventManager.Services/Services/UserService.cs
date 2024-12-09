@@ -115,7 +115,7 @@ namespace EventManager.Services.Services
             var result = await _userRepository.EditAsync(id, user);
 
             if (!result)
-                throw new DatabaseException(ExceptionConstants.FailedToDeleteUser);
+                throw new DatabaseException(ExceptionConstants.FailedToUpdateUser);
         }
 
         public async Task UploadProfilePictureAsync(ProfilePictureServiceModel model)
@@ -171,7 +171,7 @@ namespace EventManager.Services.Services
             var result = await _userRepository.DeleteAsync(id);
 
             if (!result)
-                throw new DatabaseException(ExceptionConstants.FailedToUpdateUser);
+                throw new DatabaseException(ExceptionConstants.FailedToDeleteUser);
         }
 
         public async Task DeleteProfilePictureAsync(Guid id)
@@ -189,7 +189,7 @@ namespace EventManager.Services.Services
             var user = await _userRepository.GetByIdAsync(id);
             user.ProfilePicture = new ProfilePicture
             {
-                Url = PictureConstants.DefaultPicture
+                Url = PictureConstants.DefaultUserPicture
             };
 
             await _userRepository.EditAsync(id, user);
