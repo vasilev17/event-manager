@@ -2,6 +2,7 @@
 using EventManager.Data.Models.Picture;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace EventManager.Data.Models
 {
@@ -16,6 +17,7 @@ namespace EventManager.Data.Models
 
         public HashSet<Role> Roles { get; set; } = new();
 
+        [JsonIgnore]
         public HashSet<Event> Events { get; set; } = new();
     }
 }

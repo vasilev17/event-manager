@@ -4,6 +4,7 @@ using EventManager.Data.Models;
 using EventManager.Data.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata.Ecma335;
 
 namespace EventManager.Data.Repositories
 {
@@ -65,6 +66,16 @@ namespace EventManager.Data.Repositories
                 throw new ArgumentException(ExceptionConstants.EventNotFound);
 
             return searchedEvent;
+        }
+
+        public async Task<List<Event>> GetAllEvents()
+        {
+            var events = await DbContext.Events
+                .Include(e => e.User)
+                .Include(e => e.Types)
+                .ToListAsync();
+
+            return events;
         }
 
         public override async Task<bool> EditAsync(Guid id, Event newEntity)

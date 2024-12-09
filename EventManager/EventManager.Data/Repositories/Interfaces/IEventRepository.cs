@@ -24,5 +24,11 @@ namespace EventManager.Data.Repositories.Interfaces
         /// <returns>True if the event is deleted correctly</returns>
         Task<bool> DeleteAsync(Guid eventId);
 
+        /// <summary>
+        /// Gets all events from the database
+        /// </summary>
+        /// <returns>List containing all events</returns>
+        Task<List<Event>> GetAllEvents();
+
     }
 }

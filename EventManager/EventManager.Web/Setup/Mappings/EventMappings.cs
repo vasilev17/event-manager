@@ -12,10 +12,9 @@ namespace EventManager.Web.Setup.Mappings
     {
         public EventMappings()
         {
-            //   CreateMap<CreateEventWebModel, CreateEventServiceModel>();
 
             CreateMap<CreateEventWebModel, CreateEventServiceModel>();
-
+            CreateMap<EventFilterWebModel, EventFilterServiceModel>();
 
             CreateMap<CreateEventServiceModel, Event>()
                 .ForMember(dest => dest.Types, opt => opt.MapFrom(src => src.Types.Select(t => new EventType(t.ToString())).ToHashSet()));

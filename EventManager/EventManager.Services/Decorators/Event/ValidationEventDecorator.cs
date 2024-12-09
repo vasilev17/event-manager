@@ -1,4 +1,5 @@
 ﻿using EventManager.Common.Constants;
+using EventManager.Data.Models;
 using EventManager.Services.Models.Event;
 using EventManager.Services.Models.Picture;
 using EventManager.Services.Services.Interfaces;
@@ -43,6 +44,16 @@ namespace EventManager.Services.Decorators.Event
         public Task DeleteEventAsync(Guid eventID)
         {
             return _parent.DeleteEventAsync(eventID);
+        }
+
+        public Task<List<Data.Models.Event>> GetFilteredEvents(EventFilterServiceModel filter)
+        {
+            return _parent.GetFilteredEvents(filter);
+        }
+
+        public Task<Data.Models.Event> GetEvent(Guid eventID)
+        {
+            return _parent.GetEvent(eventID);
         }
 
     }

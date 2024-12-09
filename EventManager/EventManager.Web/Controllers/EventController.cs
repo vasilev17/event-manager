@@ -100,7 +100,20 @@ namespace EventManager.Web.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Endpoint for getting events
+        /// </summary>
+        /// <param name="filter">Model containing filters to be applied</param>
+        [HttpGet("GetFilteredEvents")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetFilteredEvents([FromQuery] EventFilterWebModel filter)
+        {
+            var filterServiceModel = _mapper.Map<EventFilterServiceModel>(filter);
 
+            return Ok(await _eventService.GetFilteredEvents(filterServiceModel));
+        }
+
+        
 
     }
 }

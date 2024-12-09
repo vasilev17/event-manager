@@ -9,6 +9,7 @@ using EventManager.Data.Repositories.Interfaces;
 using EventManager.Services.Models.Event;
 using EventManager.Services.Models.Picture;
 using EventManager.Services.Services.Interfaces;
+using Microsoft.IdentityModel.Tokens;
 
 namespace EventManager.Services.Services
 {
@@ -63,6 +64,54 @@ namespace EventManager.Services.Services
 
             if (!result)
                 throw new DatabaseException(ExceptionConstants.FailedToDeleteEvent);
+        }
+
+        public async Task<List<Event>> GetFilteredEvents(EventFilterServiceModel filter)
+        {
+            var events = await _eventRepository.GetAllEvents();
+
+            //if (filter.MinPrice.HasValue)
+            //{
+            //    events = events.Where(e => e.Price >= filter.MinPrice.Value).ToList();
+            //}
+
+            //if (filter.MaxPrice.HasValue)
+            //{
+            //    events = events.Where(e => e.Price <= filter.MaxPrice.Value).ToList();
+            //}
+
+            if (filter.StartDateTime.HasValue)
+            {
+                events = events.Where(e => e.StartDateTime >= filter.StartDateTime.Value).ToList();
+            }
+
+            if (filter.EndDateTime.HasValue)
+            {
+                events = events.Where(e => e.EndDateTime <= filter.EndDateTime.Value).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(filter.Address))
+            {
+                events = events.Where(e => e.Address.Contains(filter.Address, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(filter.Username))
+            {
+                events = events.Where(e => e.User != null && e.User.UserName == filter.Username).ToList();
+            }
+
+            if (filter.EventTypes != null && filter.EventTypes.Any())
+            {
+                var eventTypeNames = filter.EventTypes.Select(et => et.ToString()).ToHashSet();
+                events = events.Where(e => e.Types.Any(t => eventTypeNames.Contains(t.Name))).ToList();
+            }
+
+            return events;
+        }
+
+        public async Task<Event> GetEvent(Guid eventId)
+        {
+            return await _eventRepository.GetByIdAsync(eventId);
         }
 
         public async Task UploadEventPictureAsync(EventPictureServiceModel model)

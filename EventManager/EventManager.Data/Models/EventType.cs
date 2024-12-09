@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace EventManager.Data.Models
 {
@@ -13,6 +14,7 @@ namespace EventManager.Data.Models
 
         public EventType(string name) { this.Name = name; }
 
+        [JsonIgnore]
         public HashSet<Event> Events { get; set; } = new();
 
 
