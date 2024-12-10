@@ -8,7 +8,6 @@ namespace EventManager.Web.Models.Event
     public class CreateEventWebModel
     {
         public required string Name { get; set; }
-        public required Guid UserId { get; set; }
         public string? Description { get; set; }
         public DateTime? StartDateTime { get; set; }
         public DateTime? EndDateTime { get; set; }

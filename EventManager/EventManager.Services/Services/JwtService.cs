@@ -54,35 +54,15 @@ namespace EventManager.Services.Services
             return tokenHandler.WriteToken(token);
         }
 
-        public bool ValidateJwtToken(Guid userId, string token)
+        public Guid GetId(string token)
         {
             token = token.Substring("Bearer ".Length);
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var validationParameters = GetValidationParameters();
 
             JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(token);
 
-            IPrincipal principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
-            if (principal.Identity == null || !principal.Identity.IsAuthenticated)
-                return false;
-            else if (jwtToken.Claims.FirstOrDefault(x => x.Type == Id).Value != userId.ToString())
-                return false;
-            
-            return true;
-        }
-
-        private TokenValidationParameters GetValidationParameters()
-        {
-            return new TokenValidationParameters()
-            {
-                ValidateLifetime = true,
-                ValidateAudience = true,
-                ValidateIssuer = true,
-                ValidIssuer = _issuer,
-                ValidAudience = _audience,
-                IssuerSigningKey = new SymmetricSecurityKey(this._signingKey)
-            };
+            return new Guid(jwtToken.Claims.FirstOrDefault(x => x.Type == Id).Value);
         }
     }
 }

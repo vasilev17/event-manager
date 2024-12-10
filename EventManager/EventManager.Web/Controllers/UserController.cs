@@ -118,16 +118,11 @@ namespace EventManager.Web.Controllers
         /// <param name="id">Id of the user to be deleted</param>
         /// <param name="authorization">The token of the user</param>
         /// <returns>Ok result after deleting the user</returns>
-        [HttpDelete("Delete/{id}")]
+        [HttpDelete("Delete")]
         [Authorize()]
-        public async Task<IActionResult> Delete(Guid id, [FromHeader] string authorization)
+        public async Task<IActionResult> Delete([FromHeader] string authorization)
         {
-            var tokenResult = _jwtService.ValidateJwtToken(id, authorization);
-
-            if (!tokenResult)
-                return Unauthorized(ExceptionConstants.Unauthorized);
-
-            await _userService.DeleteUserAsync(id);
+            await _userService.DeleteUserAsync(_jwtService.GetId(authorization));
 
             return Ok();
         }
@@ -139,18 +134,13 @@ namespace EventManager.Web.Controllers
         /// <param name="updateModel">The model. It's params can be null, in that case old once will be kept</param>
         /// <param name="authorization">User's token</param>
         /// <returns>Ok result</returns>
-        [HttpPut("Update/{id}")]
+        [HttpPut("Update")]
         [Authorize()]
-        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserWebModel updateModel, [FromHeader] string authorization)
+        public async Task<IActionResult> Update([FromBody] UpdateUserWebModel updateModel, [FromHeader] string authorization)
         {
-            var tokenResult = _jwtService.ValidateJwtToken(id, authorization);
-
-            if (!tokenResult)
-                return Unauthorized(ExceptionConstants.Unauthorized);
-
             var serviceModel = _mapper.Map<UpdateUserServiceModel>(updateModel);
 
-            await _userService.UpdateUserAsync(id, serviceModel);
+            await _userService.UpdateUserAsync(_jwtService.GetId(authorization), serviceModel);
 
             return Ok();
         }
@@ -162,19 +152,12 @@ namespace EventManager.Web.Controllers
         /// <param name="model">Model with the file data</param>
         /// <param name="authorization">JWT authorizaation token</param>
         /// <returns></returns>
-        [HttpPut("UploadPicture/{id}")]
+        [HttpPut("UploadPicture")]
         [Authorize()]
-        public async Task<IActionResult> UpdateProfilePicture(Guid id, [FromForm] UploadPictureWebModel model, [FromHeader] string authorization)
+        public async Task<IActionResult> UpdateProfilePicture([FromForm] UploadPictureWebModel model, [FromHeader] string authorization)
         {
             if (model.Picture == null)
-            {
                 throw new InvalidDataException(ExceptionConstants.PictureNotUploaded);
-            }
-
-            var tokenResult = _jwtService.ValidateJwtToken(id, authorization);
-
-            if (!tokenResult)
-                return Unauthorized(ExceptionConstants.Unauthorized);
 
             var ms = new MemoryStream();
             model.Picture.CopyTo(ms);
@@ -185,23 +168,18 @@ namespace EventManager.Web.Controllers
                     FileName = model.Picture.FileName,
                     Stream = ms
                 },
-                UserId = id
+                UserId = _jwtService.GetId(authorization)
             };
 
             await _userService.UploadProfilePictureAsync(profilePictureServiceModel);
             return Ok();
         }
 
-        [HttpDelete("DeleteProfilePicture/{id}")]
+        [HttpDelete("DeleteProfilePicture")]
         [Authorize()]
-        public async Task<IActionResult> DeleteProfilePicture(Guid id, [FromHeader] string authorization)
+        public async Task<IActionResult> DeleteProfilePicture([FromHeader] string authorization)
         {
-            var tokenResult = _jwtService.ValidateJwtToken(id, authorization);
-
-            if (!tokenResult)
-                return Unauthorized(ExceptionConstants.Unauthorized);
-
-            await _userService.DeleteProfilePictureAsync(id);
+            await _userService.DeleteProfilePictureAsync(_jwtService.GetId(authorization));
 
             return Ok();
         }

@@ -12,11 +12,10 @@
         string GenerateJwtToken(Guid userId, string username, IList<string> roleNames);
 
         /// <summary>
-        /// Validates that the token belongs to the user 
+        /// Gets the id out of a token
         /// </summary>
-        /// <param name="userId">The id of the user</param>
-        /// <param name="jwtToken">The token</param>
-        /// <returns>Bool showing if the token belongs to the user</returns>
-        bool ValidateJwtToken(Guid userId, string jwtToken);
+        /// <param name="token">The token</param>
+        /// <returns>The id</returns>
+        Guid GetId(string token);
     }
 }

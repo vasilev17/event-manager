@@ -48,11 +48,6 @@ namespace EventManager.Web.Controllers
                 return Unauthorized(ExceptionConstants.UnauthorizedThirdPartyCreation);
             }
 
-            var tokenResult = _jwtService.ValidateJwtToken(newEventModel.UserId, authorization);
-
-            if (!tokenResult)
-                return Unauthorized(ExceptionConstants.Unauthorized);
-
             EventPictureServiceModel eventPictureServiceModel = null;
 
             if (pictureModel.Picture != null)
@@ -72,6 +67,7 @@ namespace EventManager.Web.Controllers
             }
 
             var newEvent = _mapper.Map<CreateEventServiceModel>(newEventModel);
+            newEvent.Id = _jwtService.GetId(authorization);
 
             await _eventService.CreateEventAsync(newEvent, eventPictureServiceModel);
 
@@ -88,13 +84,8 @@ namespace EventManager.Web.Controllers
         /// <returns>Action result status</returns>
         [HttpDelete("DeleteEvent/{eventId}")]
         [Authorize(Roles = RoleConstants.Creators)]
-        public async Task<IActionResult> DeleteEvent(Guid eventId, [FromBody] Guid userId, [FromHeader] string authorization)
+        public async Task<IActionResult> DeleteEvent(Guid eventId, [FromHeader] string authorization)
         {
-            var tokenResult = _jwtService.ValidateJwtToken(userId, authorization);
-
-            if (!tokenResult)
-                return Unauthorized(ExceptionConstants.Unauthorized);
-
             await _eventService.DeleteEventAsync(eventId);
 
             return Ok();
@@ -137,16 +128,9 @@ namespace EventManager.Web.Controllers
         [Authorize()]
         public async Task<IActionResult> RateEvent(Guid eventId, [FromBody] RateEventWebModel ratingModel, [FromHeader] string authorization)
         {
-
-            var tokenResult = _jwtService.ValidateJwtToken(ratingModel.UserId, authorization);
-
-            if (!tokenResult)
-                return Unauthorized(ExceptionConstants.Unauthorized);
-
-
             var rating = _mapper.Map<RateEventServiceModel>(ratingModel);
             rating.EventId = eventId;
-
+            rating.UserId = _jwtService.GetId(authorization);
 
             return Ok(await _eventService.RateEventAsync(rating));
         }
