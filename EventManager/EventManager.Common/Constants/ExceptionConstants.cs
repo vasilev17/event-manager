@@ -12,6 +12,7 @@
         public const string InvalidRole = "Invalid role is provided!";
         public const string Unauthorized = "User is unauthorized";
         public const string UnauthorizedThirdPartyCreation = "Role unauthorized to create third party events/activities!";
+        public const string InvalidToken = "The jwt token is invalid";
 
         //Service Exceptions
         public const string CantSendEmail = "Could not send email!";
@@ -41,6 +42,5 @@
 
         //Controller Exceptions
         public const string PictureNotUploaded = "Required field Picture is not uploaded!";
-
     }
 }

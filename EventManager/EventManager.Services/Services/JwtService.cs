@@ -1,4 +1,5 @@
-﻿using EventManager.Services.Services.Interfaces;
+﻿using EventManager.Common.Constants;
+using EventManager.Services.Services.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
@@ -61,6 +62,11 @@ namespace EventManager.Services.Services
             var tokenHandler = new JwtSecurityTokenHandler();
 
             JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(token);
+
+            var claim = jwtToken.Claims.FirstOrDefault(x => x.Type == Id);
+
+            if (claim == null)
+                throw new ArgumentException(ExceptionConstants.InvalidToken);
 
             return new Guid(jwtToken.Claims.FirstOrDefault(x => x.Type == Id).Value);
         }
