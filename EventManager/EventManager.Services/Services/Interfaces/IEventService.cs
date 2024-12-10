@@ -35,15 +35,29 @@ namespace EventManager.Services.Services.Interfaces
         /// <summary>
         /// Gets event based on the Id provided
         /// </summary>
+        /// <param name="eventId">The id of the searched event</param>
         /// <returns>Single Event object</returns>
         Task<Event> GetEventAsync(Guid eventId);
 
         /// <summary>
         /// Creates a new event rating in the database
         /// </summary>
+        /// <param name="ratingModel">Model carying the rating data</param>
         /// <returns>The new event average rating</returns>
         Task<float> RateEventAsync(RateEventServiceModel ratingModel);
 
+        /// <summary>
+        /// Marks user as attending or not attending to an event
+        /// </summary>
+        /// <param name="eventId">The id of the event the user is attending</param>
+        /// <param name="userId">The id of the attending user </param>
+        Task ToggleEventAttendanceAsync(Guid eventId, Guid userId);
+
+
+
+
+
         
+
     }
 }

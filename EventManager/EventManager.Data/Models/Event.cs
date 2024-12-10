@@ -22,6 +22,7 @@ namespace EventManager.Data.Models
         public bool IsThirdParty { get; set; } = false;
         public List<Rating> Ratings { get; set; } = new();
         public float AverageRating { get; set; } = 0f;
+        public HashSet<User> Attendees { get; set; } = new();
 
         //TODO Tickets
     }

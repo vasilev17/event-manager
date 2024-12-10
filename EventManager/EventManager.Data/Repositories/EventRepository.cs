@@ -51,7 +51,8 @@ namespace EventManager.Data.Repositories
 
             if (result <= 0)
             {
-                throw new CreationDatabaseException(string.Format(ExceptionConstants.CanNotCreate, "event"));
+                throw new CreationDatabaseException(string.Format(ExceptionConstants.FailedToCreate, "event"));
+
             }
 
             return true;
@@ -62,7 +63,8 @@ namespace EventManager.Data.Repositories
             var searchedEvent = await base.GetByIdAsync(id);
 
             if (searchedEvent == null)
-                throw new DatabaseException(ExceptionConstants.EventNotFound);
+                throw new DatabaseException(string.Format(ExceptionConstants.NotFound, "event"));
+
 
             return searchedEvent;
         }
@@ -84,8 +86,10 @@ namespace EventManager.Data.Repositories
 
             var eventToRate = await GetByIdAsync(entity.EventId);
 
-            if (eventToRate == null) {
-            throw new DatabaseException(ExceptionConstants.EventNotFound);
+            if (eventToRate == null)
+            {
+                throw new DatabaseException(string.Format(ExceptionConstants.NotFound, "event"));
+
             }
 
 
@@ -108,7 +112,7 @@ namespace EventManager.Data.Repositories
 
             if (result <= 0)
             {
-                throw new CreationDatabaseException(string.Format(ExceptionConstants.CanNotCreate, "rating"));
+                throw new CreationDatabaseException(string.Format(ExceptionConstants.FailedToCreate, "rating"));
             }
 
             return true;
@@ -123,7 +127,7 @@ namespace EventManager.Data.Repositories
 
             if (eventEntity == null)
             {
-                throw new DatabaseException(ExceptionConstants.EventNotFound);
+                throw new DatabaseException(string.Format(ExceptionConstants.NotFound, "event"));
             }
 
             float avgRating = 0f;
@@ -137,6 +141,44 @@ namespace EventManager.Data.Repositories
             await DbContext.SaveChangesAsync();
 
             return avgRating;
+        }
+
+        public async Task<bool> ToggleAttendanceAsync(Guid eventId, Guid userId)
+        {
+
+            //Check if the event exists
+            var existingEvent = await GetByIdAsync(eventId);
+
+            // Validate if the event already exists
+            var existingAttendance = await DbContext.Attendances
+                .FirstOrDefaultAsync(e => e.UserId == userId && e.EventId == eventId);
+
+            if (existingAttendance != null)
+            {
+                DbContext.Attendances.Remove(existingAttendance);
+                var result = await DbContext.SaveChangesAsync();
+
+                if (result <= 0)
+                {
+                    throw new DatabaseException(string.Format(ExceptionConstants.FailedToDelete, "attendance"));
+                }
+
+            }
+            else
+            {
+
+                // Add the new Attendance to the context
+                DbContext.Attendances.Add(new Attendance { UserId = userId, EventId = eventId });
+                var result = await DbContext.SaveChangesAsync();
+
+                if (result <= 0)
+                {
+                    throw new CreationDatabaseException(string.Format(ExceptionConstants.FailedToCreate, "attendance"));
+                }
+            }
+
+            return true;
+
         }
 
         public override async Task<bool> EditAsync(Guid id, Event newEntity)
@@ -153,7 +195,7 @@ namespace EventManager.Data.Repositories
 
             if (eventInDb == null)
             {
-                throw new DatabaseException(ExceptionConstants.EventNotFound);
+                throw new DatabaseException(ExceptionConstants.NotFound + "event");
             }
 
             return await base.DeleteAsync(eventInDb);

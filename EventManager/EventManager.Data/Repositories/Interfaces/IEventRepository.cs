@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace EventManager.Data.Repositories.Interfaces
 {
-    public interface IEventRepository: IBaseRepository<Event>
+    public interface IEventRepository : IBaseRepository<Event>
     {
         /// <summary>
         /// Adds an event to the database
@@ -33,14 +33,24 @@ namespace EventManager.Data.Repositories.Interfaces
         /// <summary>
         /// Adds a rating to the database
         /// </summary>
+        /// <param name="entity">The entity with the rating data</param>
         /// <returns>True if the rating is added correctly</returns>
         Task<bool> AddEventRatingAsync(Rating entity);
 
         /// <summary>
-        /// Updates the average rating of an event
+        /// Updates the average rating of an event in the database
         /// </summary>
+        /// <param name="eventId">Id of the event which average rating to change</param>
         /// <returns>The new average rating</returns>
         Task<float> UpdateEventAverageRatingAsync(Guid eventId);
+
+        /// <summary>
+        /// Adds a new attendance in the database or deletes an existing one
+        /// </summary>
+        /// <param name="eventId">Id of the attended event</param>
+        /// <param name="userId">Id of the attending user</param>
+        /// <returns>True if the attendance is added/removed correctly</returns>
+        Task<bool> ToggleAttendanceAsync(Guid eventId, Guid userId);
 
     }
 }

@@ -60,7 +60,8 @@ namespace EventManager.Services.Services
             var result = await _eventRepository.DeleteAsync(eventId);
 
             if (!result)
-                throw new DatabaseException(ExceptionConstants.FailedToDeleteEvent);
+                throw new DatabaseException(string.Format(ExceptionConstants.FailedToDelete, "event"));
+
         }
 
         public async Task<List<Event>> GetFilteredEventsAsync(EventFilterServiceModel filter)
@@ -119,10 +120,19 @@ namespace EventManager.Services.Services
 
             if (!savedRating)
             {
-                throw new DatabaseException(string.Format(ExceptionConstants.CanNotCreate, "rating"));
+                throw new DatabaseException(string.Format(ExceptionConstants.FailedToCreate, "rating"));
             }
 
             return await _eventRepository.UpdateEventAverageRatingAsync(rating.EventId);
+
+        }
+
+        public async Task ToggleEventAttendanceAsync(Guid eventId, Guid userId)
+        {
+            var result = await _eventRepository.ToggleAttendanceAsync(eventId, userId);
+
+            if (!result)
+                throw new CreationDatabaseException(string.Format(ExceptionConstants.FailedToCreate, "attendance"));
 
         }
 
@@ -170,12 +180,14 @@ namespace EventManager.Services.Services
             eventPicture.EventId = searchedEvent.Id;
 
             var pictureIsSaved = await _eventPictureRepository.AddAsync(eventPicture);
+
             if (!pictureIsSaved)
-                throw new DatabaseException(ExceptionConstants.FailedToUploadEventPicture);
+                throw new DatabaseException(string.Format(ExceptionConstants.FailedToUpload, "event picture"));
 
             var eventResult = await _eventRepository.EditAsync(searchedEvent.Id, searchedEvent);
+
             if (!eventResult)
-                throw new DatabaseException(ExceptionConstants.FailedToUpdateEvent);
+                throw new DatabaseException(string.Format(ExceptionConstants.FailedToUpdate, "event"));
         }
 
     }

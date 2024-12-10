@@ -59,6 +59,13 @@ namespace EventManager.Data.Models.Configurations
                 .WithOne(b => b.Event)
                 .HasForeignKey(b => b.EventId);
 
+            builder
+                .HasMany(e => e.Attendees)
+                .WithMany(u => u.AttendedEvents)
+                .UsingEntity<Attendance>(
+                 j => j.HasOne(a => a.User).WithMany().HasForeignKey(a => a.UserId),
+                 j => j.HasOne(a => a.Event).WithMany().HasForeignKey(a => a.EventId));
+
         }
     }
 }

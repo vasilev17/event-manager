@@ -3,6 +3,7 @@ using EventManager.Data.Models;
 using EventManager.Services.Models.Event;
 using EventManager.Services.Models.Picture;
 using EventManager.Services.Services.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace EventManager.Services.Decorators.Event
 {
@@ -41,9 +42,9 @@ namespace EventManager.Services.Decorators.Event
             }
         }
 
-        public Task DeleteEventAsync(Guid eventID)
+        public Task DeleteEventAsync(Guid eventId)
         {
-            return _parent.DeleteEventAsync(eventID);
+            return _parent.DeleteEventAsync(eventId);
         }
 
         public Task<List<Data.Models.Event>> GetFilteredEventsAsync(EventFilterServiceModel filter)
@@ -51,9 +52,9 @@ namespace EventManager.Services.Decorators.Event
             return _parent.GetFilteredEventsAsync(filter);
         }
 
-        public Task<Data.Models.Event> GetEventAsync(Guid eventID)
+        public Task<Data.Models.Event> GetEventAsync(Guid eventId)
         {
-            return _parent.GetEventAsync(eventID);
+            return _parent.GetEventAsync(eventId);
         }
 
         public Task<float> RateEventAsync(RateEventServiceModel ratingModel)
@@ -61,6 +62,11 @@ namespace EventManager.Services.Decorators.Event
             ValidateRateEventModel(ratingModel);
             return _parent.RateEventAsync(ratingModel);
 
+        }
+
+        public Task ToggleEventAttendanceAsync(Guid eventId, Guid userId)
+        {
+            return _parent.ToggleEventAttendanceAsync(eventId, userId);
         }
 
         public void ValidateRateEventModel(RateEventServiceModel ratingModel)

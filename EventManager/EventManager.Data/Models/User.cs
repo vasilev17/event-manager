@@ -20,6 +20,9 @@ namespace EventManager.Data.Models
         [JsonIgnore]
         public HashSet<Event> Events { get; set; } = new();
 
-        public List<Rating> EventRatings { get; set; }
+        public List<Rating> EventRatings { get; set; } = new();
+
+        public HashSet<Event> AttendedEvents { get; set; } = new();
+
     }
 }

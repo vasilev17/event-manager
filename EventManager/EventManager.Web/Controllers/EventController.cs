@@ -127,7 +127,7 @@ namespace EventManager.Web.Controllers
         }
 
         /// <summary>
-        /// End point for creating a new event in the platform
+        /// End point for rating an event
         /// </summary>
         /// <param name="eventId">Id of the event to be rated</param>
         /// <param name="ratingModel">Model containing rating and user data</param>
@@ -148,6 +148,28 @@ namespace EventManager.Web.Controllers
 
             return Ok(await _eventService.RateEventAsync(rating));
         }
+
+        /// <summary>
+        /// Endpoint for toggling event attendance status
+        /// </summary>
+        /// <param name="eventId">Id of the attended event</param>
+        /// <param name="userId">Id of the user attending the event</param>
+        /// <param name="authorization">JWT authorizaation token</param>
+        /// <returns></returns>
+        [HttpPost("AttendEvent/{eventId}")]
+        [Authorize()]
+        public async Task<IActionResult> ToggleEventAttendance(Guid eventId, [FromBody] Guid userId, [FromHeader] string authorization)
+        {
+
+            var tokenResult = _jwtService.ValidateJwtToken(userId, authorization);
+
+            if (!tokenResult)
+                return Unauthorized(ExceptionConstants.Unauthorized);
+
+            await _eventService.ToggleEventAttendanceAsync(eventId, userId);
+            return Ok();
+        }
+
 
     }
 }
