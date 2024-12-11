@@ -3,6 +3,7 @@ using EventManager.Common.Constants;
 using EventManager.Services.Factories.Interfaces;
 using EventManager.Services.Models.Picture;
 using EventManager.Services.Models.User;
+using EventManager.Services.Services;
 using EventManager.Services.Services.Interfaces;
 using EventManager.Web.Models.Picture;
 using EventManager.Web.Models.User;
@@ -198,5 +199,6 @@ namespace EventManager.Web.Controllers
 
             return Ok();
         }
+
     }
 }

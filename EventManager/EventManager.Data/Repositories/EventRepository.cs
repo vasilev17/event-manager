@@ -1,9 +1,11 @@
 ﻿using EventManager.Common.Constants;
+using EventManager.Common.Models;
 using EventManager.Data.Exceptions;
 using EventManager.Data.Models;
 using EventManager.Data.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Reflection.Metadata.Ecma335;
 
 namespace EventManager.Data.Repositories
@@ -69,12 +71,45 @@ namespace EventManager.Data.Repositories
             return searchedEvent;
         }
 
-        public async Task<List<Event>> GetAllEventsAsync()
+        public async Task<List<EventDTO>> GetAllEventsAsync()
         {
             var events = await DbContext.Events
-                .Include(e => e.User)
-                .Include(e => e.Types)
-                .ToListAsync();
+  .Include(e => e.User)
+  .Include(e => e.Types)
+  .Include(e => e.AvailableTickets)
+  .Select(e => new EventDTO
+  {
+      Id = e.Id,
+      Name = e.Name,
+      Description = e.Description,
+      StartDateTime = e.StartDateTime,
+      EndDateTime = e.EndDateTime,
+      EventPictureUrl = e.EventPicture.Url,
+      Webpage = e.Webpage,
+      Address = e.Address,
+      IsActivity = e.IsActivity,
+      IsThirdParty = e.IsThirdParty,
+      AverageRating = e.AverageRating,
+      CreatorUsername = e.User.UserName,
+      CreatorProfilePictureURL = e.User.ProfilePicture.Url,
+      MinPrice = e.MinPrice,
+      MaxPrice = e.MaxPrice,
+
+      // Types as a HashSet of strings
+      EventTypeNames = e.Types.Select(t => t.Name).ToHashSet(),
+
+      // Now using TicketDTO for AvailableTickets
+      AvailableTickets = e.AvailableTickets
+      .Where(at => at.UserId == null)
+      .Select(at => new TicketDTO
+      {
+          Id = at.Id,
+          Type = at.Type,
+          Price = at.Price,
+          Description = at.Description,
+      }).ToList()
+  })
+  .ToListAsync();
 
             return events;
         }
@@ -149,7 +184,7 @@ namespace EventManager.Data.Repositories
             //Check if the event exists
             var existingEvent = await GetByIdAsync(eventId);
 
-            // Validate if the event already exists
+            // Validate if the attendance already exists
             var existingAttendance = await DbContext.Attendances
                 .FirstOrDefaultAsync(e => e.UserId == userId && e.EventId == eventId);
 
@@ -159,26 +194,113 @@ namespace EventManager.Data.Repositories
                 var result = await DbContext.SaveChangesAsync();
 
                 if (result <= 0)
-                {
                     throw new DatabaseException(string.Format(ExceptionConstants.FailedToDelete, "attendance"));
-                }
-
             }
             else
             {
-
                 // Add the new Attendance to the context
                 DbContext.Attendances.Add(new Attendance { UserId = userId, EventId = eventId });
                 var result = await DbContext.SaveChangesAsync();
 
                 if (result <= 0)
-                {
                     throw new CreationDatabaseException(string.Format(ExceptionConstants.FailedToCreate, "attendance"));
+            }
+
+            return true;
+        }
+
+        public async Task<bool> BookTicketAsync(Guid ticketId, Guid userId)
+        {
+            var existingTicket = await DbContext.Tickets
+                                       .FirstOrDefaultAsync(e => e.Id == ticketId);
+
+            if (existingTicket.UserId != null)
+            {
+                if (existingTicket.UserId == userId)
+                    throw new CreationDatabaseException(string.Format(ExceptionConstants.AlreadyExists, "ticket booking"));
+
+                else
+                    throw new CreationDatabaseException(ExceptionConstants.TicketAlreadyBooked);
+            }
+
+            existingTicket.UserId = userId;
+            existingTicket.BookingDate = DateTime.Now;
+
+            await DbContext.SaveChangesAsync();
+
+            //Update the new min and max prices of an event based on available tickets
+            await UpdateEventPricesAsync(existingTicket.EventId);
+
+            return true;
+        }
+
+        public async Task<bool> UpdateEventPricesAsync(Guid eventId)
+        {
+            var _event = await DbContext.Events
+                                       .Include(e => e.AvailableTickets)
+                                       .FirstOrDefaultAsync(e => e.Id == eventId);
+
+            if (_event == null)
+            {
+                throw new DatabaseException(string.Format(ExceptionConstants.NotFound, "event"));
+            }
+
+            var availableTickets = _event.AvailableTickets.Where(t => t.UserId == null).ToList();
+
+            if (availableTickets.Count == 0)
+            {
+                _event.MinPrice = null;
+                _event.MaxPrice = 0;
+            }
+            else
+            {
+
+                decimal minPrice = availableTickets.Min(t => t.Price);
+                decimal maxPrice = availableTickets.Max(t => t.Price);
+
+                _event.MinPrice = minPrice;
+                _event.MaxPrice = maxPrice;
+            }
+
+            await DbContext.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> AddTicketAsync(Ticket newTicket)
+        {
+            //Check if the event exists
+            var existingEvent = await GetByIdAsync(newTicket.EventId);
+
+            newTicket.CreationDate = DateTime.Now;
+
+            DbContext.Tickets.Add(newTicket);
+            var result = await DbContext.SaveChangesAsync();
+
+            if (result <= 0)
+                throw new CreationDatabaseException(string.Format(ExceptionConstants.FailedToCreate, "ticket"));
+
+            //Update Event prices if appropriate
+            if (newTicket.Price == 0)
+            {
+                existingEvent.MinPrice = 0;
+                await DbContext.SaveChangesAsync();
+            }
+            else if (newTicket.Price > existingEvent.MaxPrice)
+            {
+                existingEvent.MaxPrice = newTicket.Price;
+                await DbContext.SaveChangesAsync();
+            }
+            else
+            {
+                if (newTicket.Price < existingEvent.MinPrice || existingEvent.MinPrice == null)
+                {
+                    existingEvent.MinPrice = newTicket.Price;
+                    await DbContext.SaveChangesAsync();
                 }
             }
 
             return true;
-
         }
 
         public override async Task<bool> EditAsync(Guid id, Event newEntity)

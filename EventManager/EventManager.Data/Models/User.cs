@@ -2,6 +2,7 @@
 using EventManager.Data.Models.Picture;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Net.Sockets;
 using System.Text.Json.Serialization;
 
 namespace EventManager.Data.Models
@@ -23,6 +24,8 @@ namespace EventManager.Data.Models
         public List<Rating> EventRatings { get; set; } = new();
 
         public HashSet<Event> AttendedEvents { get; set; } = new();
+
+        public List<Ticket> BookedTickets { get; set; } = new();
 
     }
 }

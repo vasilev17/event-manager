@@ -4,6 +4,7 @@ using EventManager.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241210165856_AddTicketsTable")]
+    partial class AddTicketsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -84,12 +87,6 @@ namespace EventManager.Data.Migrations
 
                     b.Property<bool>("IsThirdParty")
                         .HasColumnType("tinyint(1)");
-
-                    b.Property<decimal>("MaxPrice")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<decimal?>("MinPrice")
-                        .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("Name")
                         .IsRequired()

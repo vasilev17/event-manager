@@ -29,8 +29,8 @@ namespace EventManager.Services.Services.Interfaces
         /// Gets events based on applied filters
         /// </summary>
         /// <param name="filter">Model carying the filters to be applied</param>
-        /// <returns>List of filtered events</returns>
-        Task<List<Event>> GetFilteredEventsAsync(EventFilterServiceModel filter);
+        /// <returns>List of Event DTOs of filtered events</returns>
+        Task<List<EventDTO>> GetFilteredEventsAsync(EventFilterServiceModel filter);
 
         /// <summary>
         /// Gets event based on the Id provided
@@ -53,11 +53,20 @@ namespace EventManager.Services.Services.Interfaces
         /// <param name="userId">The id of the attending user </param>
         Task ToggleEventAttendanceAsync(Guid eventId, Guid userId);
 
+        /// <summary>
+        /// Makes a ticket booked by a user
+        /// </summary>
+        /// <param name="ticketId">Id of the ticket the user is booking</param>
+        /// <param name="userId">Id of the user booking the event</param>
+        Task BookTicketAsync(Guid ticketId, Guid userId);
+
+        /// <summary>
+        /// Creates a new event ticket
+        /// </summary>
+        /// <param name="ticketModel">Model containing the ticket data</param>
+        Task CreateEventTicketAsync(EventTicketServiceModel ticketModel);
 
 
-
-
-        
 
     }
 }

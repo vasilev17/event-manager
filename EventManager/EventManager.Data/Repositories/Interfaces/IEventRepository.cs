@@ -1,4 +1,5 @@
 ﻿using EventManager.Common.Constants;
+using EventManager.Common.Models;
 using EventManager.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -27,8 +28,8 @@ namespace EventManager.Data.Repositories.Interfaces
         /// <summary>
         /// Gets all events from the database
         /// </summary>
-        /// <returns>List containing all events</returns>
-        Task<List<Event>> GetAllEventsAsync();
+        /// <returns>List of all Event DTOs</returns>
+        Task<List<EventDTO>> GetAllEventsAsync();
 
         /// <summary>
         /// Adds a rating to the database
@@ -51,6 +52,28 @@ namespace EventManager.Data.Repositories.Interfaces
         /// <param name="userId">Id of the attending user</param>
         /// <returns>True if the attendance is added/removed correctly</returns>
         Task<bool> ToggleAttendanceAsync(Guid eventId, Guid userId);
+
+        /// <summary>
+        /// Assigns a ticket in the database to a user (booking it)
+        /// </summary>
+        /// <param name="ticketId">Id of the ticket to be marked as booked</param>
+        /// <param name="userId">Id of the user booking the event ticket</param>
+        /// <returns>True if the booking is made correctly</returns>
+        Task<bool> BookTicketAsync(Guid ticketId, Guid userId);
+
+        /// <summary>
+        /// Checks and sets min and max price for an event based on the tickets available
+        /// </summary>
+        /// <param name="ticketId">Id of the event</param>
+        /// <returns>True if the prices are updated correctly</returns>
+        Task<bool> UpdateEventPricesAsync(Guid eventId);
+
+        /// <summary>
+        /// Creates a new ticket in the database
+        /// </summary>
+        /// <param name="newTicket">Model containg the new ticket data</param>
+        /// <returns>True if the ticket is created correctly</returns>
+        Task<bool> AddTicketAsync(Ticket newTicket);
 
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EventManager.Common.Constants;
+using EventManager.Common.Models;
 using EventManager.Data.Exceptions;
 using EventManager.Data.Models;
 using EventManager.Data.Models.Picture;
@@ -64,19 +65,35 @@ namespace EventManager.Services.Services
 
         }
 
-        public async Task<List<Event>> GetFilteredEventsAsync(EventFilterServiceModel filter)
+        public async Task BookTicketAsync(Guid ticketId, Guid userId)
+        {
+            var result = await _eventRepository.BookTicketAsync(ticketId, userId);
+
+            if (!result)
+                throw new DatabaseException(string.Format(ExceptionConstants.FailedToCreate, "booking"));
+
+        }
+
+        public async Task CreateEventTicketAsync(EventTicketServiceModel ticketModel)
+        {
+            var newTicket = _mapper.Map<Ticket>(ticketModel);
+
+            await _eventRepository.AddTicketAsync(newTicket);
+        }
+
+        public async Task<List<EventDTO>> GetFilteredEventsAsync(EventFilterServiceModel filter)
         {
             var events = await _eventRepository.GetAllEventsAsync();
 
-            //if (filter.MinPrice.HasValue)
-            //{
-            //    events = events.Where(e => e.Price >= filter.MinPrice.Value).ToList();
-            //}
+            if (filter.MinPrice.HasValue)
+            {
+                events = events.Where(e => e.MaxPrice >= filter.MinPrice.Value).ToList();
+            }
 
-            //if (filter.MaxPrice.HasValue)
-            //{
-            //    events = events.Where(e => e.Price <= filter.MaxPrice.Value).ToList();
-            //}
+            if (filter.MaxPrice.HasValue)
+            {
+                events = events.Where(e => e.MinPrice <= filter.MaxPrice.Value || e.MinPrice == null).ToList();
+            }
 
             if (filter.StartDateTime.HasValue)
             {
@@ -95,13 +112,13 @@ namespace EventManager.Services.Services
 
             if (!string.IsNullOrEmpty(filter.Username))
             {
-                events = events.Where(e => e.User != null && e.User.UserName == filter.Username).ToList();
+                events = events.Where(e => e.CreatorUsername == filter.Username).ToList();
             }
 
             if (filter.EventTypes != null && filter.EventTypes.Any())
             {
                 var eventTypeNames = filter.EventTypes.Select(et => et.ToString()).ToHashSet();
-                events = events.Where(e => e.Types.Any(t => eventTypeNames.Contains(t.Name))).ToList();
+                events = events.Where(e => e.EventTypeNames.Overlaps(eventTypeNames)).ToList();
             }
 
             return events;
@@ -136,59 +153,59 @@ namespace EventManager.Services.Services
 
         }
 
-        public async Task UploadEventPictureAsync(EventPictureServiceModel model)
-        {
-            await SavePicture(model);
-        }
+        //public async Task UploadEventPictureAsync(EventPictureServiceModel model)
+        //{
+        //    await SavePicture(model);
+        //}
 
-        public async Task DeleteEventPictureAsync(Guid id)
-        {
-            var picture = await _eventPictureRepository.GetByEventIdAsync(id);
+        //public async Task DeleteEventPictureAsync(Guid id)
+        //{
+        //    var picture = await _eventPictureRepository.GetByEventIdAsync(id);
 
-            if (picture != null)
-            {
-                var pictureServiceModel = _mapper.Map<PictureServiceModel>(picture);
-                await _cloudinaryService.DeletePictureAsync(pictureServiceModel);
-            }
+        //    if (picture != null)
+        //    {
+        //        var pictureServiceModel = _mapper.Map<PictureServiceModel>(picture);
+        //        await _cloudinaryService.DeletePictureAsync(pictureServiceModel);
+        //    }
 
-            await _eventPictureRepository.DeleteAsync(picture);
+        //    await _eventPictureRepository.DeleteAsync(picture);
 
-            var searchedEvent = await _eventRepository.GetByIdAsync(id);
-            searchedEvent.EventPicture = new EventPicture
-            {
-                Url = PictureConstants.DefaultEventPicture
-            };
+        //    var searchedEvent = await _eventRepository.GetByIdAsync(id);
+        //    searchedEvent.EventPicture = new EventPicture
+        //    {
+        //        Url = PictureConstants.DefaultEventPicture
+        //    };
 
-            await _eventRepository.EditAsync(id, searchedEvent);
-        }
+        //    await _eventRepository.EditAsync(id, searchedEvent);
+        //}
 
-        private async Task SavePicture(EventPictureServiceModel model)
-        {
-            model.Picture.Stream.Seek(0, SeekOrigin.Begin);
-            var cloudinaryResult = await _cloudinaryService.UploadPictureAsync(model.Picture);
+        //private async Task SavePicture(EventPictureServiceModel model)
+        //{
+        //    model.Picture.Stream.Seek(0, SeekOrigin.Begin);
+        //    var cloudinaryResult = await _cloudinaryService.UploadPictureAsync(model.Picture);
 
-            var eventPicture = new EventPicture
-            {
-                PublicId = cloudinaryResult.PublicId,
-                ResourceType = cloudinaryResult.ResourceType,
-                Url = cloudinaryResult.Url.AbsoluteUri
-            };
-            var searchedEvent = await _eventRepository.GetByIdAsync(model.EventId);
+        //    var eventPicture = new EventPicture
+        //    {
+        //        PublicId = cloudinaryResult.PublicId,
+        //        ResourceType = cloudinaryResult.ResourceType,
+        //        Url = cloudinaryResult.Url.AbsoluteUri
+        //    };
+        //    var searchedEvent = await _eventRepository.GetByIdAsync(model.EventId);
 
-            searchedEvent.EventPicture = eventPicture;
-            eventPicture.Event = searchedEvent;
-            eventPicture.EventId = searchedEvent.Id;
+        //    searchedEvent.EventPicture = eventPicture;
+        //    eventPicture.Event = searchedEvent;
+        //    eventPicture.EventId = searchedEvent.Id;
 
-            var pictureIsSaved = await _eventPictureRepository.AddAsync(eventPicture);
+        //    var pictureIsSaved = await _eventPictureRepository.AddAsync(eventPicture);
 
-            if (!pictureIsSaved)
-                throw new DatabaseException(string.Format(ExceptionConstants.FailedToUpload, "event picture"));
+        //    if (!pictureIsSaved)
+        //        throw new DatabaseException(string.Format(ExceptionConstants.FailedToUpload, "event picture"));
 
-            var eventResult = await _eventRepository.EditAsync(searchedEvent.Id, searchedEvent);
+        //    var eventResult = await _eventRepository.EditAsync(searchedEvent.Id, searchedEvent);
 
-            if (!eventResult)
-                throw new DatabaseException(string.Format(ExceptionConstants.FailedToUpdate, "event"));
-        }
+        //    if (!eventResult)
+        //        throw new DatabaseException(string.Format(ExceptionConstants.FailedToUpdate, "event"));
+        //}
 
     }
 }

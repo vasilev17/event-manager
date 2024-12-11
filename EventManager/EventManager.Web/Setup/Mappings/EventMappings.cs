@@ -16,10 +16,12 @@ namespace EventManager.Web.Setup.Mappings
             CreateMap<CreateEventWebModel, CreateEventServiceModel>();
             CreateMap<EventFilterWebModel, EventFilterServiceModel>();
             CreateMap<RateEventWebModel, RateEventServiceModel>();
+            CreateMap<EventTicketWebModel, EventTicketServiceModel>();
 
             CreateMap<CreateEventServiceModel, Event>()
                 .ForMember(dest => dest.Types, opt => opt.MapFrom(src => src.Types.Select(t => new EventType(t.ToString())).ToHashSet()));
             CreateMap<RateEventServiceModel, Rating>();
+            CreateMap<EventTicketServiceModel, Ticket>();
         }
 
     }

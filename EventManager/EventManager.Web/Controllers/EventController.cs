@@ -12,6 +12,8 @@ using EventManager.Web.Models.Picture;
 using EventManager.Web.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration.UserSecrets;
+using Microsoft.Extensions.Logging;
 
 namespace EventManager.Web.Controllers
 {
@@ -155,7 +157,7 @@ namespace EventManager.Web.Controllers
         /// <param name="eventId">Id of the attended event</param>
         /// <param name="userId">Id of the user attending the event</param>
         /// <param name="authorization">JWT authorizaation token</param>
-        /// <returns></returns>
+        /// <returns>Action result status</returns>
         [HttpPost("AttendEvent/{eventId}")]
         [Authorize()]
         public async Task<IActionResult> ToggleEventAttendance(Guid eventId, [FromBody] Guid userId, [FromHeader] string authorization)
@@ -170,6 +172,47 @@ namespace EventManager.Web.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Endpoint for booking a ticket
+        /// </summary>
+        /// <param name="ticketId">Id of the ticket to be booked</param>
+        /// <param name="userId">Id of the user booking the ticket</param>
+        /// <param name="authorization">JWT authorizaation token</param>
+        /// <returns>Action result status</returns>
+        [HttpPut("BookTicket/{ticketId}")]
+        [Authorize()]
+        public async Task<IActionResult> BookTicket(Guid ticketId, [FromBody] Guid userId, [FromHeader] string authorization)
+        {
+            var tokenResult = _jwtService.ValidateJwtToken(userId, authorization);
+
+            if (!tokenResult)
+                return Unauthorized(ExceptionConstants.Unauthorized);
+
+            await _eventService.BookTicketAsync(ticketId, userId);
+            return Ok();
+        }
+
+        /// <summary>
+        /// Endpoint for creating an event ticket
+        /// </summary>
+        /// <param name="userId">Id of the user creating the event</param>
+        /// <param name="ticketModel">Model containing the ticket data</param>
+        /// <param name="authorization">JWT authorizaation token</param>
+        /// <returns>Action result status</returns>
+        [HttpPost("CreateEventTicket")]
+        [Authorize(Roles = RoleConstants.Creators)]
+        public async Task<IActionResult> CreateEventTicket([FromForm] Guid userId, [FromForm] EventTicketWebModel ticketModel, [FromHeader] string authorization)
+        {
+            var tokenResult = _jwtService.ValidateJwtToken(userId, authorization);
+
+            if (!tokenResult)
+                return Unauthorized(ExceptionConstants.Unauthorized);
+
+            var ticket = _mapper.Map<EventTicketServiceModel>(ticketModel);
+
+            await _eventService.CreateEventTicketAsync(ticket);
+            return Ok();
+        }
 
     }
 }

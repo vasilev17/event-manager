@@ -11,7 +11,7 @@
         public const string PasswordMissMatch = "The password and the confirmation do not match";
         public const string InvalidRole = "Invalid role is provided!";
         public const string Unauthorized = "User is unauthorized";
-        public const string UnauthorizedThirdPartyCreation = "Role unauthorized to create third party events/activities!";
+        public const string TicketAlreadyBooked = "Ticket is already booked by another user!";
 
         //Service Exceptions
         public const string CantSendEmail = "Could not send email!";
@@ -38,6 +38,7 @@
 
         //Controller Exceptions
         public const string PictureNotUploaded = "Required field Picture is not uploaded!";
+        public const string UnauthorizedThirdPartyCreation = "Role unauthorized to create third party events/activities!";
 
     }
 }
