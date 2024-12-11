@@ -1,6 +1,8 @@
-function App() {
-  return <div>
-  </div>
-}
+export default function App() {
 
-export default App;
+  return (
+    <h1 className="text-5xl font-bold underline">
+      Hello world!
+    </h1>
+  )
+}
