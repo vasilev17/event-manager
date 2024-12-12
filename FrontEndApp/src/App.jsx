@@ -1,8 +1,13 @@
-export default function App() {
+import Footer from "./components/Footer";
+import Footer2 from "./components/Footer2";
+import { LoginSignup2 } from "./pop_up/login_signup2";
 
+export default function App() {
   return (
-    <h1 className="text-5xl font-bold underline">
-      Hello world!
-    </h1>
-  )
+    <div>
+      <LoginSignup2 />
+      <Footer2 />
+    </div>
+  );
 }
+
