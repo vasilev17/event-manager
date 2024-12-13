@@ -1,4 +1,4 @@
-import React from "react";
+
 import group21 from "../assets/Group 21.svg";
 import Checkbox from "./CheckBox";
 
@@ -27,12 +27,12 @@ export default function MailAbonament() {
           <div className="">
             <span className="text-black font-sans mr-1">
               Желая да се регистрирам за бюлетин и съм съгласен предоставената
-              от мен информация да се обработва съобразно 
+              от мен информация да се обработва съобразно
             </span>
             <span className="text-black font-sans underline">
               политиката за поверителност на данните
             </span>
-            <span className="text-black font-sans">. </span>
+            <span className="text-black font-sans">.</span>
           </div>
         </div>
       </div>
