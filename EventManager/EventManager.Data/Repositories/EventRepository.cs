@@ -145,5 +145,11 @@ namespace EventManager.Data.Repositories
 
         }
 
+        public async Task<IEnumerable<Event>> GetAllEventsByOrganizerAsync(Guid id)
+        {
+            var events = await GetAllEventsAsync();
+
+            return events.Where(x => x.UserId == id);
+        }
     }
 }

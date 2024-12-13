@@ -26,7 +26,7 @@ namespace EventManager.Web.Controllers
 
         public EventController(IEventServiceFactory eventServiceFactory, IMapper mapper, IJwtService jwtService)
         {
-            _eventService = eventServiceFactory.CreateEventService();
+            _eventService = eventServiceFactory.Create();
             _mapper = mapper;
             _jwtService = jwtService;
         }

@@ -1,10 +1,4 @@
-﻿using EventManager.Common.Constants;
-using EventManager.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using EventManager.Data.Models;
 
 namespace EventManager.Data.Repositories.Interfaces
 {
@@ -41,6 +35,11 @@ namespace EventManager.Data.Repositories.Interfaces
         /// </summary>
         /// <returns>The new average rating</returns>
         Task<float> UpdateEventAverageRatingAsync(Guid eventId);
-
+        
+        /// <summary>
+        /// Gets all events by organizer
+        /// </summary>
+        /// <param name="id"></param>
+        Task<IEnumerable<Event>> GetAllEventsByOrganizerAsync(Guid id);
     }
 }

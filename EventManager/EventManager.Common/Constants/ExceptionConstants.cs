@@ -13,6 +13,7 @@
         public const string Unauthorized = "User is unauthorized";
         public const string UnauthorizedThirdPartyCreation = "Role unauthorized to create third party events/activities!";
         public const string InvalidToken = "The jwt token is invalid";
+        public const string OrganizerIsVerified = "Organizer is already verified!";
 
         //Service Exceptions
         public const string CantSendEmail = "Could not send email!";

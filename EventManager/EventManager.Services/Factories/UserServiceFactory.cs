@@ -11,6 +11,7 @@ namespace EventManager.Services.Factories
     public class UserServiceFactory : IUserServiceFactory
     {
         private readonly IUserRepository _userRepository;
+        private readonly IVerificationRequestsRepository _verificationRequestsRepository;
         private readonly IProfilePictureRepository _profilePictureRepository;
         private readonly IJwtService _jwtService;
         private readonly ICloudinaryService _cloudinaryService;
@@ -18,7 +19,8 @@ namespace EventManager.Services.Factories
         private readonly IEmailService _emailService;
         private readonly string _localTokenLocation;
 
-        public UserServiceFactory(IUserRepository userRepository, 
+        public UserServiceFactory(IUserRepository userRepository,
+            IVerificationRequestsRepository verificationRequestsRepository,
             IProfilePictureRepository profilePictureRepository,
             IEmailService emailService, 
             ICloudinaryService cloudinaryService,
@@ -26,6 +28,7 @@ namespace EventManager.Services.Factories
             IMapper mapper,
             string localTokenlocation)
         {
+            _verificationRequestsRepository = verificationRequestsRepository;
             _userRepository = userRepository;
             _profilePictureRepository = profilePictureRepository;
             _jwtService = jwtService;
@@ -35,9 +38,17 @@ namespace EventManager.Services.Factories
             _localTokenLocation = localTokenlocation;
         }
 
-        public IUserService CreateUserService()
+        public IUserService Create()
         {
-            var coreService = new UserService(_userRepository, _profilePictureRepository, _emailService, _jwtService, _cloudinaryService, _mapper, _localTokenLocation);
+            var coreService = new UserService(_userRepository,
+                _verificationRequestsRepository,
+                _profilePictureRepository, 
+                _emailService, 
+                _jwtService, 
+                _cloudinaryService, 
+                _mapper, 
+                _localTokenLocation);
+
             return new ValidationUserDecorator(coreService);
         }
     }

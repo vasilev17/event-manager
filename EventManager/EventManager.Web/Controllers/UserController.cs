@@ -24,7 +24,7 @@ namespace EventManager.Web.Controllers
 
         public UserController(IUserServiceFactory userServiceFactory, IMapper mapper, IJwtService jwtService)
         {
-            _userService = userServiceFactory.CreateUserService();
+            _userService = userServiceFactory.Create();
             _mapper = mapper;
             _jwtService = jwtService;
         }
@@ -175,6 +175,11 @@ namespace EventManager.Web.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Deletes the profile picture of a user
+        /// </summary>
+        /// <param name="authorization">The token of the user</param>
+        /// <returns></returns>
         [HttpDelete("DeleteProfilePicture")]
         [Authorize()]
         public async Task<IActionResult> DeleteProfilePicture([FromHeader] string authorization)

@@ -35,19 +35,7 @@ namespace EventManager.Data.Repositories
                 if (!result.Succeeded)
                     throw new CreationDatabaseException(string.Format(ExceptionConstants.CanNotCreate, "user") + "Inner exception: " + result.Errors.ToString());
 
-                // Add the user to a role
-                var roleExists = await _roleManager.RoleExistsAsync(role.ToString());
-                if (!roleExists)
-                {
-                    // Optionally, create the role if it doesn't exist
-                    var roleResult = await _roleManager.CreateAsync(new Role(role.ToString()));
-                    if (!roleResult.Succeeded)
-                        throw new CreationDatabaseException(string.Format(ExceptionConstants.CanNotCreate, "role") + "Inner exception: " + roleResult.Errors.ToString());
-                }
-
-                var addToRoleResult = await _userManager.AddToRoleAsync(entity, role.ToString());
-                if (!addToRoleResult.Succeeded)
-                    throw new DatabaseException(ExceptionConstants.CantAddToRole + "Inner exception: " + addToRoleResult.Errors.ToString());
+                await AddToRoleAsync(entity, role);
 
                 // Commit the transaction
                 await transaction.CommitAsync();
@@ -176,6 +164,23 @@ namespace EventManager.Data.Repositories
             var result = await _userManager.DeleteAsync(user);
 
             return result.Succeeded;
+        }
+
+        public async Task AddToRoleAsync(User user, Roles role)
+        {
+            // Add the user to a role
+            var roleExists = await _roleManager.RoleExistsAsync(role.ToString());
+            if (!roleExists)
+            {
+                // Optionally, create the role if it doesn't exist
+                var roleResult = await _roleManager.CreateAsync(new Role(role.ToString()));
+                if (!roleResult.Succeeded)
+                    throw new CreationDatabaseException(string.Format(ExceptionConstants.CanNotCreate, "role") + "Inner exception: " + roleResult.Errors.ToString());
+            }
+
+            var addToRoleResult = await _userManager.AddToRoleAsync(user, role.ToString());
+            if (!addToRoleResult.Succeeded)
+                throw new DatabaseException(ExceptionConstants.CantAddToRole + "Inner exception: " + addToRoleResult.Errors.ToString());
         }
         #endregion
     }

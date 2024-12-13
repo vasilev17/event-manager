@@ -42,7 +42,7 @@ namespace EventManager.Services.Decorators.User
         {
             ValidatePassword(user);
 
-            if (user.Role != Roles.User && user.Role != Roles.Organizer)
+            if (user.Role != Roles.User && user.Role != Roles.Organizer && user.Role != Roles.Admin)
                 throw new ArgumentException(ExceptionConstants.InvalidRole);
 
             if (PropertiesAreNull(user))

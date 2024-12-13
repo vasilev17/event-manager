@@ -2,8 +2,8 @@
 
 namespace EventManager.Services.Factories.Interfaces
 {
-    public interface IEventServiceFactory
+    public interface IVerificationRequestServiceFactory
     {
-        IEventService Create();
+        IVerificationRequestService Create();
     }
 }
