@@ -1,12 +1,11 @@
 import React from "react";
+import group21 from "../assets/Group 21.svg";
 
 export default function Footer() {
   return (
-    <footer class="bg-purple-950 text-white bottom-0 w-screen p-24 pr-28">
+    <footer className="bg-secondary text-white bottom-0 w-screen p-10 md:p-24 md:pr-28">
       <div className="">
-        <div className="footer-semibold">
-          За нас
-        </div>
+        <div className="footer-semibold">За нас</div>
         <div className="footer-bold">
           Ние сме водеща платформа за организиране и откриване на събития – от
           концерти и фестивали до бизнес конференции и уъркшопи. Помагаме на
@@ -43,6 +42,10 @@ export default function Footer() {
           <a> Twitter |</a>
           <a> LinkedIn</a>
         </div>
+        <div className="w-full h-0 border border-white my-12"></div>
+      </div>
+      <div className="text-center text-white text-sm font-semibold font-sans">
+        © 2024 Всички права запазени.
       </div>
     </footer>
   );
