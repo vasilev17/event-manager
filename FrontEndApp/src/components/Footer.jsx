@@ -1,5 +1,4 @@
 import React from "react";
-import group21 from "../assets/Group 21.svg";
 
 export default function Footer() {
   return (

@@ -4,7 +4,7 @@ import Checkbox from "./CheckBox";
 
 export default function MailAbonament() {
   return (
-    <div className="bg-secondary2 p-10 md:p-24 h-auto grid grid-cols-5 relative overflow-clip">
+    <div className="bg-secondary2 p-10 md:p-24 h-auto grid grid-cols-5 relative over">
       <div className="col-span-2">
         <div className="text-black text-4xl font-semibold font-sans mb-6">
           Абонирайте се за новини
@@ -50,5 +50,3 @@ export default function MailAbonament() {
     </div>
   );
 }
-
-<div className="w-[220px] h-14 bg-secondary rounded-[29px]" />;

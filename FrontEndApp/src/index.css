@@ -9,4 +9,7 @@
   .footer-bold{
     @apply text-white text-xl font-bold font-sans
   }
+  .page-placeholder{
+    @apply h-96 bg-gray-400  text-5xl p-12
+  }
 }
