@@ -1,5 +1,4 @@
 import { createBrowserRouter, RouterProvider } from "react-router";
-import FakeNavBar from "./components/FakeNavBar";
 import HomePage from "./pages/HomePage";
 import EventsPage from "./pages/EventsPage";
 import EventPage from "./pages/EventPage";
