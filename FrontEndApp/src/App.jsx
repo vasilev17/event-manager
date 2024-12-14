@@ -6,11 +6,13 @@ import NotFoundPage from "./pages/NotFoundPage";
 import ProfilePage from "./pages/ProfilePage";
 import CartPage from "./pages/CartPage";
 import CreateActivity from "./pages/CreateActivityPage";
+import NavigationBar from "./components/NavigationBar";
 
 
 export default function App() {
   return (
     <div>
+      <NavigationBar />
       <RouterProvider router={router} />
     </div>
   );
