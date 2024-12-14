@@ -13,8 +13,8 @@ export default function CardsRow({
   card3Description,
 }) {
   return (
-    <div className="grid grid-cols-3 px-10 md:px-24 gap-20 justify-items-center self-end">
-      <div className="justify-self-start self-end  text-black text-4xl font-semibold font-sans">
+    <div className="grid grid-cols-3 px-10 md:px-24 gap-20 justify-items-center">
+      <div className="justify-self-start self-end text-black text-4xl font-semibold font-sans">
         {mainTitle}
       </div>
       <div />

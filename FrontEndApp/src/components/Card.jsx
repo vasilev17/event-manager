@@ -1,4 +1,10 @@
-export default function Card({ picture, title, description }) {
+import defaultImage from "../assets/default.jpg";
+
+export default function Card({
+  picture = defaultImage,
+  title = "Event",
+  description = "Description",
+}) {
   const trimmedTitle =
     title.length > 25 ? title.substring(0, 30) + "..." : title;
 
@@ -12,7 +18,7 @@ export default function Card({ picture, title, description }) {
       <div className="rounded-t-3xl bg-primary2 shadow-md overflow-hidden">
         <img
           src={picture}
-          alt="stew"
+          alt="picture"
           className="h-32 sm:h-48 w-full object-cover"
         ></img>
       </div>
