@@ -29,6 +29,13 @@ namespace EventManager.Web.Controllers
             _jwtService = jwtService;
         }
 
+        [HttpGet("GetByName")]
+        [Authorize()]
+        public async Task<IActionResult> GetByName([FromBody] GetUserWebModel model)
+        {
+            return Ok(await _userService.GetUserByName(model.UserName));
+        }
+
         /// <summary>
         /// End point for registering new users in the platform
         /// </summary>

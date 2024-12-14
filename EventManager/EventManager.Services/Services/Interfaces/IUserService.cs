@@ -70,5 +70,12 @@ namespace EventManager.Services.Services.Interfaces
         /// </summary>
         /// <param name="id">Id of the user</param>
         Task DeleteProfilePictureAsync(Guid id);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
+        Task<UserServiceModel> GetUserByName(string userName);
     }
 }

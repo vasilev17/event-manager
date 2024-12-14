@@ -197,5 +197,16 @@ namespace EventManager.Services.Services
 
             await _userRepository.EditAsync(id, user);
         }
+
+        public async Task<UserServiceModel> GetUserByName(string userName)
+        {
+            var user = await _userRepository.GetByUserNameAsync(userName);
+            var userServiceModel = _mapper.Map<UserServiceModel>(user);
+
+            var roleNames = await _userRepository.GerUserRoleAsync(user);
+            userServiceModel.Roles = roleNames.ToList();
+
+            return userServiceModel;
+        }
     }
 }

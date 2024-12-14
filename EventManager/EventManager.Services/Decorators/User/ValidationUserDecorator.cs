@@ -147,5 +147,13 @@ namespace EventManager.Services.Decorators.User
 
             return _parent.GetOrganizerAsync(oganizerName);
         }
+
+        public Task<UserServiceModel> GetUserByName(string userName)
+        {
+            if(userName == null) 
+                throw new ArgumentException(ExceptionConstants.AllPropertiesRequiered);
+            
+            return _parent.GetUserByName(userName);
+        }
     }
 }
