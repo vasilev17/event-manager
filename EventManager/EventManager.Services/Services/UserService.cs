@@ -15,6 +15,7 @@ namespace EventManager.Services.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IVerificationRequestsRepository _verificationRequestsRepository;
         private readonly IProfilePictureRepository _profilePictureRepository;
         private readonly IEmailService _emailService;
         private readonly IJwtService _jwtService;
@@ -23,6 +24,7 @@ namespace EventManager.Services.Services
         private readonly string _localTokenLocation;
 
         public UserService(IUserRepository userRepository,
+            IVerificationRequestsRepository verificationRequestsRepository,
             IProfilePictureRepository profilePictureRepository,
             IEmailService emailService,
             IJwtService jwtService,
@@ -37,6 +39,7 @@ namespace EventManager.Services.Services
             _cloudinaryService = cloudinaryService;
             _mapper = mapper;
             _localTokenLocation = localTokenLocation;
+            _verificationRequestsRepository = verificationRequestsRepository;
         }
 
         public async Task<TokenModel> LoginAsync(LoginServiceModel loginServiceModel)
@@ -193,6 +196,17 @@ namespace EventManager.Services.Services
             };
 
             await _userRepository.EditAsync(id, user);
+        }
+
+        public async Task<UserServiceModel> GetUserByName(string userName)
+        {
+            var user = await _userRepository.GetByUserNameAsync(userName);
+            var userServiceModel = _mapper.Map<UserServiceModel>(user);
+
+            var roleNames = await _userRepository.GerUserRoleAsync(user);
+            userServiceModel.Roles = roleNames.ToList();
+
+            return userServiceModel;
         }
     }
 }

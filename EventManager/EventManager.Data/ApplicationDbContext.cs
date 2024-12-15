@@ -20,6 +20,8 @@ namespace EventManager.Data
             base.OnModelCreating(builder);
         }
 
+        public DbSet<VerificationRequest> VerificationRequests { get; set; }
+
         public DbSet<EventType> Types { get; set; }
 
         public DbSet<ProfilePicture> ProfilePictures { get; set; }

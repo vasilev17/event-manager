@@ -16,10 +16,15 @@ namespace EventManager.Web.Setup.Mappings
             CreateMap<ResetPasswordWebModel, ResetPasswordServiceModel>();
             CreateMap<ResetPasswordTokenWebModel, ResetPasswordTokenServiceModel>();
             CreateMap<UpdateUserWebModel, UpdateUserServiceModel>();
+            CreateMap<VerificationRequestWebModel, VerificationRequestServiceModel>();
+            CreateMap<UserWebModel, UserServiceModel>();
 
             CreateMap<UserPasswordResetModel, UserPasswordResetServiceModel>();
             CreateMap<ProfilePicture, PictureServiceModel>();
             CreateMap<User, GetUserServiceModel>();
+            CreateMap<VerificationRequestServiceModel, VerificationRequest>();
+            CreateMap<VerificationRequest, VerificationRequestInfo>();
+            CreateMap<User, UserServiceModel>();
 
             CreateMap<RegisterServiceModel, User>()
                 .ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(src => src.Password));

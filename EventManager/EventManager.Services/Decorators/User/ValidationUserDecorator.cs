@@ -42,7 +42,7 @@ namespace EventManager.Services.Decorators.User
         {
             ValidatePassword(user);
 
-            if (user.Role != Roles.User && user.Role != Roles.Organizer)
+            if (user.Role != Roles.User && user.Role != Roles.Organizer && user.Role != Roles.Admin)
                 throw new ArgumentException(ExceptionConstants.InvalidRole);
 
             if (PropertiesAreNull(user))
@@ -146,6 +146,14 @@ namespace EventManager.Services.Decorators.User
                 throw new ArgumentException(ExceptionConstants.AllPropertiesRequiered);
 
             return _parent.GetOrganizerAsync(oganizerName);
+        }
+
+        public Task<UserServiceModel> GetUserByName(string userName)
+        {
+            if(userName == null) 
+                throw new ArgumentException(ExceptionConstants.AllPropertiesRequiered);
+            
+            return _parent.GetUserByName(userName);
         }
     }
 }

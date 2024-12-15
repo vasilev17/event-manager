@@ -20,6 +20,7 @@ namespace EventManager.Web.Setup
             services.AddScoped<IUserServiceFactory>(serviceProvider =>
             {
                 var userRepository = serviceProvider.GetRequiredService<IUserRepository>();
+                var verificationRequestRepository = serviceProvider.GetRequiredService<IVerificationRequestsRepository>();
                 var profilePictureRepository = serviceProvider.GetRequiredService<IProfilePictureRepository>();
                 var emailService = serviceProvider.GetRequiredService<IEmailService>();
                 var jwtService = serviceProvider.GetRequiredService<IJwtService>();
@@ -31,8 +32,14 @@ namespace EventManager.Web.Setup
                 if(tokenLocation == null)
                     tokenLocation = Environment.CurrentDirectory;
 
-                return new UserServiceFactory(userRepository, profilePictureRepository,
-                    emailService, cloudinaryService, jwtService, mapper, tokenLocation);
+                return new UserServiceFactory(userRepository,
+                    verificationRequestRepository,
+                    profilePictureRepository,
+                    emailService, 
+                    cloudinaryService, 
+                    jwtService, 
+                    mapper, 
+                    tokenLocation);
             });
 
             services.AddScoped<IUserRepository, UserRepository>();
@@ -41,6 +48,8 @@ namespace EventManager.Web.Setup
             services.AddScoped<IEventRepository, EventRepository>();
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<IEventPictureRepository, EventPictureRepository>();
+            services.AddScoped<IVerificationRequestsRepository, VerificationRequestsRepository>();
+            services.AddScoped<IVerificationRequestServiceFactory, VerificationRequestServiceFactory>();
 
             services.AddSingleton<IJwtService, JwtService>(options =>
             new JwtService(

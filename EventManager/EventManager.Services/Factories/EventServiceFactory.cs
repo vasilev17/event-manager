@@ -35,7 +35,7 @@ namespace EventManager.Services.Factories
             _mapper = mapper;
         }
 
-        public IEventService CreateEventService()
+        public IEventService Create()
         {
             var coreService = new EventService(_eventRepository, _eventPictureRepository, _jwtService, _cloudinaryService, _mapper);
             return new ValidationEventDecorator(coreService);

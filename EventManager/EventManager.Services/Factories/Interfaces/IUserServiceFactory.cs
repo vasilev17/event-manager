@@ -4,6 +4,6 @@ namespace EventManager.Services.Factories.Interfaces
 {
     public interface IUserServiceFactory
     {
-        IUserService CreateUserService();
+        IUserService Create();
     }
 }

@@ -70,5 +70,13 @@ namespace EventManager.Data.Repositories.Interfaces
         /// <param name="roleName"></param>
         /// <returns></returns>
         Task<bool> IsInRoleAsync(User user, string roleName);
+        
+        /// <summary>
+        /// Adds user to role
+        /// </summary>
+        /// <param name="organizer">user</param>
+        /// <param name="verified"></param>
+        /// <returns></returns>
+        Task AddToRoleAsync(User user, Roles role);
     }
 }

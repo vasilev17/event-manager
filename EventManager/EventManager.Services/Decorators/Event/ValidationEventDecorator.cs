@@ -1,5 +1,4 @@
 ﻿using EventManager.Common.Constants;
-using EventManager.Data.Models;
 using EventManager.Services.Models.Event;
 using EventManager.Services.Models.Picture;
 using EventManager.Services.Services.Interfaces;

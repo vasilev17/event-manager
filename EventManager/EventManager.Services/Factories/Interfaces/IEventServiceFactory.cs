@@ -4,6 +4,6 @@ namespace EventManager.Services.Factories.Interfaces
 {
     public interface IEventServiceFactory
     {
-        IEventService CreateEventService();
+        IEventService Create();
     }
 }
