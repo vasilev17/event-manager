@@ -49,3 +49,4 @@ const router = createBrowserRouter([
     element: <CreateActivity />,
   },
 ]);
+
