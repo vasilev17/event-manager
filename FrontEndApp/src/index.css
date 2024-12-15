@@ -12,8 +12,4 @@
   .page-placeholder{
     @apply h-96 bg-gray-400  text-5xl p-12
   }
-
-  .input-flex{
-    @apply flex items-center mx-10 
-  }
 }

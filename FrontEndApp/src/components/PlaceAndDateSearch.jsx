@@ -2,7 +2,7 @@ export default function () {
   return (
     <div className="bg-cover mb-20 bg-center rounded-b-3xl bg-no-repeat w-full h-[800px] relative bg-[url('D:\S_tasks\ST\EventManager\FrontEndApp\src\assets\concertBackgroung.jpg')]">
       <div className="w-[1000px] h-36 bg-white rounded-full shadow-xl absolute bottom-0 left-0 m-14 p-6 flex">
-        <div className="input-flex">
+        <div className="flex items-center mx-10 ">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -20,7 +20,7 @@ export default function () {
 
           <input type="text" placeholder="Въведете място или изпълнител " className="focus:outline-none p-2 border-b-2 ml-1 w-64"></input>
         </div>
-        <div className="input-flex">
+        <div className="flex items-center mr-20 ">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
