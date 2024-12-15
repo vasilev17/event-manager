@@ -102,7 +102,7 @@ const NavigationBar = () => {
         />
         <Link to={"events/" + search}>
           <button
-            className="search-button w-28 h-8 left-[255px] top-[8px] text-white absolute bg-[#40ddc7] rounded-2xl hover:bg-teal-700"
+            className="search-button w-28 h-8 left-[260px] top-[8px] text-white absolute bg-[#40ddc7] rounded-2xl hover:bg-teal-700"
             onClick={handleSearch}
           >
             Търсене
