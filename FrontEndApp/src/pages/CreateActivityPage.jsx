@@ -1,6 +1,5 @@
  import { useState } from "react";
 
-
   const CreateActivity = () => {
     const [step, setStep] = useState(1);
   
