@@ -9,7 +9,7 @@ export default function CategotyPlaceDateSearch() {
           backgroundImage: `url(${paintPicture})`,
         }}
       >
-        <div className="flex flex-col items-center justify-center w-full h-48 mt-6 bg-white/60 shadow-black/30 shadow-md ">
+        <div className="flex flex-col items-center justify-center w-full h-48 mt-4 bg-white/60 shadow-black/30 shadow-md ">
           <div className=" text-center text-secondary text-5xl font-bold tracking-widest mb-2 ">
             Всички събития
           </div>
@@ -22,13 +22,13 @@ export default function CategotyPlaceDateSearch() {
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
-            stroke-width="1.5"
+            strokeWidth="1.5"
             stroke="currentColor"
-            class="size-6"
+            className="size-6"
           >
             <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               d="m19.5 8.25-7.5 7.5-7.5-7.5"
             />
           </svg>
@@ -39,13 +39,13 @@ export default function CategotyPlaceDateSearch() {
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
-            stroke-width="1.5"
+            strokeWidth="1.5"
             stroke="currentColor"
-            class="size-6"
+            className="size-6"
           >
             <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               d="m19.5 8.25-7.5 7.5-7.5-7.5"
             />
           </svg>
@@ -56,13 +56,13 @@ export default function CategotyPlaceDateSearch() {
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
-            stroke-width="1.5"
+            strokeWidth="1.5"
             stroke="currentColor"
-            class="size-6"
+            className="size-6"
           >
             <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               d="m19.5 8.25-7.5 7.5-7.5-7.5"
             />
           </svg>

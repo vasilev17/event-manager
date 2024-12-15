@@ -1,7 +1,7 @@
  import { useState } from "react";
 
 
-  const AddActivity = () => {
+  const CreateActivity = () => {
     const [step, setStep] = useState(1);
   
     const nextStep = () => {
@@ -91,5 +91,5 @@
     return <div className="min-h-screen bg-teal-50 flex items-center justify-center">{renderStep()}</div>;
   };
   
-  export default AddActivity;
+  export default CreateActivity;
   

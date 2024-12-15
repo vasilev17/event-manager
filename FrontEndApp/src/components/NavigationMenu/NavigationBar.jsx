@@ -1,13 +1,14 @@
-
 import { FaShoppingCart, FaUserAlt } from "react-icons/fa";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 import { useState } from "react";
-import { DropdownMenuRight, DropdownMenuLeft } from "./DropdownMenu"; 
+import { DropdownMenuRight, DropdownMenuLeft } from "./DropdownMenu";
+import { Link } from "react-router";
 
 const NavigationBar = () => {
   const [isEventsOpen, setIsEventsOpen] = useState(false);
   const [isActivitiesOpen, setIsActivitiesOpen] = useState(false);
   const [activeButton, setActiveButton] = useState(null);
+  const [search, setSearch] = useState("");
 
   // open "Всички събития" and close "Всички активности"
   const toggleEventsDropdown = () => {
@@ -24,7 +25,7 @@ const NavigationBar = () => {
   };
 
   const handleItemClick = (item) => {
-    console.log(item); 
+    console.log(item);
   };
 
   const handleSearch = () => {
@@ -35,11 +36,13 @@ const NavigationBar = () => {
     <nav className="navbar w-full h-[140px] border-b shadow border border-[#d9d9d9] flex items-center justify-between px-4 bg-white">
       <div className="container w-70">
         {/* Logo Section */}
-        <div className="navbar-logo w-48 mb-5 mt-7 ml-5 ">
-          <div className="text-center text-white pr-70 text-xl py-3 bg-[#40ddc7]">
-            Лого
+        <Link to="/">
+          <div className="navbar-logo w-48 mb-9 ">
+            <div className="text-center text-white pr-70 text-xl py-3 bg-primary">
+              Лого
+            </div>
           </div>
-        </div>
+        </Link>
 
         {/* Buttons Section */}
         <div className="flex items-center space-x-4 ml-5">
@@ -68,7 +71,6 @@ const NavigationBar = () => {
           </button>
         </div>
 
-        
         <DropdownMenuRight
           isOpen={isEventsOpen}
           items={["Концерти", "Култура", "Спорт", "Благотворителни", "Други"]}
@@ -91,40 +93,45 @@ const NavigationBar = () => {
       </div>
 
       {/* Search bar */}
-      <div className="navbar-search pl-4 flex items-center space-x-2 w-96 h-12 left-[422px] top-[50px] absolute bg-white rounded-3xl shadow border border-[#d9d9d9]">
+      <div className="navbar-search pl-4 flex items-center space-x-2 w-96 h-12 left-[422px] top-[50px] absolute bg-white rounded-3xl shadow border border-[#d9d9d9] ">
         <input
+          onChange={(e) => setSearch(e.target.value)}
           type="text"
-          className="search-input p-1 rounded-3xl outline-transparent w-200"
+          className="search-input p-1 rounded-3xl outline-transparent w-200 focus:outline-none"
           placeholder="Търсене..."
         />
-        <button
-          className="search-button w-28 h-8 left-[255px] top-[8px] text-white absolute bg-[#40ddc7] rounded-2xl hover:bg-teal-700"
-          onClick={handleSearch}
-        >
-          Търсене
-        </button>
+        <Link to={"events/" + search}>
+          <button
+            className="search-button w-28 h-8 left-[255px] top-[8px] text-white absolute bg-[#40ddc7] rounded-2xl hover:bg-teal-700"
+            onClick={handleSearch}
+          >
+            Търсене
+          </button>
+        </Link>
       </div>
 
       {/* Create Button */}
-      <div className="navbar-button">
-        <button className="create main-button w-40 h-12 left-[850px] top-[50px] text-white absolute bg-[#40ddc7] rounded-3xl hover:bg-teal-700 shadow border border-[#d9d9d9]">
-          Създай
-        </button>
-      </div>
+      <Link to="/create">
+        <div className="navbar-button">
+          <button className="create main-button w-40 h-12 left-[850px] top-[50px] text-white absolute bg-[#40ddc7] rounded-3xl hover:bg-teal-700 shadow border border-[#d9d9d9]">
+            Създай
+          </button>
+        </div>
+      </Link>
 
-     
       <div className="navbar-icons flex space-x-8 mr-8 text-gray-600">
-    
-        <div className=" shoppingCart flex flex-col items-center">
-          <FaShoppingCart className="text-xl hover:text-teal-600" />
-          <span className="text-sm mt-1">Количка</span>
-        </div>
-
-     
-        <div className="profile flex flex-col items-center">
-          <FaUserAlt className="text-xl hover:text-teal-600" />
-          <span className="text-sm mt-1">Профил</span>
-        </div>
+        <Link to="cart/whoever-this-user-is">
+          <div className=" shoppingCart flex flex-col items-center">
+            <FaShoppingCart className="text-xl hover:text-teal-600" />
+            <span className="text-sm mt-1">Количка</span>
+          </div>
+        </Link>
+        <Link to="profile/whoever-this-user-is">
+          <div className="profile flex flex-col items-center">
+            <FaUserAlt className="text-xl hover:text-teal-600" />
+            <span className="text-sm mt-1">Профил</span>
+          </div>
+        </Link>
       </div>
     </nav>
   );
