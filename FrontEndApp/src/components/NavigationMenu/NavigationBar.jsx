@@ -68,7 +68,7 @@ const NavigationBar = () => {
           </button>
         </div>
 
-        {/* Dropdown menus */}
+        
         <DropdownMenuRight
           isOpen={isEventsOpen}
           items={["Концерти", "Култура", "Спорт", "Благотворителни", "Други"]}
@@ -107,21 +107,21 @@ const NavigationBar = () => {
 
       {/* Create Button */}
       <div className="navbar-button">
-        <button className="main-button w-40 h-12 left-[850px] top-[50px] text-white absolute bg-[#40ddc7] rounded-3xl hover:bg-teal-700 shadow border border-[#d9d9d9]">
+        <button className="create main-button w-40 h-12 left-[850px] top-[50px] text-white absolute bg-[#40ddc7] rounded-3xl hover:bg-teal-700 shadow border border-[#d9d9d9]">
           Създай
         </button>
       </div>
 
-      {/* Icons */}
+     
       <div className="navbar-icons flex space-x-8 mr-8 text-gray-600">
-        {/* Количка Icon and Text */}
-        <div className="flex flex-col items-center">
+    
+        <div className=" shoppingCart flex flex-col items-center">
           <FaShoppingCart className="text-xl hover:text-teal-600" />
           <span className="text-sm mt-1">Количка</span>
         </div>
 
-        {/* Профил Icon and Text */}
-        <div className="flex flex-col items-center">
+     
+        <div className="profile flex flex-col items-center">
           <FaUserAlt className="text-xl hover:text-teal-600" />
           <span className="text-sm mt-1">Профил</span>
         </div>
