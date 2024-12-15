@@ -8,7 +8,7 @@ export default function CardGrid() {
         Най-популярни
       </div>
       <div />
-      <button className="w-44 h-[71px] bg-secondary2 rounded-full justify-self-center -mb-3  p-6 flex ">
+      <button className="w-44 h-[71px] bg-secondary2 rounded-full justify-self-center -mb-3 p-6 flex gap-2 text-center text-black text-2xl  font-semibold font-sans leading-none shadow-black/30 shadow-md hover:bg-secondary hover:text-white transition-all ease-out duration-100">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -22,10 +22,8 @@ export default function CardGrid() {
             stroke-linejoin="round"
             d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75"
           />
-
         </svg>
-        <p className="text-center text-black text-2xl  font-semibold font-sans ml-2 -mt-1.5">Филтри</p>
-        
+        Филтри
       </button>
       <Card
         picture={pictureFromAssetsFolder}
@@ -43,7 +41,7 @@ export default function CardGrid() {
       <Card />
       <Card />
       <Card />
-      <button className="w-full max-w-96 h-20 pb-1 mb-44 mt-16 col-start-2 col-span-2 bg-secondary rounded-full text-white font-sans text-xl font-semibold">
+      <button className="w-full max-w-96 h-20 pb-1 mb-44 mt-16 col-start-2 col-span-2 bg-secondary rounded-full text-white font-sans text-xl font-semibold shadow-black/30 shadow-md">
         Покажи Още
       </button>
     </div>

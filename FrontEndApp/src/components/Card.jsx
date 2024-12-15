@@ -14,7 +14,7 @@ export default function Card({
       : description;
 
   return (
-    <div className="relative max-w-96">
+    <div className="relative max-w-96 ">
       <div className="rounded-t-3xl bg-primary2 shadow-md overflow-hidden">
         <img
           src={picture}
