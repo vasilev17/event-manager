@@ -1,8 +1,13 @@
-
+import { useState } from "react";
 import group21 from "../assets/Group 21.svg";
 import Checkbox from "./CheckBox";
 
 export default function MailAbonament() {
+  const [email, setEmail] = useState("");
+  function handleClick() {
+    setEmail("");
+    console.log(email);
+  }
   return (
     <div className="bg-secondary2 p-10 md:p-24 h-auto grid grid-cols-5 relative over">
       <div className="col-span-2">
@@ -18,9 +23,10 @@ export default function MailAbonament() {
 
       <div className="col-span-2">
         <input
+          onChange={(e) => setEmail(e.target.value)}
           type="text"
           placeholder="Въведете имейл адрес..."
-          className="w-full h-16 p-6 pb-7 bg-white rounded-full border border-[#929292] focus:outline-none font-sans placeholder:text-black/30 text-xl font-semibold"
+          className="w-full h-16 p-6 pb-7 bg-white rounded-full border border-gray-400 focus:outline-none font-sans placeholder:text-black/30 text-xl font-semibold"
         />
         <div className="flex pl-4 mt-6">
           <Checkbox />
@@ -38,7 +44,10 @@ export default function MailAbonament() {
       </div>
 
       <div className="pl-6 pt-1">
-        <button className="w-full h-14 pb-1 bg-secondary rounded-full text-white font-sans text-xl font-semibold">
+        <button
+          onClick={handleClick}
+          className="w-full h-14 pb-1 bg-secondary rounded-full text-white font-sans text-xl font-semibold hover:shadow-black/30 hover:shadow-md transition-all ease-out duration-100"
+        >
           Регистрирам се
         </button>
       </div>

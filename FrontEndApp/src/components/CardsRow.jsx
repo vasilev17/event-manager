@@ -34,7 +34,7 @@ export default function CardsRow({
         title={card3Title}
         description={card3Description}
       />
-      <button className="w-full max-w-96 h-20 pb-1 mb-44 mt-16 col-start-2 bg-secondary rounded-full text-white font-sans text-xl font-semibold">
+      <button className="w-full max-w-96 h-20 pb-1 mb-44 mt-16 col-start-2 bg-secondary rounded-full text-white font-sans text-xl font-semibold shadow-black/30 shadow-md">
         Покажи Още
       </button>
     </div>

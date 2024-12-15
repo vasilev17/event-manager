@@ -6,23 +6,21 @@ export default function Card({
   description = "Description",
 }) {
   const trimmedTitle =
-    title.length > 25 ? title.substring(0, 30) + "..." : title;
+    title.length > 30 ? title.substring(0, 30) + "..." : title;
 
   const trimmedDescription =
-    description.length > 50
-      ? description.substring(0, 50) + "..."
+    description.length > 30
+      ? description.substring(0, 30) + "..."
       : description;
 
   return (
-    <div className="relative max-w-96 ">
-      <div className="rounded-t-3xl bg-primary2 shadow-md overflow-hidden">
-        <img
-          src={picture}
-          alt="picture"
-          className="h-32 sm:h-48 w-full object-cover"
-        ></img>
-      </div>
-      <div className="p-4 pb-5 -mt-6 rounded-3xl bg-primary absolute w-full">
+    <div className="flex flex-col max-w-96 hover:shadow-black/50 shadow-md rounded-3xl ">
+      <img
+        src={picture}
+        alt="picture"
+        className="h-32 sm:h-48 w-full object-cover rounded-t-3xl"
+      ></img>
+      <div className="p-4 pb-5 -mt-6 max-h-[92px] rounded-3xl bg-primary w-full">
         <span className="font-bold text-xl text-white">{trimmedTitle}</span>
         <span className="block text-xl font-semibold text-white">
           {trimmedDescription}
