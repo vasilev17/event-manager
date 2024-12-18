@@ -2,7 +2,7 @@
 
 export default function Footer() {
   return (
-    <footer className="bg-secondary text-white bottom-0 w-screen p-10 md:p-24 md:pr-28">
+    <footer className="bg-secondary text-white w-full md:p-24 md:pr-28">
       <div className="">
         <div className="footer-semibold">За нас</div>
         <div className="footer-bold">

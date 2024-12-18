@@ -2,7 +2,7 @@ import concertPicture from "../assets/concertBackgroung.jpg"
 
 export default function PlaceAndDateSearch() {
   return (
-    <div className="bg-cover mb-20 bg-center rounded-b-3xl bg-no-repeat w-full h-[800px] relative"
+    <div className="bg-cover mb-20 bg-center rounded-b-3xl bg-no-repeat w-full h-[550px] relative"
     style={{ backgroundImage: `url(${concertPicture})` }}>
       <div className="w-[1000px] h-36 bg-white rounded-full shadow-xl absolute bottom-0 left-0 m-14 p-6 flex">
         <div className="flex items-center mx-10 ">
