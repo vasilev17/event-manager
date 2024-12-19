@@ -81,52 +81,65 @@ namespace EventManager.Services.Services
             await _eventRepository.AddTicketAsync(newTicket);
         }
 
-        public async Task<List<EventDTO>> GetFilteredEventsAsync(EventFilterServiceModel filter)
+        public async Task<List<EventGridViewDTO>> GetFilteredEventsAsync(EventFilterServiceModel filter)
         {
             var events = await _eventRepository.GetAllEventsAsync();
 
+            List<EventDTO> eventDTOs = _mapper.Map<List<EventDTO>>(events);
+
+            if (!string.IsNullOrEmpty(filter.Name))
+            {
+                eventDTOs = eventDTOs.Where(e => e.Name.Contains(filter.Name, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
             if (filter.MinPrice.HasValue)
             {
-                events = events.Where(e => e.MaxPrice >= filter.MinPrice.Value).ToList();
+                eventDTOs = eventDTOs.Where(e => e.MaxPrice >= filter.MinPrice.Value).ToList();
             }
 
             if (filter.MaxPrice.HasValue)
             {
-                events = events.Where(e => e.MinPrice <= filter.MaxPrice.Value || e.MinPrice == null).ToList();
+                eventDTOs = eventDTOs.Where(e => e.MinPrice <= filter.MaxPrice.Value || e.MinPrice == null).ToList();
             }
 
             if (filter.StartDateTime.HasValue)
             {
-                events = events.Where(e => e.StartDateTime >= filter.StartDateTime.Value).ToList();
+                eventDTOs = eventDTOs.Where(e => e.StartDateTime >= filter.StartDateTime.Value).ToList();
             }
 
             if (filter.EndDateTime.HasValue)
             {
-                events = events.Where(e => e.EndDateTime <= filter.EndDateTime.Value).ToList();
+                eventDTOs = eventDTOs.Where(e => e.EndDateTime <= filter.EndDateTime.Value).ToList();
             }
 
             if (!string.IsNullOrEmpty(filter.Address))
             {
-                events = events.Where(e => e.Address.Contains(filter.Address, StringComparison.OrdinalIgnoreCase)).ToList();
+                eventDTOs = eventDTOs.Where(e => e.Address.Contains(filter.Address, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
             if (!string.IsNullOrEmpty(filter.Username))
             {
-                events = events.Where(e => e.CreatorUsername == filter.Username).ToList();
+                eventDTOs = eventDTOs.Where(e => e.CreatorUsername == filter.Username).ToList();
             }
 
             if (filter.EventTypes != null && filter.EventTypes.Any())
             {
                 var eventTypeNames = filter.EventTypes.Select(et => et.ToString()).ToHashSet();
-                events = events.Where(e => e.EventTypeNames.Overlaps(eventTypeNames)).ToList();
+                eventDTOs = eventDTOs.Where(e => e.EventTypeNames.Overlaps(eventTypeNames)).ToList();
             }
 
-            return events;
+            List<EventGridViewDTO> eventViewDTOs = _mapper.Map<List<EventGridViewDTO>>(eventDTOs);
+
+            return eventViewDTOs;
         }
 
-        public async Task<Event> GetEventAsync(Guid eventId)
+        public async Task<EventDTO> GetEventAsync(Guid eventId)
         {
-            return await _eventRepository.GetByIdAsync(eventId);
+            var searchedEvent = await _eventRepository.GetSingleEventAsync(eventId);
+
+            var eventDTO = _mapper.Map<EventDTO>(searchedEvent);
+
+            return eventDTO;
         }
 
         public async Task<float> RateEventAsync(RateEventServiceModel ratingModel)

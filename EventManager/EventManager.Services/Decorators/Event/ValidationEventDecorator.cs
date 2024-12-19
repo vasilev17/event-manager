@@ -48,7 +48,7 @@ namespace EventManager.Services.Decorators.Event
             return _parent.DeleteEventAsync(eventId);
         }
 
-        public Task<List<EventDTO>> GetFilteredEventsAsync(EventFilterServiceModel filter)
+        public Task<List<EventGridViewDTO>> GetFilteredEventsAsync(EventFilterServiceModel filter)
         {
             ValidateEventFilterModel(filter);
             return _parent.GetFilteredEventsAsync(filter);
@@ -62,7 +62,7 @@ namespace EventManager.Services.Decorators.Event
             }
         }
 
-        public Task<Data.Models.Event> GetEventAsync(Guid eventId)
+        public Task<EventDTO> GetEventAsync(Guid eventId)
         {
             return _parent.GetEventAsync(eventId);
         }

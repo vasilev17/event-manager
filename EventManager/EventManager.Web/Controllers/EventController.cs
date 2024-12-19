@@ -1,19 +1,13 @@
 ﻿using AutoMapper;
 using EventManager.Common.Constants;
-using EventManager.Data.Models;
 using EventManager.Services.Factories.Interfaces;
 using EventManager.Services.Models.Event;
 using EventManager.Services.Models.Picture;
-using EventManager.Services.Models.User;
-using EventManager.Services.Services;
 using EventManager.Services.Services.Interfaces;
 using EventManager.Web.Models.Event;
 using EventManager.Web.Models.Picture;
-using EventManager.Web.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration.UserSecrets;
-using Microsoft.Extensions.Logging;
 
 namespace EventManager.Web.Controllers
 {
@@ -120,7 +114,7 @@ namespace EventManager.Web.Controllers
         /// Endpoint for getting a single event by Id
         /// </summary>
         /// /// <param name="eventId">Id of the event to be retrieved</param>
-        /// <returns>Event object</returns>
+        /// <returns>EventDTO object</returns>
         [HttpGet("GetEvent/{eventId}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetEvent(Guid eventId)

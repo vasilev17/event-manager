@@ -26,10 +26,17 @@ namespace EventManager.Data.Repositories.Interfaces
         Task<bool> DeleteAsync(Guid eventId);
 
         /// <summary>
+        /// Gets an event from the database
+        /// </summary>
+        /// <param name="eventId">Id of the searched event</param>
+        /// <returns>The searched Event</returns>
+        Task<Event> GetSingleEventAsync(Guid eventId);
+
+        /// <summary>
         /// Gets all events from the database
         /// </summary>
-        /// <returns>List of all Event DTOs</returns>
-        Task<List<EventDTO>> GetAllEventsAsync();
+        /// <returns>List of all Events</returns>
+        Task<List<Event>> GetAllEventsAsync();
 
         /// <summary>
         /// Adds a rating to the database

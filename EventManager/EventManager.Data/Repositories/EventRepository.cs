@@ -67,49 +67,31 @@ namespace EventManager.Data.Repositories
             if (searchedEvent == null)
                 throw new DatabaseException(string.Format(ExceptionConstants.NotFound, "event"));
 
-
             return searchedEvent;
         }
 
-        public async Task<List<EventDTO>> GetAllEventsAsync()
+        public async Task<Event> GetSingleEventAsync(Guid eventId)
+        {
+
+            var eventEntity = await DbContext.Events
+       .Include(e => e.User)
+       .Include(e => e.Types)
+       .Include(e => e.AvailableTickets)
+       .FirstOrDefaultAsync(e => e.Id == eventId);
+
+            if (eventEntity == null)
+                throw new DatabaseException(string.Format(ExceptionConstants.NotFound, "event"));
+
+            return eventEntity;
+        }
+
+        public async Task<List<Event>> GetAllEventsAsync()
         {
             var events = await DbContext.Events
-  .Include(e => e.User)
-  .Include(e => e.Types)
-  .Include(e => e.AvailableTickets)
-  .Select(e => new EventDTO
-  {
-      Id = e.Id,
-      Name = e.Name,
-      Description = e.Description,
-      StartDateTime = e.StartDateTime,
-      EndDateTime = e.EndDateTime,
-      EventPictureUrl = e.EventPicture.Url,
-      Webpage = e.Webpage,
-      Address = e.Address,
-      IsActivity = e.IsActivity,
-      IsThirdParty = e.IsThirdParty,
-      AverageRating = e.AverageRating,
-      CreatorUsername = e.User.UserName,
-      CreatorProfilePictureURL = e.User.ProfilePicture.Url,
-      MinPrice = e.MinPrice,
-      MaxPrice = e.MaxPrice,
-
-      // Types as a HashSet of strings
-      EventTypeNames = e.Types.Select(t => t.Name).ToHashSet(),
-
-      // Now using TicketDTO for AvailableTickets
-      AvailableTickets = e.AvailableTickets
-      .Where(at => at.UserId == null)
-      .Select(at => new TicketDTO
-      {
-          Id = at.Id,
-          Type = at.Type,
-          Price = at.Price,
-          Description = at.Description,
-      }).ToList()
-  })
-  .ToListAsync();
+            .Include(e => e.User)
+            .Include(e => e.Types)
+            .Include(e => e.AvailableTickets)
+            .ToListAsync();
 
             return events;
         }

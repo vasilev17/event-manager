@@ -29,15 +29,15 @@ namespace EventManager.Services.Services.Interfaces
         /// Gets events based on applied filters
         /// </summary>
         /// <param name="filter">Model carying the filters to be applied</param>
-        /// <returns>List of Event DTOs of filtered events</returns>
-        Task<List<EventDTO>> GetFilteredEventsAsync(EventFilterServiceModel filter);
+        /// <returns>List of Event Grid View DTOs of filtered events</returns>
+        Task<List<EventGridViewDTO>> GetFilteredEventsAsync(EventFilterServiceModel filter);
 
         /// <summary>
         /// Gets event based on the Id provided
         /// </summary>
         /// <param name="eventId">The id of the searched event</param>
-        /// <returns>Single Event object</returns>
-        Task<Event> GetEventAsync(Guid eventId);
+        /// <returns>Single EventDTO object</returns>
+        Task<EventDTO> GetEventAsync(Guid eventId);
 
         /// <summary>
         /// Creates a new event rating in the database
