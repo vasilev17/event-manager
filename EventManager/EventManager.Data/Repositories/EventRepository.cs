@@ -85,12 +85,14 @@ namespace EventManager.Data.Repositories
             return eventEntity;
         }
 
-        public async Task<List<Event>> GetAllEventsAsync()
+        public async Task<List<Event>> GetAllEventsAsync(Pagination pagination)
         {
             var events = await DbContext.Events
             .Include(e => e.User)
             .Include(e => e.Types)
             .Include(e => e.AvailableTickets)
+            .Skip((pagination.PageNumber - 1) * pagination.PageSize)
+            .Take(pagination.PageSize)
             .ToListAsync();
 
             return events;

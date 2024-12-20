@@ -1,10 +1,8 @@
 ﻿using EventManager.Common.Constants;
 using EventManager.Common.Models;
-using EventManager.Data.Models;
 using EventManager.Services.Models.Event;
 using EventManager.Services.Models.Picture;
 using EventManager.Services.Services.Interfaces;
-using Microsoft.Extensions.Logging;
 
 namespace EventManager.Services.Decorators.Event
 {
@@ -48,10 +46,11 @@ namespace EventManager.Services.Decorators.Event
             return _parent.DeleteEventAsync(eventId);
         }
 
-        public Task<List<EventGridViewDTO>> GetFilteredEventsAsync(EventFilterServiceModel filter)
+        public Task<List<EventGridViewDTO>> GetFilteredEventsAsync(EventFilterServiceModel filter, PaginationServiceModel paginationModel)
         {
             ValidateEventFilterModel(filter);
-            return _parent.GetFilteredEventsAsync(filter);
+            ValidateEventPaginationModel(paginationModel);
+            return _parent.GetFilteredEventsAsync(filter, paginationModel);
         }
 
         public void ValidateEventFilterModel(EventFilterServiceModel filter)
@@ -59,6 +58,14 @@ namespace EventManager.Services.Decorators.Event
             if (filter.MinPrice < 0 || filter.MaxPrice < 0)
             {
                 throw new ArgumentException(ExceptionConstants.InvalidEventDataInput);
+            }
+        }
+
+        public void ValidateEventPaginationModel(PaginationServiceModel paginationModel)
+        {
+            if (paginationModel.PageNumber <= 0 || paginationModel.PageSize <= 0)
+            {
+                throw new ArgumentException(ExceptionConstants.InvalidPaginationDataInput);
             }
         }
 

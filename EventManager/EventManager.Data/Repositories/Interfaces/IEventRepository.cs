@@ -1,11 +1,5 @@
-﻿using EventManager.Common.Constants;
-using EventManager.Common.Models;
+﻿using EventManager.Common.Models;
 using EventManager.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EventManager.Data.Repositories.Interfaces
 {
@@ -35,8 +29,9 @@ namespace EventManager.Data.Repositories.Interfaces
         /// <summary>
         /// Gets all events from the database
         /// </summary>
+        /// <param name="pagination">Pagination data for the retrieval</param>
         /// <returns>List of all Events</returns>
-        Task<List<Event>> GetAllEventsAsync();
+        Task<List<Event>> GetAllEventsAsync(Pagination pagination);
 
         /// <summary>
         /// Adds a rating to the database

@@ -30,6 +30,7 @@
 
         //Event Validation Exceptions
         public const string InvalidEventDataInput = "The data you have entered seems invalid!";
+        public const string InvalidPaginationDataInput = "Pagination values must be greater than 0!";
         public const string InvalidActivityDateTimes = "Activities can not have start and/or end dates/times!";
         public const string InvalidEventDateTimes = "Events must have start and end dates/times! If there are no such consider creating an activity.";
         public const string InvalidRatingValue = "The rating value should be between 0 and 5";

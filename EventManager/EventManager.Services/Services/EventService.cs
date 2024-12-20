@@ -81,9 +81,11 @@ namespace EventManager.Services.Services
             await _eventRepository.AddTicketAsync(newTicket);
         }
 
-        public async Task<List<EventGridViewDTO>> GetFilteredEventsAsync(EventFilterServiceModel filter)
+        public async Task<List<EventGridViewDTO>> GetFilteredEventsAsync(EventFilterServiceModel filter, PaginationServiceModel paginationModel)
         {
-            var events = await _eventRepository.GetAllEventsAsync();
+            var pagination = _mapper.Map<Pagination>(paginationModel);
+
+            var events = await _eventRepository.GetAllEventsAsync(pagination);
 
             List<EventDTO> eventDTOs = _mapper.Map<List<EventDTO>>(events);
 

@@ -18,11 +18,13 @@ namespace EventManager.Web.Setup.Mappings
             CreateMap<EventFilterWebModel, EventFilterServiceModel>();
             CreateMap<RateEventWebModel, RateEventServiceModel>();
             CreateMap<EventTicketWebModel, EventTicketServiceModel>();
+            CreateMap<PaginationWebModel, PaginationServiceModel>();
 
             CreateMap<CreateEventServiceModel, Event>()
                 .ForMember(dest => dest.Types, opt => opt.MapFrom(src => src.Types.Select(t => new EventType(t.ToString())).ToHashSet()));
             CreateMap<RateEventServiceModel, Rating>();
             CreateMap<EventTicketServiceModel, Ticket>();
+            CreateMap<PaginationServiceModel, Pagination>();
 
             CreateMap<EventDTO, EventGridViewDTO>();
             CreateMap<Ticket, TicketDTO>();
@@ -39,7 +41,7 @@ namespace EventManager.Web.Setup.Mappings
                     .ToList();
             }));
 
-
+            
 
 
         }

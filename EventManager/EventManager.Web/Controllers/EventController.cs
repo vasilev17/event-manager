@@ -100,14 +100,16 @@ namespace EventManager.Web.Controllers
         /// Endpoint for getting events
         /// </summary>
         /// <param name="filter">Model containing filters to be applied</param>
+        /// <param name="pagination">Model containing the pagination data</param>
         /// <returns>Filtered list of events</returns>
         [HttpGet("GetFilteredEvents")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetFilteredEvents([FromQuery] EventFilterWebModel filter)
+        public async Task<IActionResult> GetFilteredEvents([FromQuery] EventFilterWebModel filter, [FromQuery] PaginationWebModel pagination)
         {
             var filterServiceModel = _mapper.Map<EventFilterServiceModel>(filter);
+            var paginationServiceModel = _mapper.Map<PaginationServiceModel>(pagination);
 
-            return Ok(await _eventService.GetFilteredEventsAsync(filterServiceModel));
+            return Ok(await _eventService.GetFilteredEventsAsync(filterServiceModel, paginationServiceModel));
         }
 
         /// <summary>
