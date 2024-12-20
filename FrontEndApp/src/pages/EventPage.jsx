@@ -13,7 +13,7 @@ export default function EventPage() {
   const scrollLeft = () => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollBy({
-        left: -300, // Adjust the scroll amount
+        left: -300, 
         behavior: "smooth",
       });
     }
@@ -22,7 +22,7 @@ export default function EventPage() {
   const scrollRight = () => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollBy({
-        left: 300, // Adjust the scroll amount
+        left: 300, 
         behavior: "smooth",
       });
     }
@@ -34,7 +34,7 @@ export default function EventPage() {
         {/* Event Header Section */}
         <div className="relative">
           <img
-            src={concert} // Replace with your image URL
+            src={concert} 
             alt="Event"
             className="w-full h-[300px] object-cover"
           />
