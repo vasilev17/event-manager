@@ -53,7 +53,8 @@ namespace EventManager.Services.Services.Interfaces
         /// </summary>
         /// <param name="ticketId">Id of the ticket the user is booking</param>
         /// <param name="userId">Id of the user booking the event</param>
-        Task BookTicketAsync(Guid ticketId, Guid userId);
+        /// <returns>The barcode of the booked ticket</returns>
+        Task<string> BookTicketAsync(Guid ticketId, Guid userId);
 
         /// <summary>
         /// Creates a new event ticket

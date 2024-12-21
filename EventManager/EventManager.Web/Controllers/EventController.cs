@@ -153,14 +153,13 @@ namespace EventManager.Web.Controllers
         /// </summary>
         /// <param name="ticketId">Id of the ticket to be booked</param>
         /// <param name="authorization">JWT authorizaation token</param>
-        /// <returns>Action result status</returns>
+        /// <returns>The barcode of the booked ticket</returns>
         [HttpPut("BookTicket/{ticketId}")]
         [Authorize()]
         public async Task<IActionResult> BookTicket(Guid ticketId, [FromHeader] string authorization)
         {
             Guid userId = _jwtService.GetId(authorization);
-            await _eventService.BookTicketAsync(ticketId, userId);
-            return Ok();
+            return Ok(await _eventService.BookTicketAsync(ticketId, userId));
         }
 
         /// <summary>

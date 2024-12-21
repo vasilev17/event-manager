@@ -211,7 +211,7 @@ namespace EventManager.Data.Repositories
             return true;
         }
 
-        public async Task<bool> BookTicketAsync(Guid ticketId, Guid userId)
+        public async Task<string> BookTicketAsync(Guid ticketId, Guid userId)
         {
             var existingTicket = await DbContext.Tickets
                                        .FirstOrDefaultAsync(e => e.Id == ticketId);
@@ -233,11 +233,12 @@ namespace EventManager.Data.Repositories
             //Update the new min and max prices of an event based on available tickets
             await UpdateEventPricesAsync(existingTicket.EventId);
 
-            return true;
+            return existingTicket.Barcode;
         }
 
         public async Task<bool> UpdateEventPricesAsync(Guid eventId)
         {
+
             var _event = await DbContext.Events
                                        .Include(e => e.AvailableTickets)
                                        .FirstOrDefaultAsync(e => e.Id == eventId);

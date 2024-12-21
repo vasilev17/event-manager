@@ -7,6 +7,7 @@ namespace EventManager.Data.Models
     public class Ticket
     {
         public required Guid Id { get; set; }
+        public required string Barcode { get; set; } = Guid.NewGuid().ToString();
         public required Guid EventId { get; set; }
         public Guid? UserId { get; set; } = null; // Nullable because AvailableTickets are not booked by a user yet
         public string Type { get; set; } = "General Admission Ticket (GA)";

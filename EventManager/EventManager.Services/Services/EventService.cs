@@ -65,13 +65,14 @@ namespace EventManager.Services.Services
 
         }
 
-        public async Task BookTicketAsync(Guid ticketId, Guid userId)
+        public async Task<string> BookTicketAsync(Guid ticketId, Guid userId)
         {
             var result = await _eventRepository.BookTicketAsync(ticketId, userId);
 
-            if (!result)
+            if (result == string.Empty)
                 throw new DatabaseException(string.Format(ExceptionConstants.FailedToCreate, "booking"));
 
+            return result;
         }
 
         public async Task CreateEventTicketAsync(EventTicketServiceModel ticketModel)

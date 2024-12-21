@@ -60,8 +60,8 @@ namespace EventManager.Data.Repositories.Interfaces
         /// </summary>
         /// <param name="ticketId">Id of the ticket to be marked as booked</param>
         /// <param name="userId">Id of the user booking the event ticket</param>
-        /// <returns>True if the booking is made correctly</returns>
-        Task<bool> BookTicketAsync(Guid ticketId, Guid userId);
+        /// <returns>The barcode of the booked ticket</returns>
+        Task<string> BookTicketAsync(Guid ticketId, Guid userId);
 
         /// <summary>
         /// Checks and sets min and max price for an event based on the tickets available

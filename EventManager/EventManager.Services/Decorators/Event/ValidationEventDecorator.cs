@@ -99,7 +99,7 @@ namespace EventManager.Services.Decorators.Event
             return _parent.ToggleEventAttendanceAsync(eventId, userId);
         }
 
-        public Task BookTicketAsync(Guid ticketId, Guid userId)
+        public Task<string> BookTicketAsync(Guid ticketId, Guid userId)
         {
             return _parent.BookTicketAsync(ticketId, userId);
         }
