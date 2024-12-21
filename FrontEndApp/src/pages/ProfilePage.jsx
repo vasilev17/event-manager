@@ -1,16 +1,39 @@
-import  { useState } from "react";
+import { useEffect, useState } from "react";
 import TicketSection from "../components/TicketSection";
+import { isTokenExpired } from "../api/authUtils";
+import LoginSignup1 from "../pop_up/login_signup1";
+import { useNavigate } from "react-router";
 
 function ProfilePage() {
-
-  const [isEditingPhone, setIsEditingPhone] = useState(false);// Edit state
-  const [isEditingEmail, setIsEditingEmail] = useState(false); 
+  const [isEditingPhone, setIsEditingPhone] = useState(false); // Edit state
+  const [isEditingEmail, setIsEditingEmail] = useState(false);
   const [isEditingUsername, setIsEditingUsername] = useState(false);
   const [isEventsVisible, setIsEventsVisible] = useState(true); // Visibility state for events section
-
   const [phoneNumber, setPhoneNumber] = useState("0888888888"); // Phone number state
-  const [emailAddress, setEmailAddress] = useState("example123@gmail.com"); 
-  const [username, setUsername] = useState("потребителско име"); 
+  const [emailAddress, setEmailAddress] = useState("example123@gmail.com");
+  const [username, setUsername] = useState("потребителско име");
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkToken = () => {
+      if (isTokenExpired()) {
+        setIsLoggedIn(false);
+        navigate("/login");
+      }
+    };
+
+    checkToken(); // Check on initial render
+
+    const intervalId = setInterval(checkToken, 60000); // Check every minute
+
+    return () => clearInterval(intervalId); // Clear interval on unmount
+  }, [navigate]);
+
+  if (!isLoggedIn) {
+    return <LoginSignup1 />;
+  }
 
   // Toggle editing mode
   const toggleEditUsername = () => {
@@ -24,7 +47,7 @@ function ProfilePage() {
   const toggleEditPhone = () => {
     setIsEditingPhone(!isEditingPhone);
   };
-    // Update the username
+  // Update the username
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
   };
@@ -34,7 +57,7 @@ function ProfilePage() {
     setEmailAddress(e.target.value);
   };
 
- // Update the phone number
+  // Update the phone number
   const handlePhoneChange = (e) => {
     setPhoneNumber(e.target.value);
   };
@@ -99,7 +122,7 @@ function ProfilePage() {
               </div>
               <div>
                 <p className="text-gray-600">Телефонен номер</p>
-                 {isEditingPhone ? (
+                {isEditingPhone ? (
                   <input
                     type="text"
                     value={phoneNumber}
@@ -118,18 +141,24 @@ function ProfilePage() {
               </div>
             </div>
             <div className="flex flex-col mt-4 space-y-2 text-sm">
-              <a href="#" className="text-teal-500 hover:underline">Смяна на парола</a>
-              <a href="#" className="text-red-500 hover:underline">Изход</a>
-              <a href="#" className="text-red-500 hover:underline">Изтриване на профил</a>
+              <a href="#" className="text-teal-500 hover:underline">
+                Смяна на парола
+              </a>
+              <a href="#" className="text-red-500 hover:underline">
+                Изход
+              </a>
+              <a href="#" className="text-red-500 hover:underline">
+                Изтриване на профил
+              </a>
             </div>
           </div>
         </div>
 
         {/* Tickets Section */}
-        
+
         <div className="lg:col-span-2">
           <h2 className="text-xl font-bold mb-4">Моите билети</h2>
-           <TicketSection />
+          <TicketSection />
 
           {/* Events Section */}
           {isEventsVisible && (
@@ -157,8 +186,4 @@ function ProfilePage() {
   );
 }
 
-
 export default ProfilePage;
-
-  
- 

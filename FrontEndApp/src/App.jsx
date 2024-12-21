@@ -7,6 +7,7 @@ import ProfilePage from './pages/ProfilePage';
 import CartPage from './pages/CartPage';
 import CreateActivity from './pages/CreateActivityPage';
 import NavigationBar from './components/NavigationMenu/NavigationBar';
+import LoginSigninPage from './pages/LoginSinginPage';
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
         <NavigationBar />
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginSigninPage />} />
           <Route path="/events" element={<EventsPage />} />
           <Route path="/events/:eventId" element={<EventPage />} />
           <Route path="/profile/:profileId" element={<ProfilePage />} />
