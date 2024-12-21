@@ -3,6 +3,7 @@ import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 import { useState } from "react";
 import { DropdownMenuRight, DropdownMenuLeft } from "./DropdownMenu";
 import { Link } from "react-router";
+import { getUsername } from "../../api/authUtils";
 
 const NavigationBar = () => {
   const [isEventsOpen, setIsEventsOpen] = useState(false);
@@ -126,7 +127,7 @@ const NavigationBar = () => {
             <span className="text-sm mt-1">Количка</span>
           </div>
         </Link>
-        <Link to="profile/whoever-this-user-is">
+        <Link to={getUsername() ? "profile/"+getUsername() : "/login"}>
           <div className="profile flex flex-col items-center">
             <FaUserAlt className="text-xl hover:text-teal-600" />
             <span className="text-sm mt-1">Профил</span>

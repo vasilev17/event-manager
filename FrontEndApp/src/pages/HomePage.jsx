@@ -3,8 +3,50 @@ import MailAbonament from "../components/MailAbonament";
 import CardsRow from "../components/CardsRow";
 import pictureFromAssetsFolder from "../assets/pictureFromAssetsFolder.jpg";
 import PlaceAndDateSearch from "../components/PlaceAndDateSearch";
+import {
+  api,
+  storeUserData,
+  getToken,
+  isTokenExpired,
+  removeUserData,
+  getUsername,
+  getEmail,
+} from "../api/authUtils.js";
+import { useEffect } from "react";
 
 export default function HomePage() {
+  /*
+  const requestBody = {
+    userName: "name1",
+    password: "Password1!",
+  };
+  useEffect(() => {
+    const fetchEvent = async () => {
+      api
+        .post("User/Login", requestBody)
+        .then((response) => {
+          const token = response.data.token;
+          storeToken(token); // Store the token
+          console.log(getToken());
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+    fetchEvent();
+  }, []);
+  */
+/*
+  useEffect(() => {
+    const fetchEvent = async () => {
+      removeUserData();
+      console.log(isTokenExpired());
+      console.log(getUsername());
+      console.log(getEmail());
+    };
+    fetchEvent();
+  }, []);
+*/
   const hardCodedPictureLink =
     "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.rbVMAX7i5iH4MrkykUiy9gHaEK%26pid%3DApi&f=1&ipt=58261e1cbfc98b5409839b963a42f3f62be6efc4851a24b84d4ab3730c5f3a97&ipo=images";
 

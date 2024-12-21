@@ -18,4 +18,10 @@
     hover:border-white hover:border-b-[3px]
     transition-all ease-out duration-100
   }
+  .input-login{
+    @apply absolute w-[194px] h-[39px] rounded-[30px] p-2 border 
+    border-solid border-[#28666e] placeholder:font-normal 
+    placeholder:text-xs whitespace-nowrap focus:outline-none 
+    font-sans placeholder:text-black/40
+  }
 }
