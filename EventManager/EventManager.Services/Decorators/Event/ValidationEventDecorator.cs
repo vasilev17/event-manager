@@ -1,4 +1,5 @@
 ﻿using EventManager.Common.Constants;
+using EventManager.Common.Models;
 using EventManager.Services.Models.Event;
 using EventManager.Services.Models.Picture;
 using EventManager.Services.Services.Interfaces;
@@ -40,19 +41,37 @@ namespace EventManager.Services.Decorators.Event
             }
         }
 
-        public Task DeleteEventAsync(Guid eventID)
+        public Task DeleteEventAsync(Guid eventId)
         {
-            return _parent.DeleteEventAsync(eventID);
+            return _parent.DeleteEventAsync(eventId);
         }
 
-        public Task<List<Data.Models.Event>> GetFilteredEventsAsync(EventFilterServiceModel filter)
+        public Task<List<EventGridViewDTO>> GetFilteredEventsAsync(EventFilterServiceModel filter, PaginationServiceModel paginationModel)
         {
-            return _parent.GetFilteredEventsAsync(filter);
+            ValidateEventFilterModel(filter);
+            ValidateEventPaginationModel(paginationModel);
+            return _parent.GetFilteredEventsAsync(filter, paginationModel);
         }
 
-        public Task<Data.Models.Event> GetEventAsync(Guid eventID)
+        public void ValidateEventFilterModel(EventFilterServiceModel filter)
         {
-            return _parent.GetEventAsync(eventID);
+            if (filter.MinPrice < 0 || filter.MaxPrice < 0)
+            {
+                throw new ArgumentException(ExceptionConstants.InvalidEventDataInput);
+            }
+        }
+
+        public void ValidateEventPaginationModel(PaginationServiceModel paginationModel)
+        {
+            if (paginationModel.PageNumber <= 0 || paginationModel.PageSize <= 0)
+            {
+                throw new ArgumentException(ExceptionConstants.InvalidPaginationDataInput);
+            }
+        }
+
+        public Task<EventDTO> GetEventAsync(Guid eventId)
+        {
+            return _parent.GetEventAsync(eventId);
         }
 
         public Task<float> RateEventAsync(RateEventServiceModel ratingModel)
@@ -72,6 +91,35 @@ namespace EventManager.Services.Decorators.Event
             if (ratingModel.RatingValue % 0.5 != 0)
             {
                 throw new ArgumentException(ExceptionConstants.InvalidRatingValueStep);
+            }
+        }
+
+        public Task ToggleEventAttendanceAsync(Guid eventId, Guid userId)
+        {
+            return _parent.ToggleEventAttendanceAsync(eventId, userId);
+        }
+
+        public Task<string> BookTicketAsync(Guid ticketId, Guid userId)
+        {
+            return _parent.BookTicketAsync(ticketId, userId);
+        }
+
+        public Task CreateEventTicketAsync(EventTicketServiceModel ticketModel)
+        {
+            ValidateTicketModel(ticketModel);
+            return _parent.CreateEventTicketAsync(ticketModel);
+        }
+
+        public void ValidateTicketModel(EventTicketServiceModel ticketModel)
+        {
+            if (ticketModel.Price < 0)
+            {
+                throw new ArgumentException(ExceptionConstants.InvalidEventDataInput);
+            }
+
+            if (ticketModel.Type.Length < 2)
+            {
+                throw new ArgumentException(ExceptionConstants.InvalidEventDataInput);
             }
         }
     }

@@ -60,55 +60,88 @@ namespace EventManager.Services.Services
             var result = await _eventRepository.DeleteAsync(eventId);
 
             if (!result)
-                throw new DatabaseException(ExceptionConstants.FailedToDeleteEvent);
+                throw new DatabaseException(string.Format(ExceptionConstants.FailedToDelete, "event"));
+
         }
 
-        public async Task<List<Event>> GetFilteredEventsAsync(EventFilterServiceModel filter)
+        public async Task<string> BookTicketAsync(Guid ticketId, Guid userId)
         {
-            var events = await _eventRepository.GetAllEventsAsync();
+            var result = await _eventRepository.BookTicketAsync(ticketId, userId);
 
-            //if (filter.MinPrice.HasValue)
-            //{
-            //    events = events.Where(e => e.Price >= filter.MinPrice.Value).ToList();
-            //}
+            if (result == string.Empty)
+                throw new DatabaseException(string.Format(ExceptionConstants.FailedToCreate, "booking"));
 
-            //if (filter.MaxPrice.HasValue)
-            //{
-            //    events = events.Where(e => e.Price <= filter.MaxPrice.Value).ToList();
-            //}
+            return result;
+        }
+
+        public async Task CreateEventTicketAsync(EventTicketServiceModel ticketModel)
+        {
+            var newTicket = _mapper.Map<Ticket>(ticketModel);
+
+            await _eventRepository.AddTicketAsync(newTicket);
+        }
+
+        public async Task<List<EventGridViewDTO>> GetFilteredEventsAsync(EventFilterServiceModel filter, PaginationServiceModel paginationModel)
+        {
+            var pagination = _mapper.Map<Pagination>(paginationModel);
+
+            var events = await _eventRepository.GetAllEventsAsync(pagination);
+
+            List<EventDTO> eventDTOs = _mapper.Map<List<EventDTO>>(events);
+
+            if (!string.IsNullOrEmpty(filter.Name))
+            {
+                eventDTOs = eventDTOs.Where(e => e.Name.Contains(filter.Name, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
+            if (filter.MinPrice.HasValue)
+            {
+                eventDTOs = eventDTOs.Where(e => e.MaxPrice >= filter.MinPrice.Value).ToList();
+            }
+
+            if (filter.MaxPrice.HasValue)
+            {
+                eventDTOs = eventDTOs.Where(e => e.MinPrice <= filter.MaxPrice.Value || e.MinPrice == null).ToList();
+            }
 
             if (filter.StartDateTime.HasValue)
             {
-                events = events.Where(e => e.StartDateTime >= filter.StartDateTime.Value).ToList();
+                eventDTOs = eventDTOs.Where(e => e.StartDateTime >= filter.StartDateTime.Value).ToList();
             }
 
             if (filter.EndDateTime.HasValue)
             {
-                events = events.Where(e => e.EndDateTime <= filter.EndDateTime.Value).ToList();
+                eventDTOs = eventDTOs.Where(e => e.EndDateTime <= filter.EndDateTime.Value).ToList();
             }
 
             if (!string.IsNullOrEmpty(filter.Address))
             {
-                events = events.Where(e => e.Address.Contains(filter.Address, StringComparison.OrdinalIgnoreCase)).ToList();
+                eventDTOs = eventDTOs.Where(e => e.Address.Contains(filter.Address, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
             if (!string.IsNullOrEmpty(filter.Username))
             {
-                events = events.Where(e => e.User != null && e.User.UserName == filter.Username).ToList();
+                eventDTOs = eventDTOs.Where(e => e.CreatorUsername == filter.Username).ToList();
             }
 
             if (filter.EventTypes != null && filter.EventTypes.Any())
             {
                 var eventTypeNames = filter.EventTypes.Select(et => et.ToString()).ToHashSet();
-                events = events.Where(e => e.Types.Any(t => eventTypeNames.Contains(t.Name))).ToList();
+                eventDTOs = eventDTOs.Where(e => e.EventTypeNames.Overlaps(eventTypeNames)).ToList();
             }
 
-            return events;
+            List<EventGridViewDTO> eventViewDTOs = _mapper.Map<List<EventGridViewDTO>>(eventDTOs);
+
+            return eventViewDTOs;
         }
 
-        public async Task<Event> GetEventAsync(Guid eventId)
+        public async Task<EventDTO> GetEventAsync(Guid eventId)
         {
-            return await _eventRepository.GetByIdAsync(eventId);
+            var searchedEvent = await _eventRepository.GetSingleEventAsync(eventId);
+
+            var eventDTO = _mapper.Map<EventDTO>(searchedEvent);
+
+            return eventDTO;
         }
 
         public async Task<float> RateEventAsync(RateEventServiceModel ratingModel)
@@ -119,64 +152,75 @@ namespace EventManager.Services.Services
 
             if (!savedRating)
             {
-                throw new DatabaseException(string.Format(ExceptionConstants.CanNotCreate, "rating"));
+                throw new DatabaseException(string.Format(ExceptionConstants.FailedToCreate, "rating"));
             }
 
             return await _eventRepository.UpdateEventAverageRatingAsync(rating.EventId);
 
         }
 
-        public async Task UploadEventPictureAsync(EventPictureServiceModel model)
+        public async Task ToggleEventAttendanceAsync(Guid eventId, Guid userId)
         {
-            await SavePicture(model);
+            var result = await _eventRepository.ToggleAttendanceAsync(eventId, userId);
+
+            if (!result)
+                throw new CreationDatabaseException(string.Format(ExceptionConstants.FailedToCreate, "attendance"));
+
         }
 
-        public async Task DeleteEventPictureAsync(Guid id)
-        {
-            var picture = await _eventPictureRepository.GetByEventIdAsync(id);
+        //public async Task UploadEventPictureAsync(EventPictureServiceModel model)
+        //{
+        //    await SavePicture(model);
+        //}
 
-            if (picture != null)
-            {
-                var pictureServiceModel = _mapper.Map<PictureServiceModel>(picture);
-                await _cloudinaryService.DeletePictureAsync(pictureServiceModel);
-            }
+        //public async Task DeleteEventPictureAsync(Guid id)
+        //{
+        //    var picture = await _eventPictureRepository.GetByEventIdAsync(id);
 
-            await _eventPictureRepository.DeleteAsync(picture);
+        //    if (picture != null)
+        //    {
+        //        var pictureServiceModel = _mapper.Map<PictureServiceModel>(picture);
+        //        await _cloudinaryService.DeletePictureAsync(pictureServiceModel);
+        //    }
 
-            var searchedEvent = await _eventRepository.GetByIdAsync(id);
-            searchedEvent.EventPicture = new EventPicture
-            {
-                Url = PictureConstants.DefaultEventPicture
-            };
+        //    await _eventPictureRepository.DeleteAsync(picture);
 
-            await _eventRepository.EditAsync(id, searchedEvent);
-        }
+        //    var searchedEvent = await _eventRepository.GetByIdAsync(id);
+        //    searchedEvent.EventPicture = new EventPicture
+        //    {
+        //        Url = PictureConstants.DefaultEventPicture
+        //    };
 
-        private async Task SavePicture(EventPictureServiceModel model)
-        {
-            model.Picture.Stream.Seek(0, SeekOrigin.Begin);
-            var cloudinaryResult = await _cloudinaryService.UploadPictureAsync(model.Picture);
+        //    await _eventRepository.EditAsync(id, searchedEvent);
+        //}
 
-            var eventPicture = new EventPicture
-            {
-                PublicId = cloudinaryResult.PublicId,
-                ResourceType = cloudinaryResult.ResourceType,
-                Url = cloudinaryResult.Url.AbsoluteUri
-            };
-            var searchedEvent = await _eventRepository.GetByIdAsync(model.EventId);
+        //private async Task SavePicture(EventPictureServiceModel model)
+        //{
+        //    model.Picture.Stream.Seek(0, SeekOrigin.Begin);
+        //    var cloudinaryResult = await _cloudinaryService.UploadPictureAsync(model.Picture);
 
-            searchedEvent.EventPicture = eventPicture;
-            eventPicture.Event = searchedEvent;
-            eventPicture.EventId = searchedEvent.Id;
+        //    var eventPicture = new EventPicture
+        //    {
+        //        PublicId = cloudinaryResult.PublicId,
+        //        ResourceType = cloudinaryResult.ResourceType,
+        //        Url = cloudinaryResult.Url.AbsoluteUri
+        //    };
+        //    var searchedEvent = await _eventRepository.GetByIdAsync(model.EventId);
 
-            var pictureIsSaved = await _eventPictureRepository.AddAsync(eventPicture);
-            if (!pictureIsSaved)
-                throw new DatabaseException(ExceptionConstants.FailedToUploadEventPicture);
+        //    searchedEvent.EventPicture = eventPicture;
+        //    eventPicture.Event = searchedEvent;
+        //    eventPicture.EventId = searchedEvent.Id;
 
-            var eventResult = await _eventRepository.EditAsync(searchedEvent.Id, searchedEvent);
-            if (!eventResult)
-                throw new DatabaseException(ExceptionConstants.FailedToUpdateEvent);
-        }
+        //    var pictureIsSaved = await _eventPictureRepository.AddAsync(eventPicture);
+
+        //    if (!pictureIsSaved)
+        //        throw new DatabaseException(string.Format(ExceptionConstants.FailedToUpload, "event picture"));
+
+        //    var eventResult = await _eventRepository.EditAsync(searchedEvent.Id, searchedEvent);
+
+        //    if (!eventResult)
+        //        throw new DatabaseException(string.Format(ExceptionConstants.FailedToUpdate, "event"));
+        //}
 
     }
 }

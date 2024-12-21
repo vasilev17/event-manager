@@ -72,10 +72,12 @@ namespace EventManager.Services.Services
             var user = await _userRepository.GetByUserNameAsync(oganizerName);
 
             if (user == null)
-                throw new DatabaseException(ExceptionConstants.UserNotFound);
+                throw new DatabaseException(string.Format(ExceptionConstants.NotFound, "User"));
 
             var isOrganizer = await _userRepository.IsInRoleAsync(user, Roles.Organizer.ToString());
 
+            if(!isOrganizer)
+                throw new DatabaseException(string.Format(ExceptionConstants.NotFound, "User"));
             if (!isOrganizer)
                 throw new DatabaseException(ExceptionConstants.UserNotFound);
 
@@ -123,7 +125,8 @@ namespace EventManager.Services.Services
             var result = await _userRepository.EditAsync(id, user);
 
             if (!result)
-                throw new DatabaseException(ExceptionConstants.FailedToUpdateUser);
+                throw new DatabaseException(string.Format(ExceptionConstants.FailedToUpdate, "user"));
+
         }
 
         public async Task UploadProfilePictureAsync(ProfilePictureServiceModel model)
@@ -152,11 +155,13 @@ namespace EventManager.Services.Services
 
             var pictureIsSaved = await _profilePictureRepository.AddAsync(profilePicture);
             if (!pictureIsSaved)
-                throw new DatabaseException(ExceptionConstants.FailedToUploadProfilePicture);
+                throw new DatabaseException(string.Format(ExceptionConstants.FailedToUpload, "profile picture"));
 
             var userResult = await _userRepository.EditAsync(user.Id, user);
             if (!userResult)
-                throw new DatabaseException(ExceptionConstants.FailedToUpdateUser);
+                throw new DatabaseException(string.Format(ExceptionConstants.FailedToUpdate, "user"));
+
+
         }
 
         private void PopulateUser(User user, UpdateUserServiceModel updateUserServiceModel)
@@ -179,7 +184,8 @@ namespace EventManager.Services.Services
             var result = await _userRepository.DeleteAsync(id);
 
             if (!result)
-                throw new DatabaseException(ExceptionConstants.FailedToDeleteUser);
+                throw new DatabaseException(string.Format(ExceptionConstants.FailedToDelete, "user"));
+
         }
 
         public async Task DeleteProfilePictureAsync(Guid id)

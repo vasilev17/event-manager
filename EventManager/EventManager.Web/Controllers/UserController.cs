@@ -196,5 +196,6 @@ namespace EventManager.Web.Controllers
 
             return Ok();
         }
+
     }
 }

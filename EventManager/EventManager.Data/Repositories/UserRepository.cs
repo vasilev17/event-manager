@@ -37,6 +37,10 @@ namespace EventManager.Data.Repositories
 
                 await AddToRoleAsync(entity, role);
 
+                var addToRoleResult = await _userManager.AddToRoleAsync(entity, role.ToString());
+                if (!addToRoleResult.Succeeded)
+                    throw new DatabaseException(ExceptionConstants.CantAddToRole + "Inner exception: " + addToRoleResult.Errors.ToString());
+
                 // Commit the transaction
                 await transaction.CommitAsync();
 
@@ -82,7 +86,7 @@ namespace EventManager.Data.Repositories
             var user = await _userManager.FindByIdAsync(id.ToString());
 
             if (user == null)
-                throw new ArgumentException(ExceptionConstants.UserNotFound);
+                throw new ArgumentException(string.Format(ExceptionConstants.NotFound, "user"));
 
             return user;
         }
@@ -121,7 +125,7 @@ namespace EventManager.Data.Repositories
             var user = await _userManager.FindByEmailAsync(email);
 
             if (user == null)
-                throw new DatabaseException(ExceptionConstants.UserNotFound);
+                throw new DatabaseException(string.Format(ExceptionConstants.NotFound, "user"));
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
@@ -139,7 +143,8 @@ namespace EventManager.Data.Repositories
             var user = await _userManager.FindByEmailAsync(email);
 
             if (user == null)
-                throw new DatabaseException(ExceptionConstants.UserNotFound);
+                throw new DatabaseException(string.Format(ExceptionConstants.NotFound, "user"));
+
 
             return await _userManager.GeneratePasswordResetTokenAsync(user);
         }
@@ -188,12 +193,12 @@ namespace EventManager.Data.Repositories
                 // Optionally, create the role if it doesn't exist
                 var roleResult = await _roleManager.CreateAsync(new Role(role.ToString()));
                 if (!roleResult.Succeeded)
-                    throw new CreationDatabaseException(string.Format(ExceptionConstants.CanNotCreate, "role") + "Inner exception: " + roleResult.Errors.ToString());
+                    throw new CreationDatabaseException(string.Format(ExceptionConstants.FailedToCreate, "role") + "Inner exception: " + roleResult.Errors.ToString());
             }
 
             var addToRoleResult = await _userManager.AddToRoleAsync(user, role.ToString());
             if (!addToRoleResult.Succeeded)
-                throw new DatabaseException(ExceptionConstants.CantAddToRole + "Inner exception: " + addToRoleResult.Errors.ToString());
+                throw new DatabaseException(ExceptionConstants.FailedToCreate + "role" + " Inner exception: " + addToRoleResult.Errors.ToString());
         }
         #endregion
     }

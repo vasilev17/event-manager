@@ -22,7 +22,10 @@ namespace EventManager.Data.Models
         public bool IsThirdParty { get; set; } = false;
         public List<Rating> Ratings { get; set; } = new();
         public float AverageRating { get; set; } = 0f;
+        public decimal? MinPrice { get; set; } = null;
+        public decimal MaxPrice { get; set; } = 0;
+        public HashSet<User> Attendees { get; set; } = new();
+        public List<Ticket> AvailableTickets { get; set; } = new();
 
-        //TODO Tickets
     }
 }
