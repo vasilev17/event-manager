@@ -78,5 +78,20 @@ namespace EventManager.Data.Repositories.Interfaces
         /// <param name="verified"></param>
         /// <returns></returns>
         Task AddToRoleAsync(User user, Roles role);
+
+        /// <summary>
+        /// Checks if a user with a given userName exists
+        /// </summary>
+        /// <param name="userName">The username</param>
+        /// <returns>boolean</returns>
+        Task<bool> DoesUserNameExist(string userName);
+
+
+        /// <summary>
+        /// Checks if a user with a given email exists
+        /// </summary>
+        /// <param name="userName">The email</param>
+        /// <returns>boolean</returns>
+        Task<bool> DoesEmailExist(string email);
     }
 }

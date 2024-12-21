@@ -1,5 +1,6 @@
 
 using EventManager.Data;
+using EventManager.Web.Middlewares;
 using EventManager.Web.Setup;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
@@ -43,6 +44,8 @@ namespace EventManager.Web
 
             app.UseAuthentication();  
             app.UseAuthorization();
+
+            app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
             app.MapControllers();
 

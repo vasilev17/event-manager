@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using EventManager.Common.Constants;
 using EventManager.Common.Models;
-using EventManager.Data.Exceptions;
+using EventManager.Common.Exceptions;
 using EventManager.Data.Models;
 using EventManager.Data.Models.Picture;
 using EventManager.Data.Repositories.Interfaces;

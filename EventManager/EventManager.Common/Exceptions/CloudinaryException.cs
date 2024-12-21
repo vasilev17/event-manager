@@ -1,6 +1,6 @@
-﻿namespace EventManager.Services.Exceptions
+﻿namespace EventManager.Common.Exceptions
 {
-    public class CloudinaryException: Exception
+    public class CloudinaryException : Exception
     {
         public CloudinaryException() { }
 

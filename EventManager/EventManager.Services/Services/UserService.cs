@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
 using EventManager.Common.Constants;
 using EventManager.Common.Models;
-using EventManager.Data.Exceptions;
 using EventManager.Data.Models;
 using EventManager.Data.Models.Picture;
 using EventManager.Data.Repositories.Interfaces;
-using EventManager.Services.Exceptions;
+using EventManager.Common.Exceptions;
 using EventManager.Services.Models.Picture;
 using EventManager.Services.Models.User;
 using EventManager.Services.Services.Interfaces;
@@ -54,6 +53,12 @@ namespace EventManager.Services.Services
         {
             var user = _mapper.Map<User>(userServiceModel);
 
+            if (await _userRepository.DoesEmailExist(userServiceModel.Email))
+                throw new CredentialsAlreadyExistException(ExceptionConstants.EmailExists);
+
+            if (await _userRepository.DoesUserNameExist(userServiceModel.UserName))
+                throw new CredentialsAlreadyExistException(ExceptionConstants.UserNameExists);
+
             await _userRepository.AddAsync(user, userServiceModel.Role);
 
             var createdUser = await _userRepository.GetByUserNameAsync(userServiceModel.UserName);
@@ -73,6 +78,8 @@ namespace EventManager.Services.Services
 
             if(!isOrganizer)
                 throw new DatabaseException(string.Format(ExceptionConstants.NotFound, "User"));
+            if (!isOrganizer)
+                throw new DatabaseException(ExceptionConstants.UserNotFound);
 
             return _mapper.Map<GetUserServiceModel>(user);
         }
@@ -205,6 +212,10 @@ namespace EventManager.Services.Services
         public async Task<UserServiceModel> GetUserByName(string userName)
         {
             var user = await _userRepository.GetByUserNameAsync(userName);
+
+            if (user == null)
+                throw new UserNotFoundException(ExceptionConstants.UserNotFound);
+
             var userServiceModel = _mapper.Map<UserServiceModel>(user);
 
             var roleNames = await _userRepository.GerUserRoleAsync(user);
