@@ -98,6 +98,18 @@ namespace EventManager.Data.Repositories
             return events;
         }
 
+        //Overload for when no pagination is needed (and passed)
+        public async Task<List<Event>> GetAllEventsAsync()
+        {
+            var events = await DbContext.Events
+            .Include(e => e.User)
+            .Include(e => e.Types)
+            .Include(e => e.AvailableTickets)
+            .ToListAsync();
+
+            return events;
+        }
+
         public async Task<bool> AddEventRatingAsync(Rating entity)
         {
 
@@ -166,7 +178,13 @@ namespace EventManager.Data.Repositories
         {
 
             //Check if the event exists
-            var existingEvent = await GetByIdAsync(eventId);
+            var existingEvent = await GetSingleEventAsync(eventId);
+
+            //Can only set event attendance if the event doesnt have tickets
+            if (existingEvent.AvailableTickets.Count != 0)
+            {
+                throw new ArgumentException(ExceptionConstants.CanNotSetAttendance);
+            }
 
             // Validate if the attendance already exists
             var existingAttendance = await DbContext.Attendances

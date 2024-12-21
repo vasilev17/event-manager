@@ -29,6 +29,7 @@
         public const string NotFound = "{0} not found!";
         public const string FailedToUpload = "Could not upload {0}!";
         public const string FailedToUpdate = "Could not update {0}!";
+        public const string CantAddToRole = "Failed to add user to role!";
 
 
         //Event Validation Exceptions
@@ -39,10 +40,10 @@
         public const string InvalidRatingValue = "The rating value should be between 0 and 5";
         public const string InvalidRatingValueStep = "The rating value step is 0.5";
         public const string InvalidRatingTime = "The event must have started in order to be rated!";
+        public const string CanNotSetAttendance = "This evnet has tickets. Attendance can be set only if the event is free entry (without tickets)!";
 
         //Controller Exceptions
         public const string PictureNotUploaded = "Required field Picture is not uploaded!";
-        public const string UnauthorizedThirdPartyCreation = "Role unauthorized to create third party events/activities!";
 
     }
 }

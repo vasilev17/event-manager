@@ -67,12 +67,12 @@ namespace EventManager.Services.Services
             var user = await _userRepository.GetByUserNameAsync(oganizerName);
 
             if (user == null)
-                throw new DatabaseException(ExceptionConstants.UserNotFound);
+                throw new DatabaseException(string.Format(ExceptionConstants.NotFound, "User"));
 
             var isOrganizer = await _userRepository.IsInRoleAsync(user, Roles.Organizer.ToString());
 
             if(!isOrganizer)
-                throw new DatabaseException(ExceptionConstants.UserNotFound);
+                throw new DatabaseException(string.Format(ExceptionConstants.NotFound, "User"));
 
             return _mapper.Map<GetUserServiceModel>(user);
         }

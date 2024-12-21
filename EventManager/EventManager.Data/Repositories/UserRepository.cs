@@ -180,12 +180,12 @@ namespace EventManager.Data.Repositories
                 // Optionally, create the role if it doesn't exist
                 var roleResult = await _roleManager.CreateAsync(new Role(role.ToString()));
                 if (!roleResult.Succeeded)
-                    throw new CreationDatabaseException(string.Format(ExceptionConstants.CanNotCreate, "role") + "Inner exception: " + roleResult.Errors.ToString());
+                    throw new CreationDatabaseException(string.Format(ExceptionConstants.FailedToCreate, "role") + "Inner exception: " + roleResult.Errors.ToString());
             }
 
             var addToRoleResult = await _userManager.AddToRoleAsync(user, role.ToString());
             if (!addToRoleResult.Succeeded)
-                throw new DatabaseException(ExceptionConstants.CantAddToRole + "Inner exception: " + addToRoleResult.Errors.ToString());
+                throw new DatabaseException(ExceptionConstants.FailedToCreate + "role" + " Inner exception: " + addToRoleResult.Errors.ToString());
         }
         #endregion
     }

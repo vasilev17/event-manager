@@ -63,7 +63,7 @@ namespace EventManager.Web.Controllers
             }
 
             var newEvent = _mapper.Map<CreateEventServiceModel>(newEventModel);
-            newEvent.Id = _jwtService.GetId(authorization);
+            newEvent.UserId = _jwtService.GetId(authorization);
 
             await _eventService.CreateEventAsync(newEvent, eventPictureServiceModel);
 
@@ -95,7 +95,7 @@ namespace EventManager.Web.Controllers
         /// <returns>Filtered list of events</returns>
         [HttpGet("GetFilteredEvents")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetFilteredEvents([FromQuery] EventFilterWebModel filter, [FromQuery] PaginationWebModel pagination)
+        public async Task<IActionResult> GetFilteredEvents([FromQuery] EventFilterWebModel filter, [FromQuery] PaginationWebModel? pagination)
         {
             var filterServiceModel = _mapper.Map<EventFilterServiceModel>(filter);
             var paginationServiceModel = _mapper.Map<PaginationServiceModel>(pagination);
@@ -137,19 +137,13 @@ namespace EventManager.Web.Controllers
         /// Endpoint for toggling event attendance status
         /// </summary>
         /// <param name="eventId">Id of the attended event</param>
-        /// <param name="userId">Id of the user attending the event</param>
         /// <param name="authorization">JWT authorizaation token</param>
         /// <returns>Action result status</returns>
-        [HttpPost("AttendEvent/{eventId}")]
+        [HttpPost("ToggleEventAttendance/{eventId}")]
         [Authorize()]
-        public async Task<IActionResult> ToggleEventAttendance(Guid eventId, [FromBody] Guid userId, [FromHeader] string authorization)
+        public async Task<IActionResult> ToggleEventAttendance(Guid eventId, [FromHeader] string authorization)
         {
-
-            var tokenResult = _jwtService.ValidateJwtToken(userId, authorization);
-
-            if (!tokenResult)
-                return Unauthorized(ExceptionConstants.Unauthorized);
-
+            Guid userId = _jwtService.GetId(authorization);
             await _eventService.ToggleEventAttendanceAsync(eventId, userId);
             return Ok();
         }
@@ -158,18 +152,13 @@ namespace EventManager.Web.Controllers
         /// Endpoint for booking a ticket
         /// </summary>
         /// <param name="ticketId">Id of the ticket to be booked</param>
-        /// <param name="userId">Id of the user booking the ticket</param>
         /// <param name="authorization">JWT authorizaation token</param>
         /// <returns>Action result status</returns>
         [HttpPut("BookTicket/{ticketId}")]
         [Authorize()]
-        public async Task<IActionResult> BookTicket(Guid ticketId, [FromBody] Guid userId, [FromHeader] string authorization)
+        public async Task<IActionResult> BookTicket(Guid ticketId, [FromHeader] string authorization)
         {
-            var tokenResult = _jwtService.ValidateJwtToken(userId, authorization);
-
-            if (!tokenResult)
-                return Unauthorized(ExceptionConstants.Unauthorized);
-
+            Guid userId = _jwtService.GetId(authorization);
             await _eventService.BookTicketAsync(ticketId, userId);
             return Ok();
         }
@@ -177,19 +166,13 @@ namespace EventManager.Web.Controllers
         /// <summary>
         /// Endpoint for creating an event ticket
         /// </summary>
-        /// <param name="userId">Id of the user creating the event</param>
         /// <param name="ticketModel">Model containing the ticket data</param>
         /// <param name="authorization">JWT authorizaation token</param>
         /// <returns>Action result status</returns>
         [HttpPost("CreateEventTicket")]
         [Authorize(Roles = RoleConstants.Creators)]
-        public async Task<IActionResult> CreateEventTicket([FromForm] Guid userId, [FromForm] EventTicketWebModel ticketModel, [FromHeader] string authorization)
+        public async Task<IActionResult> CreateEventTicket([FromForm] EventTicketWebModel ticketModel, [FromHeader] string authorization)
         {
-            var tokenResult = _jwtService.ValidateJwtToken(userId, authorization);
-
-            if (!tokenResult)
-                return Unauthorized(ExceptionConstants.Unauthorized);
-
             var ticket = _mapper.Map<EventTicketServiceModel>(ticketModel);
 
             await _eventService.CreateEventTicketAsync(ticket);

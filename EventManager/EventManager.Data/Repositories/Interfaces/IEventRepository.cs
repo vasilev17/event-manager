@@ -77,5 +77,11 @@ namespace EventManager.Data.Repositories.Interfaces
         /// <returns>True if the ticket is created correctly</returns>
         Task<bool> AddTicketAsync(Ticket newTicket);
 
+        /// <summary>
+        /// Gets all events by organizer
+        /// </summary>
+        /// <param name="id"></param>
+        Task<IEnumerable<Event>> GetAllEventsByOrganizerAsync(Guid id);
+
     }
 }

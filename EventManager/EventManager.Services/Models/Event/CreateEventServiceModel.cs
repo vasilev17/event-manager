@@ -18,7 +18,5 @@ namespace EventManager.Services.Models.Event
         public bool IsActivity { get; set; }
         public bool IsThirdParty { get; set; }
 
-        //TODO Tickets
-
     }
 }
