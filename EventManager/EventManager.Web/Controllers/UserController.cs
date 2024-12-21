@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EventManager.Common.Constants;
+using EventManager.Common.Exceptions;
 using EventManager.Services.Factories.Interfaces;
 using EventManager.Services.Models.Picture;
 using EventManager.Services.Models.User;
@@ -164,7 +165,7 @@ namespace EventManager.Web.Controllers
         public async Task<IActionResult> UpdateProfilePicture([FromForm] UploadPictureWebModel model, [FromHeader] string authorization)
         {
             if (model.Picture == null)
-                throw new InvalidDataException(ExceptionConstants.PictureNotUploaded);
+                throw new InvalidRequestParametersException(ExceptionConstants.PictureNotUploaded);
 
             var ms = new MemoryStream();
             model.Picture.CopyTo(ms);

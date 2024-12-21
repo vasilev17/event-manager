@@ -1,4 +1,4 @@
-﻿namespace EventManager.Services.Exceptions
+﻿namespace EventManager.Common.Exceptions
 {
     public class EmailSenderException : Exception
     {

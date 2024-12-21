@@ -3,7 +3,7 @@
     public static class ExceptionConstants
     {
         //User Validation Exceptions
-        public const string InvalidEmailFormat = "Email: \"{0}\" is not in correct format!";
+        public const string InvalidEmailFormat = "Email is not in correct format!";
         public const string InvalidPasswordSize = "Password must at least 8 charecters long!";
         public const string PasswordSpecialCharecters = "Password must meet at least 3 of the requierments!";
         public const string AllPropertiesRequiered = "All properties are needed!";
@@ -14,6 +14,8 @@
         public const string UnauthorizedThirdPartyCreation = "Role unauthorized to create third party events/activities!";
         public const string InvalidToken = "The jwt token is invalid";
         public const string OrganizerIsVerified = "Organizer is already verified!";
+        public const string UserNameExists = "User with the username already exists";
+        public const string EmailExists = "User with the email already exists";
 
         //Service Exceptions
         public const string CantSendEmail = "Could not send email!";
