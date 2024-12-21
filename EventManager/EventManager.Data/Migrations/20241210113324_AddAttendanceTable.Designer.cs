@@ -4,6 +4,7 @@ using EventManager.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241210113324_AddAttendanceTable")]
+    partial class AddAttendanceTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -84,12 +87,6 @@ namespace EventManager.Data.Migrations
 
                     b.Property<bool>("IsThirdParty")
                         .HasColumnType("tinyint(1)");
-
-                    b.Property<decimal>("MaxPrice")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<decimal?>("MinPrice")
-                        .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -234,43 +231,6 @@ namespace EventManager.Data.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("EventManager.Data.Models.Ticket", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime?>("BookingDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("longtext");
-
-                    b.Property<Guid>("EventId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Tickets");
-                });
-
             modelBuilder.Entity("EventManager.Data.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -345,29 +305,6 @@ namespace EventManager.Data.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("EventManager.Data.Models.VerificationRequest", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("IsCompleated")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<Guid>("OrganizerId")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrganizerId");
-
-                    b.ToTable("VerificationRequests");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -574,34 +511,6 @@ namespace EventManager.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("EventManager.Data.Models.Ticket", b =>
-                {
-                    b.HasOne("EventManager.Data.Models.Event", "Event")
-                        .WithMany("AvailableTickets")
-                        .HasForeignKey("EventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EventManager.Data.Models.User", "User")
-                        .WithMany("BookedTickets")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Event");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("EventManager.Data.Models.VerificationRequest", b =>
-                {
-                    b.HasOne("EventManager.Data.Models.User", "Organizer")
-                        .WithMany()
-                        .HasForeignKey("OrganizerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Organizer");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("EventManager.Data.Models.Role", null)
@@ -670,8 +579,6 @@ namespace EventManager.Data.Migrations
 
             modelBuilder.Entity("EventManager.Data.Models.Event", b =>
                 {
-                    b.Navigation("AvailableTickets");
-
                     b.Navigation("EventPicture")
                         .IsRequired();
 
@@ -680,8 +587,6 @@ namespace EventManager.Data.Migrations
 
             modelBuilder.Entity("EventManager.Data.Models.User", b =>
                 {
-                    b.Navigation("BookedTickets");
-
                     b.Navigation("EventRatings");
 
                     b.Navigation("Events");

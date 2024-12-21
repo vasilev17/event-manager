@@ -31,5 +31,8 @@ namespace EventManager.Data
         public DbSet<Event> Events { get; set; }
 
         public DbSet<Rating> Ratings { get; set; }
+
+        public DbSet<Attendance> Attendances { get; set; }
+        public DbSet<Ticket> Tickets { get; set; }
     }
 }

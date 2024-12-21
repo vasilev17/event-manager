@@ -118,7 +118,8 @@ namespace EventManager.Services.Services
             var result = await _userRepository.EditAsync(id, user);
 
             if (!result)
-                throw new DatabaseException(ExceptionConstants.FailedToUpdateUser);
+                throw new DatabaseException(string.Format(ExceptionConstants.FailedToUpdate, "user"));
+
         }
 
         public async Task UploadProfilePictureAsync(ProfilePictureServiceModel model)
@@ -132,7 +133,7 @@ namespace EventManager.Services.Services
         {
             model.Picture.Stream.Seek(0, SeekOrigin.Begin);
             var cloudinaryResult = await _cloudinaryService.UploadPictureAsync(model.Picture);
-            
+
             var profilePicture = new ProfilePicture
             {
                 PublicId = cloudinaryResult.PublicId,
@@ -147,11 +148,13 @@ namespace EventManager.Services.Services
 
             var pictureIsSaved = await _profilePictureRepository.AddAsync(profilePicture);
             if (!pictureIsSaved)
-                throw new DatabaseException(ExceptionConstants.FailedToUploadProfilePicture);
+                throw new DatabaseException(string.Format(ExceptionConstants.FailedToUpload, "profile picture"));
 
             var userResult = await _userRepository.EditAsync(user.Id, user);
             if (!userResult)
-                throw new DatabaseException(ExceptionConstants.FailedToUpdateUser);
+                throw new DatabaseException(string.Format(ExceptionConstants.FailedToUpdate, "user"));
+
+
         }
 
         private void PopulateUser(User user, UpdateUserServiceModel updateUserServiceModel)
@@ -174,7 +177,8 @@ namespace EventManager.Services.Services
             var result = await _userRepository.DeleteAsync(id);
 
             if (!result)
-                throw new DatabaseException(ExceptionConstants.FailedToDeleteUser);
+                throw new DatabaseException(string.Format(ExceptionConstants.FailedToDelete, "user"));
+
         }
 
         public async Task DeleteProfilePictureAsync(Guid id)

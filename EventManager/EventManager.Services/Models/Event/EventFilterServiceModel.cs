@@ -9,6 +9,7 @@ namespace EventManager.Services.Models.Event
 {
     public class EventFilterServiceModel
     {
+        public string? Name { get; set; }
         public decimal? MinPrice { get; set; }
         public decimal? MaxPrice { get; set; }
         public DateTime? StartDateTime { get; set; }
