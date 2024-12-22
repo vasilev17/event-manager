@@ -30,18 +30,22 @@ namespace EventManager.Data.Repositories
             using var transaction = await DbContext.Database.BeginTransactionAsync();
             try
             {
-                // Add the user to the database without committing
                 var result = await _userManager.CreateAsync(entity);
                 if (!result.Succeeded)
                     throw new CreationDatabaseException(string.Format(ExceptionConstants.CanNotCreate, "user"));
 
-                await AddToRoleAsync(entity, role);
+                var roleExists = await _roleManager.RoleExistsAsync(role.ToString());
+                if (!roleExists)
+                {
+                    var roleResult = await _roleManager.CreateAsync(new Role(role.ToString()));
+                    if (!roleResult.Succeeded)
+                        throw new CreationDatabaseException(string.Format(ExceptionConstants.CanNotCreate, "role") + "Inner exception: " + roleResult.Errors.ToString());
+                }
 
                 var addToRoleResult = await _userManager.AddToRoleAsync(entity, role.ToString());
                 if (!addToRoleResult.Succeeded)
                     throw new DatabaseException(ExceptionConstants.CantAddToRole + "Inner exception: " + addToRoleResult.Errors.ToString());
 
-                // Commit the transaction
                 await transaction.CommitAsync();
 
                 return true;
