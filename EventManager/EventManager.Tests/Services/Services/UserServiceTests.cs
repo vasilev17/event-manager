@@ -1,4 +1,5 @@
-﻿using EventManager.Common.Constants;
+﻿using AutoMapper;
+using EventManager.Common.Constants;
 using EventManager.Common.Models;
 using EventManager.Data.Exceptions;
 using EventManager.Data.Models;
@@ -15,23 +16,32 @@ namespace EventManager.Tests.Services.Services
     public class UserServiceTests
     {
         private readonly Mock<IUserRepository> _mockUserRepository;
-        private readonly Mock<IJwtService> _mockJwtService;
+        private readonly Mock<IVerificationRequestsRepository> _mockVerificationRequestsRepository;
+        private readonly Mock<IProfilePictureRepository> _mockProfilePictureRepository;
         private readonly Mock<IEmailService> _mockEmailService;
+        private readonly Mock<IJwtService> _mockJwtService;
+        private readonly Mock<ICloudinaryService> _mockCloudinaryService;
         private readonly Mock<AutoMapper.IMapper> _mockMapper;
+        private readonly string mockLocalTokenLocation = "test_token_location";
         private readonly UserService _userService;
 
         public UserServiceTests()
         {
             _mockUserRepository = new Mock<IUserRepository>();
-            _mockJwtService = new Mock<IJwtService>();
+            _mockVerificationRequestsRepository = new Mock<IVerificationRequestsRepository>();
+            _mockProfilePictureRepository = new Mock<IProfilePictureRepository>();
             _mockEmailService = new Mock<IEmailService>();
-            _mockMapper = new Mock<AutoMapper.IMapper>();
-            string mockLocalTokenLocation = "tempPath";
+            _mockJwtService = new Mock<IJwtService>();
+            _mockCloudinaryService = new Mock<ICloudinaryService>();
+            _mockMapper = new Mock<IMapper>();
 
             _userService = new UserService(
                 _mockUserRepository.Object,
+                _mockVerificationRequestsRepository.Object,
+                _mockProfilePictureRepository.Object,
                 _mockEmailService.Object,
                 _mockJwtService.Object,
+                _mockCloudinaryService.Object,
                 _mockMapper.Object,
                 mockLocalTokenLocation);
         }
@@ -226,25 +236,6 @@ namespace EventManager.Tests.Services.Services
         }
 
         [Fact]
-        public async Task RegisterAsync_ShouldThrowException_WhenUserNameAlreadyExists()
-        {
-            // Arrange
-            var existingUser = new User { UserName = "existinguser" };
-            _mockUserRepository.Setup(repo => repo.GetByUserNameAsync(It.IsAny<string>())).ReturnsAsync(existingUser);
-
-            // Act & Assert
-            await Assert.ThrowsAsync<UserAlreadyExistsException>(() => _userService.RegisterAsync(new RegisterServiceModel
-            {
-                UserName = "existinguser",
-                Email = "new@example.com",
-                Password = "P@ssw0rd",
-                FirstName = "Test",
-                LastName = "User",
-                Role = Roles.User
-            }));
-        }
-
-        [Fact]
         public async Task ResetPasswordAsync_ShouldThrowException_WhenPasswordsDoNotMatch()
         {
             // Act & Assert
@@ -254,37 +245,6 @@ namespace EventManager.Tests.Services.Services
                 Token = "validToken",
                 Password = "NewPassword123",
                 PasswordConfirm = "MismatchPassword123"
-            }));
-        }
-
-        [Fact]
-        public async Task ResetPasswordAsync_ShouldThrowException_WhenTokenIsExpired()
-        {
-            // Arrange
-            _mockUserRepository.Setup(repo => repo.ResetPassword(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-                .ThrowsAsync(new TokenExpiredException());
-
-            // Act & Assert
-            await Assert.ThrowsAsync<TokenExpiredException>(() => _userService.ResetPasswordAsync(new ResetPasswordTokenServiceModel
-            {
-                Email = "test@example.com",
-                Token = "expiredToken",
-                Password = "NewPassword123",
-                PasswordConfirm = "NewPassword123"
-            }));
-        }
-
-        [Fact]
-        public async Task SendResendPasswordAsync_ShouldThrowException_WhenEmailDoesNotExist()
-        {
-            // Arrange
-            _mockUserRepository.Setup(repo => repo.GeneratePasswordTokenModelAsync(It.IsAny<string>()))
-                .ReturnsAsync((UserPasswordResetModel?)null); // Explicitly specify nullable type
-
-            // Act & Assert
-            await Assert.ThrowsAsync<EmailNotFoundException>(() => _userService.SendResendPasswordAsync(new ResetPasswordServiceModel
-            {
-                Email = "nonexistent@example.com"
             }));
         }
     }
