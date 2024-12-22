@@ -10,6 +10,8 @@
 
         public string LastName { get; set; }
 
+        public string PictureUrl { get; set; }
+
         public List<string> Roles { get; set; }
     }
 }

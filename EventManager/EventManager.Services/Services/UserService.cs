@@ -8,6 +8,7 @@ using EventManager.Common.Exceptions;
 using EventManager.Services.Models.Picture;
 using EventManager.Services.Models.User;
 using EventManager.Services.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
 namespace EventManager.Services.Services
 {
@@ -72,14 +73,12 @@ namespace EventManager.Services.Services
             var user = await _userRepository.GetByUserNameAsync(oganizerName);
 
             if (user == null)
-                throw new DatabaseException(string.Format(ExceptionConstants.NotFound, "User"));
+                throw new UserNotFoundException(string.Format(ExceptionConstants.NotFound, "User"));
 
             var isOrganizer = await _userRepository.IsInRoleAsync(user, Roles.Organizer.ToString());
 
-            if(!isOrganizer)
-                throw new DatabaseException(string.Format(ExceptionConstants.NotFound, "User"));
             if (!isOrganizer)
-                throw new DatabaseException(ExceptionConstants.UserNotFound);
+                throw new UserNotFoundException(string.Format(ExceptionConstants.NotFound, "User"));
 
             return _mapper.Map<GetUserServiceModel>(user);
         }
@@ -98,14 +97,13 @@ namespace EventManager.Services.Services
 
         public async Task ResetPasswordAsync(ResetPasswordTokenServiceModel resetPasswordTokenServiceModel)
         {
-            var succeeded = await _userRepository.ResetPassword(
+            var result = await _userRepository.ResetPassword(
                 resetPasswordTokenServiceModel.Email,
                 resetPasswordTokenServiceModel.Token,
                 resetPasswordTokenServiceModel.Password);
 
-            if (!succeeded)
+            if (!result.Succeeded)
                 throw new ResetPasswordException(ExceptionConstants.FailedToRestorePassword);
-
         }
 
         public async Task ResendPasswordLocalAsync(ResetPasswordServiceModel resetPasswordServiceModel)

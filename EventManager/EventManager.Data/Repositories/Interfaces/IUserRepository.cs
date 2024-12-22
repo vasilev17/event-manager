@@ -1,5 +1,6 @@
 ﻿using EventManager.Common.Constants;
 using EventManager.Data.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace EventManager.Data.Repositories.Interfaces
 {
@@ -32,7 +33,7 @@ namespace EventManager.Data.Repositories.Interfaces
         /// <param name="email">t</param>
         /// <param name="token"></param>
         /// <returns></returns>
-        Task<bool> ResetPassword(string email, string token, string newPassword);
+        Task<IdentityResult> ResetPassword(string email, string token, string newPassword);
 
         /// <summary>
         /// Gets a user from the database using his user name

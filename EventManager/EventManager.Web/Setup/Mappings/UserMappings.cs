@@ -24,7 +24,9 @@ namespace EventManager.Web.Setup.Mappings
             CreateMap<User, GetUserServiceModel>();
             CreateMap<VerificationRequestServiceModel, VerificationRequest>();
             CreateMap<VerificationRequest, VerificationRequestInfo>();
-            CreateMap<User, UserServiceModel>();
+
+            CreateMap<User, UserServiceModel>()
+                .ForMember(dest => dest.PictureUrl, opt => opt.MapFrom(src => src.ProfilePicture.Url));
 
             CreateMap<RegisterServiceModel, User>()
                 .ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(src => src.Password));
