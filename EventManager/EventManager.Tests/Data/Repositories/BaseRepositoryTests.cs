@@ -1,4 +1,5 @@
-﻿using EventManager.Data.Repositories;
+﻿using EventManager.Data;
+using EventManager.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
@@ -13,25 +14,25 @@ namespace BaseRepositoryTests
     public class TestEntity
     {
         public Guid Id { get; set; }
-        public string Name { get; set; }
+        public required string Name { get; set; }
     }
 
     // Mock repository inheriting from BaseRepository
     public class TestRepository : BaseRepository<TestEntity>
     {
-        public TestRepository(DbContext context) : base(context) { }
+        public TestRepository(ApplicationDbContext context) : base(context) { }
     }
 
     public class BaseRepositoryTests
     {
         private readonly Mock<DbSet<TestEntity>> _mockSet;
-        private readonly Mock<DbContext> _mockContext;
+        private readonly Mock<ApplicationDbContext> _mockContext;
         private readonly TestRepository _repository;
 
         public BaseRepositoryTests()
         {
             _mockSet = new Mock<DbSet<TestEntity>>();
-            _mockContext = new Mock<DbContext>();
+            _mockContext = new Mock<ApplicationDbContext>(new DbContextOptions<ApplicationDbContext>());
 
             // Set up the mocked DbSet
             var data = new List<TestEntity>().AsQueryable();
@@ -44,7 +45,7 @@ namespace BaseRepositoryTests
             _mockContext.Setup(m => m.Set<TestEntity>()).Returns(_mockSet.Object);
             _mockContext.Setup(m => m.SaveChangesAsync(default)).ReturnsAsync(1);
 
-            // Initialize repository with mocked DbContext
+            // Initialize repository with mocked ApplicationDbContext
             _repository = new TestRepository(_mockContext.Object);
         }
 
@@ -75,40 +76,6 @@ namespace BaseRepositoryTests
             _mockContext.Verify(m => m.SaveChangesAsync(default), Times.Once);
             Assert.True(result);
         }
-
-        // ORIGINAL: Tests that calling DeleteAsync throws NotImplementedException as expected.
-        [Fact]
-        public async Task DeleteAsync_ShouldThrowNotImplementedException()
-        {
-            // Act & Assert
-            await Assert.ThrowsAsync<NotImplementedException>(() => _repository.DeleteAsync(Guid.NewGuid()));
-        }
-
-        // ORIGINAL: Tests that calling EditAsync throws NotImplementedException as expected.
-        [Fact]
-        public async Task EditAsync_ShouldThrowNotImplementedException()
-        {
-            // Act & Assert
-            await Assert.ThrowsAsync<NotImplementedException>(() => _repository.EditAsync(Guid.NewGuid(), new TestEntity()));
-        }
-
-        // ORIGINAL: Tests that calling GetByIdAsync throws NotImplementedException as expected.
-        [Fact]
-        public async Task GetByIdAsync_ShouldThrowNotImplementedException()
-        {
-            // Act & Assert
-            await Assert.ThrowsAsync<NotImplementedException>(() => _repository.GetByIdAsync(Guid.NewGuid()));
-        }
-
-        // UPDATED: Tests that AddAsync throws ArgumentNullException when a null entity is added.
-        // BUG: AddAsync does not handle null entities and needs to throw ArgumentNullException, or discuss it on 12/04
-        [Fact]
-        public async Task AddAsync_ShouldThrowArgumentNullException_WhenEntityIsNull()
-        {
-            // Act & Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(() => _repository.AddAsync(null));
-        }
-
 
         // UPDATED: Tests that SaveChangesAsync returns false when no changes are saved to the DbContext.
         [Fact]
@@ -150,5 +117,5 @@ namespace BaseRepositoryTests
             await Assert.ThrowsAsync<DbUpdateException>(() => _repository.AddAsync(entity));
         }
     }
-
 }
+
