@@ -1,5 +1,5 @@
 ﻿using EventManager.Common.Constants;
-using EventManager.Data.Exceptions;
+using EventManager.Common.Exceptions;
 using EventManager.Data.Models;
 using EventManager.Data.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -33,7 +33,7 @@ namespace EventManager.Data.Repositories
                 // Add the user to the database without committing
                 var result = await _userManager.CreateAsync(entity);
                 if (!result.Succeeded)
-                    throw new CreationDatabaseException(string.Format(ExceptionConstants.FailedToCreate, "user") + "Inner exception: " + result.Errors.ToString());
+                    throw new CreationDatabaseException(string.Format(ExceptionConstants.CanNotCreate, "user"));
 
                 await AddToRoleAsync(entity, role);
 
@@ -66,6 +66,19 @@ namespace EventManager.Data.Repositories
             return await _userManager.Users
                 .Include(u => u.Roles)
                 .FirstOrDefaultAsync(x => x.UserName == username);
+        }
+
+        public async Task<bool> DoesUserNameExist(string userName)
+        {
+            var user = await GetByUserNameAsync(userName);
+
+            return user != null;
+        }
+
+        public async Task<bool> DoesEmailExist(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            return user != null;
         }
 
         public override async Task<User> GetByIdAsync(Guid id)
@@ -102,7 +115,7 @@ namespace EventManager.Data.Repositories
             var user = await GetByUserNameAsync(userName);
 
             if (user == null || !await _userManager.CheckPasswordAsync(user, password))
-                throw new InvalidDataException(ExceptionConstants.InvalidCredentials);
+                throw new InvalidRequestParametersException(ExceptionConstants.InvalidCredentials);
 
             return user;
         }

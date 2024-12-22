@@ -1,12 +1,9 @@
 ﻿using EventManager.Common.Constants;
+using EventManager.Common.Exceptions;
 using EventManager.Common.Models;
-using EventManager.Data.Exceptions;
 using EventManager.Data.Models;
 using EventManager.Data.Repositories.Interfaces;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System.Reflection.Metadata.Ecma335;
 
 namespace EventManager.Data.Repositories
 {

@@ -1,9 +1,10 @@
-﻿namespace EventManager.Common.Constants
+﻿
+namespace EventManager.Common.Constants
 {
     public static class ExceptionConstants
     {
         //User Validation Exceptions
-        public const string InvalidEmailFormat = "Email: \"{0}\" is not in correct format!";
+        public const string InvalidEmailFormat = "Email is not in correct format!";
         public const string InvalidPasswordSize = "Password must at least 8 charecters long!";
         public const string PasswordSpecialCharecters = "Password must meet at least 3 of the requierments!";
         public const string AllPropertiesRequiered = "All properties are needed!";
@@ -15,6 +16,8 @@
         public const string InvalidToken = "The jwt token is invalid";
         public const string OrganizerIsVerified = "Organizer is already verified!";
         public const string TicketAlreadyBooked = "Ticket is already booked by another user!";
+        public const string UserNameExists = "User with the username already exists";
+        public const string EmailExists = "User with the email already exists";
 
         //Service Exceptions
         public const string CantSendEmail = "Could not send email!";
@@ -30,6 +33,15 @@
         public const string FailedToUpload = "Could not upload {0}!";
         public const string FailedToUpdate = "Could not update {0}!";
         public const string CantAddToRole = "Failed to add user to role!";
+        public const string CanNotCreate = "Can not create {0}!";
+        public const string UserNotFound = "User not found!";
+        public const string EventNotFound = "Event not found!";
+        public const string FailedToDeleteUser = "Could not delete user!";
+        public const string FailedToUpdateUser = "Could not update user!";
+        public const string FailedToUpdateEvent = "Could not update event!";
+        public const string FailedToUploadProfilePicture = "Could not upload profile picture!";
+        public const string FailedToUploadEventPicture = "Could not upload event picture!";
+        public const string FailedToDeleteEvent = "Could not delete event!";
 
 
         //Event Validation Exceptions
@@ -44,6 +56,5 @@
 
         //Controller Exceptions
         public const string PictureNotUploaded = "Required field Picture is not uploaded!";
-
     }
 }

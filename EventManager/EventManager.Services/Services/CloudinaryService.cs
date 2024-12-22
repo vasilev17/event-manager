@@ -1,7 +1,7 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using EventManager.Common.Constants;
-using EventManager.Services.Exceptions;
+using EventManager.Common.Exceptions;
 using EventManager.Services.Models.Picture;
 using EventManager.Services.Services.Interfaces;
 
