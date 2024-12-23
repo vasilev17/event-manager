@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import TicketSection from "../components/TicketSection";
 import { isTokenExpired } from "../api/authUtils";
-import LoginSignup1 from "../pop_up/login_signup1";
+import LoginSignup1 from "../pages/login_signup1";
 import { useNavigate } from "react-router";
 
 function ProfilePage() {

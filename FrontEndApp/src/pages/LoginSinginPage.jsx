@@ -1,7 +1,7 @@
 import { useState } from "react";
 import rectangle74 from "../assets/Rectangle 74.png";
 import concertPicture from "../assets/concertBackgroung.jpg";
-import LoginSignup2 from "../pop_up/login_signup2";
+import LoginSignup2 from "./login_signup2";
 import { isTokenExpired } from "../api/authUtils";
 import { useNavigate } from "react-router";
 
