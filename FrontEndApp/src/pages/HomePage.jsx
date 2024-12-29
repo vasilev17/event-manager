@@ -36,7 +36,7 @@ export default function HomePage() {
     fetchEvent();
   }, []);
   */
-/*
+
   useEffect(() => {
     const fetchEvent = async () => {
       removeUserData();
@@ -46,7 +46,7 @@ export default function HomePage() {
     };
     fetchEvent();
   }, []);
-*/
+
   const hardCodedPictureLink =
     "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.rbVMAX7i5iH4MrkykUiy9gHaEK%26pid%3DApi&f=1&ipt=58261e1cbfc98b5409839b963a42f3f62be6efc4851a24b84d4ab3730c5f3a97&ipo=images";
 

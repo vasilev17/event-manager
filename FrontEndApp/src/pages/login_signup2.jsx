@@ -6,8 +6,6 @@ import rectangle74 from "../assets/Rectangle 74.png";
 import {
   api,
   storeUserData,
-  getToken,
-  isTokenExpired,
 } from "../api/authUtils.js";
 import { useNavigate } from "react-router";
 import Popup from "../components/PopUp.jsx";
