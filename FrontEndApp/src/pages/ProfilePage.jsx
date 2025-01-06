@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import TicketSection from "../components/TicketSection";
 import { isTokenExpired } from "../api/authUtils";
-import LoginSignup1 from "../pages/login_signup1";
+import LoginSignup1 from "../components/login_signup1";
 import { useNavigate } from "react-router";
 
 function ProfilePage() {
@@ -23,12 +23,7 @@ function ProfilePage() {
         navigate("/login");
       }
     };
-
     checkToken(); // Check on initial render
-
-    const intervalId = setInterval(checkToken, 60000); // Check every minute
-
-    return () => clearInterval(intervalId); // Clear interval on unmount
   }, [navigate]);
 
   if (!isLoggedIn) {

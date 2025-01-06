@@ -3,14 +3,11 @@ import ellipse31 from "../assets/Ellipse 31.svg";
 import ellipse32 from "../assets/Ellipse 32.png";
 import ellipse33 from "../assets/Ellipse 33.png";
 import rectangle74 from "../assets/Rectangle 74.png";
-import {
-  api,
-  storeUserData,
-} from "../api/authUtils.js";
+import { api, storeUserData } from "../api/authUtils.js";
 import { useNavigate } from "react-router";
-import Popup from "../components/PopUp.jsx";
+import Popup from "./PopUp.jsx";
 
-export const LoginSignup2 = () => {
+export const LoginSignup2 = ({ isOrganizer }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -42,7 +39,7 @@ export const LoginSignup2 = () => {
       firstName: "First",
       lastName: "Last",
       email: email,
-      role: "Organizer",
+      role: isOrganizer ? "Organizer" : "User",
     };
     api
       .post("User/Register", requestBody)
