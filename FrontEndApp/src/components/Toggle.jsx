@@ -16,7 +16,7 @@ const Toggle = ({ value, onChange }) => {
       {internalValue ? (
         <div
           onClick={handleToggle}
-          className="absolute w-2/3 h-full rounded-full shadow-md transition-transform duration-200 ease-in-out transform translate-x-2/3 bg-primary text-white"
+          className="absolute w-2/3 h-full rounded-full shadow-md transition-transform duration-200 ease-in-out transform translate-x-1/2 bg-primary text-white"
         >
           <div className="flex items-center justify-center h-full">
             <span>Да</span>     
