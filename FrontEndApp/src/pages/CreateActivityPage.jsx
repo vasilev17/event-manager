@@ -1,25 +1,42 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Popup from "../components/PopUp";
-import { api, getToken } from "../api/authUtils.js";
+import { api, getToken, isTokenExpired } from "../api/authUtils.js";
 import Dropdown from "../components/Dropdown.jsx";
 import Toggle from "../components/Toggle.jsx";
+import { useNavigate } from "react-router";
+import LoginSignup1 from "../components/login_signup1.jsx";
 
 const CreateActivity = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [address, setAddress] = useState("");
-  // const [timeStart, setTimeStart] = useState("");
-  // const [timeEnd, setTimeEnd] = useState("");
+  const [timeStart, setTimeStart] = useState("");
+  const [timeEnd, setTimeEnd] = useState("");
   const [webpage, setWebpage] = useState("");
   const [isActivity, setIsActivity] = useState(false);
   const [isThirdParty, setIsThirdParty] = useState(false);
   const [types, setTypes] = useState([]);
+  const [picture, setPicture] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const [step, setStep] = useState(1);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
-  const timeStart = "2025-01-05T13:56:47.095Z";
-  const timeEnd = "2025-01-07T13:56:47.095Z";
-  const picture = null;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkToken = () => {
+      if (isTokenExpired()) {
+        setIsLoggedIn(false);
+        navigate("/login");
+      }
+    };
+
+    checkToken(); // Check on initial render
+  }, [navigate]);
+
+  if (!isLoggedIn) {
+    return <LoginSignup1 />;
+  }
 
   const eventTypes = [
     "Convention",
@@ -32,8 +49,32 @@ const CreateActivity = () => {
     "Other",
   ];
 
+  function emptyForm() {
+    setName("");
+    setDescription("");
+    setAddress("");
+    setTimeStart("");
+    setTimeEnd("");
+    setWebpage("");
+    setIsActivity(false);
+    setIsThirdParty(false);
+    setTypes([]);
+    setPicture(null);
+  }
+
   const handleCreateEvent = async () => {
     const formData = new FormData();
+
+    // Validate and format timeStart and timeEnd
+    const formattedTimeStart = formatDateTime(timeStart);
+    const formattedTimeEnd = formatDateTime(timeEnd);
+
+    if (!formattedTimeStart || !formattedTimeEnd) {
+      setErrorMessage(
+        "Invalid date and time format. Please use DD.MM.YYYY HH:MM."
+      );
+      return;
+    }
 
     formData.append("Name", name);
     formData.append("Description", description);
@@ -57,10 +98,11 @@ const CreateActivity = () => {
       const response = await api.post("Event/CreateEvent", formData, {
         headers: {
           "Content-Type": "multipart/form-data", // Important: Set correct content type
-          Authorization: `Bearer ${getToken()}`, // if you need authorization
+          Authorization: "Bearer ${getToken()}", // if you need authorization
         },
       });
       console.log("Event created:", response.data);
+      emptyForm();
       // Handle success
     } catch (error) {
       console.error("Error creating event:", error);
@@ -72,21 +114,40 @@ const CreateActivity = () => {
       // Handle error, display message
     }
 
-    setName("");
-    setDescription("");
-    setAddress("");
-    // setTimeStart("");
-    // setTimeEnd("");
-    setWebpage("");
-    setIsActivity(false);
-    setIsThirdParty(false);
-    setTypes([]);
-
     nextStep();
   };
 
   const nextStep = () => {
+    setTimeStart("20.01.2025 12:00");
+    setTimeEnd("20.01.2025 14:00");
+    setAddress("sofia");
+    setTypes(["Convention, Conference"]);
+
     setStep(step + 1);
+  };
+
+  const formatDateTime = (dateTimeString) => {
+    // Validate input format (DD.MM.YYYY HH:mm)
+    const dateRegex = /^\d{2}\.\d{2}\.\d{4}$/;
+    const timeRegex = /^\d{2}:\d{2}$/;
+    const parts = dateTimeString.split(" ");
+
+    if (
+      parts.length !== 2 ||
+      !dateRegex.test(parts[0]) ||
+      !timeRegex.test(parts[1])
+    ) {
+      return null; // Invalid format
+    }
+
+    const [day, month, year] = parts[0].split(".").map(Number);
+    const [hours, minutes] = parts[1].split(":").map(Number);
+
+    // Create a Date object
+    const date = new Date(year, month - 1, day, hours, minutes, 0, 0); // Months are 0-indexed
+
+    // Convert to ISO 8601 format (YYYY-MM-DDTHH:mm:ssZ)
+    return date.toISOString();
   };
 
   const renderStep = () => {
@@ -153,7 +214,7 @@ const CreateActivity = () => {
               type="text"
               value={timeStart}
               onChange={(e) => setTimeStart(e.target.value)}
-              placeholder="2025-01-01T12:00:00Z"
+              placeholder="20.01.2025 12:00"
               className="w-full px-4 py-2 mb-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
             <label className="block text-gray-700 font-medium mb-2">
@@ -163,7 +224,7 @@ const CreateActivity = () => {
               type="text"
               value={timeEnd}
               onChange={(e) => setTimeEnd(e.target.value)}
-              placeholder="2025-01-01T14:00:00Z"
+              placeholder="20.01.2025 14:00"
               className="w-full px-4 py-2 mb-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
             <button
@@ -205,12 +266,14 @@ const CreateActivity = () => {
               Third party ли е събитието
             </label>
             <Toggle value={isThirdParty} onChange={setIsThirdParty} />
-            <button
-              onClick={nextStep}
-              className="mt-6 w-full max-w-48 ml-[35%] bg-teal-500 text-white py-2 rounded-2xl hover:bg-teal-600"
-            >
-              Продължи
-            </button>
+            <div>
+              <button
+                onClick={nextStep}
+                className=" w-full max-w-48 ml-[35%] bg-teal-500 text-white py-2 rounded-2xl hover:bg-teal-600"
+              >
+                Продължи
+              </button>
+            </div>
           </div>
         );
       case 4:
@@ -222,59 +285,96 @@ const CreateActivity = () => {
             <div className="w-full h-1 bg-gray-200 rounded mb-6">
               <div className="w-4/5 h-full bg-teal-500 rounded"></div>
             </div>
-            <div className="w-full h-60 flex flex-col items-center justify-center border-2 border-dashed border-gray-300 bg-teal-50 rounded-lg">
-              <span className="text-teal-500 text-lg mb-2">
-                Качване на снимки
-              </span>
-              <img
-                className="picture w-20 h-20"
-                src="./src/assets/picture-icon.png"
-              />
-              <p className="text-sm text-gray-500">
-                Поставете снимките тук или кликнете
-              </p>
-              <button className="mt-4 bg-teal-500 text-white px-4 py-2 rounded-lg hover:bg-teal-600">
-                Избери Снимка
-              </button>
+            <div
+              className=" m-auto w-96 h-60 flex flex-col justify-center border-2 border-dashed border-gray-300 bg-teal-50 rounded-lg"
+              onDragOver={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                e.dataTransfer.dropEffect = "copy"; // Optional: Indicate to the browser that the drop operation is a copy
+              }}
+              onDrop={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                const file = event.dataTransfer.files[0];
+
+                if (!file.type.startsWith("image/")) {
+                  alert("Please drop an image file.");
+                  return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                  setPicture(e.target.result);
+                };
+                reader.readAsDataURL(file);
+              }}
+            >
+              {picture ? (
+                <img
+                  className="object-cover w-full h-full rounded-lg" // Use object-cover for image scaling
+                  src={picture}
+                  alt="Uploaded Picture"
+                />
+              ) : (
+                <div className="flex flex-col items-center justify-center">
+                  {" "}
+                  <span className="text-teal-500 text-lg mb-2">
+                    Качване на снимка
+                  </span>
+                  <p className="text-sm text-gray-500">Поставете снимка тук</p>
+                </div>
+              )}
             </div>
             <button
               onClick={handleCreateEvent}
               className="mt-6 w-full max-w-48 ml-[35%] bg-teal-500 text-white py-2 rounded-2xl hover:bg-teal-600"
             >
-              Продължи
+              Създай събитие
             </button>
           </div>
         );
       case 5:
-        return (
-          <div className="w-full max-w-2xl mx-auto mt-10 p-6 bg-white shadow rounded-lg">
-            <h2 className="text-xl font-semibold text-center mb-4">
-              Добавяне на активност
-            </h2>
-            <div className="w-full h-1 bg-gray-200 rounded mb-6">
-              <div className="w-full h-full bg-teal-500 rounded"></div>
-            </div>
-            <img
-              className="picture w-20 h-20 mt-6 mr-auto ml-auto"
-              src="./src/assets/like.png"
+        if (errorMessage) {
+          return (
+            <Popup
+              message={errorMessage}
+              onClose={() => {
+                setErrorMessage(null), setStep(1);
+              }}
             />
-            <p className="text-center mt-6 text-gray-700">
-              Вашата активност беше успешно добавена!
-            </p>
-            <button
-              onClick={() => setStep(1)}
-              className="mt-6 w-full max-w-48 ml-[35%] bg-teal-500 text-white py-2 rounded-2xl hover:bg-teal-600"
-            >
-              Нова активност
-            </button>
-            {errorMessage && (
-              <Popup
-                message={errorMessage}
-                onClose={() => setErrorMessage(null)}
+          );
+        } else {
+          return (
+            <div className="w-full max-w-2xl mx-auto mt-10 p-6 bg-white shadow rounded-lg">
+              <h2 className="text-xl font-semibold text-center mb-4">
+                Добавяне на активност
+              </h2>
+              <div className="w-full h-1 bg-gray-200 rounded mb-6">
+                <div className="w-full h-full bg-teal-500 rounded"></div>
+              </div>
+              <img
+                className="picture w-20 h-20 mt-6 mr-auto ml-auto"
+                src="./src/assets/like.png"
               />
-            )}
-          </div>
-        );
+              <p className="text-center mt-6 text-gray-700">
+                Вашата активност беше успешно добавена!
+              </p>
+              <button
+                onClick={() => setStep(1)}
+                className="mt-6 w-full max-w-48 ml-[35%] bg-teal-500 text-white py-2 rounded-2xl hover:bg-teal-600"
+              >
+                Нова активност
+              </button>
+              {errorMessage && (
+                <Popup
+                  message={errorMessage}
+                  onClose={() => setErrorMessage(null)}
+                />
+              )}
+            </div>
+          );
+        }
+
       default:
         return null;
     }
