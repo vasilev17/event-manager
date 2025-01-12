@@ -4,6 +4,7 @@ import { useState } from "react";
 import { DropdownMenuRight, DropdownMenuLeft } from "./DropdownMenu";
 import { Link } from "react-router";
 import { getUsername } from "../../api/authUtils";
+import logo from "../../assets/logo.png";
 
 const NavigationBar = () => {
   const [isEventsOpen, setIsEventsOpen] = useState(false);
@@ -34,19 +35,15 @@ const NavigationBar = () => {
   };
 
   return (
-    <nav className="navbar w-full h-[140px] border-b shadow border border-[#d9d9d9] flex items-center justify-between px-4 bg-white">
+    <nav className="navbar w-full border-b shadow border border-[#d9d9d9] flex items-center justify-between px-4 bg-white">
       <div className="container w-70">
         {/* Logo Section */}
-        <Link to="/">
-          <div className="navbar-logo w-48 mb-9 ">
-            <div className="text-center text-white pr-70 text-xl py-3 bg-primary">
-              Лого
-            </div>
-          </div>
+        <Link to="/">  
+              <img className="logo w-48 mb-3 mt-4" src={logo} />       
         </Link>
 
         {/* Buttons Section */}
-        <div className="flex items-center space-x-4 ml-5">
+        <div className="flex items-center space-x-4 ml-5 mb-3">
           <button
             onClick={toggleEventsDropdown}
             className={`text-gray-600 font-medium flex items-center ${activeButton === "events" ? "text-teal-400" : "text-gray-600"}`}
@@ -93,28 +90,30 @@ const NavigationBar = () => {
         />
       </div>
 
-      {/* Search bar */}
-      <div className="navbar-search pl-4 flex items-center space-x-2 w-96 h-12 left-[422px] top-[50px] absolute bg-white rounded-3xl shadow border border-[#d9d9d9] ">
-        <input
-          onChange={(e) => setSearch(e.target.value)}
-          type="text"
-          className="search-input p-1 rounded-3xl outline-transparent w-200 focus:outline-none"
-          placeholder="Търсене..."
-        />
-        <Link to={"events/" + search}>
-          <button
-            className="search-button w-28 h-8 left-[260px] top-[8px] text-white absolute bg-[#40ddc7] rounded-2xl hover:bg-teal-700"
-            onClick={handleSearch}
-          >
-            Търсене
-          </button>
-        </Link>
-      </div>
+{/* Search bar */}
+<div className="navbar-search px-4 py-2 sm:px-4 sm:py-1 max-w-sm sm:w-auto mr-10 flex items-center space-x-2 bg-white rounded-3xl shadow border border-[#d9d9d9] absolute sm:relative left-0 sm:left-auto">
+  <input
+    onChange={(e) => setSearch(e.target.value)}
+    type="text"
+    className="search-input p-2 sm:p-1 rounded-3xl outline-transparent w-full sm:w-96 focus:outline-none"
+    placeholder="Търсене..."
+  />
+  <Link to={"events/" + search}>
+    <button
+      className="search-button px-4 py-2 sm:px-8 ml-10 text-white bg-teal-400 rounded-3xl hover:bg-teal-700 shadow border border-[#d9d9d9]"
+      onClick={handleSearch}
+    >
+      Търсене
+    </button>
+  </Link>
+</div>
+
 
       {/* Create Button */}
       <Link to="/create">
         <div className="navbar-button">
-          <button className="create main-button w-40 h-12 left-[850px] top-[50px] text-white absolute bg-[#40ddc7] rounded-3xl hover:bg-teal-700 shadow border border-[#d9d9d9]">
+          <button className="create main-button px-12 py-3 mr-16 text-white bg-teal-400 rounded-3xl hover:bg-teal-700 shadow border border-[#d9d9d9] sm:ml-4">
+          
             Създай
           </button>
         </div>

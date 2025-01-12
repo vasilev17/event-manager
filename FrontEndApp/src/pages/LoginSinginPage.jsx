@@ -1,5 +1,4 @@
 import { useState } from "react";
-import rectangle74 from "../assets/Rectangle 74.png";
 import concertPicture from "../assets/concertBackgroung.jpg";
 import LoginSignup2 from "../components/login_signup2";
 import { isTokenExpired } from "../api/authUtils";
@@ -17,7 +16,7 @@ export const LoginSigninPage = () => {
   }
   return (
     <div
-      className="w-screen  h-screen bg-cover bg-center bg-no-repeat bg-gray-200 -m-8 -mr-8 p-20 "
+      className="w-screen min-h-screen bg-cover bg-center flex items-center justify-center"
       style={{ backgroundImage: `url(${concertPicture})` }}
     >
       {clicked ? (
