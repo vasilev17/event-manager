@@ -3,18 +3,15 @@ import ellipse31 from "../assets/Ellipse 31.svg";
 import ellipse32 from "../assets/Ellipse 32.png";
 import ellipse33 from "../assets/Ellipse 33.png";
 import rectangle74 from "../assets/Rectangle 74.png";
-import {
-  api,
-  storeUserData,
-  getToken,
-  isTokenExpired,
-} from "../api/authUtils.js";
+import { api, storeUserData } from "../api/authUtils.js";
 import { useNavigate } from "react-router";
+import Popup from "./PopUp.jsx";
 
-export const LoginSignup2 = () => {
+export const LoginSignup2 = ({ isOrganizer }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [errorMessage, setErrorMessage] = useState(null);
   const navigate = useNavigate();
 
   function handleLogin() {
@@ -28,16 +25,35 @@ export const LoginSignup2 = () => {
         const token = response.data.token;
         storeUserData(token, username, email); // Store the token
         navigate("/profile/" + username);
-        //navigate(0);
       })
       .catch((error) => {
         console.log(error);
+        setErrorMessage("Wrong username or password");
       });
   }
 
   function handleSingin() {
-    // send register request
+    const requestBody = {
+      userName: username,
+      password: password,
+      firstName: "First",
+      lastName: "Last",
+      email: email,
+      role: isOrganizer ? "Organizer" : "User",
+    };
+    api
+      .post("User/Register", requestBody)
+      .then((response) => {
+        const token = response.data.token;
+        storeUserData(token, username, email); // Store the token
+        navigate("/profile/" + username);
+      })
+      .catch((error) => {
+        console.log(error);
+        setErrorMessage("Something went wrong with registration attempt");
+      });
   }
+
   return (
     <div className="relative flex place-content-center w-[519px] h-[450px] m-auto bg-white rounded-[42px] shadow-[10px_10px_8.1px_-1px_#00000040]">
       <div
@@ -158,6 +174,10 @@ export const LoginSignup2 = () => {
         alt="Rectangle"
         src={rectangle74}
       />
+
+      {errorMessage && (
+        <Popup message={errorMessage} onClose={() => setErrorMessage(null)} />
+      )}
     </div>
   );
 };

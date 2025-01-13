@@ -1,10 +1,30 @@
 import CardInShppingCart from "../components/CardInShoppingCart";
 import TicketSection from "../components/TicketSection";
 import CartSummary from "../components/CartSummary";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { isTokenExpired } from "../api/authUtils";
+import LoginSignup1 from "../components/login_signup1";
 
 const CartPage = () => {
   const [step, setStep] = useState(1);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkToken = () => {
+      if (isTokenExpired()) {
+        setIsLoggedIn(false);
+        navigate("/login");
+      }
+    };
+    checkToken(); // Check on initial render
+  }, [navigate]);
+
+  if (!isLoggedIn) {
+    return <LoginSignup1 />;
+  }
 
   const nextStep = () => {
     setStep(step + 1);
@@ -28,8 +48,7 @@ const CartPage = () => {
 
               {/* Cart Summary */}
               <div className="bg-white p-6 rounded-lg shadow">
-               
-                <CartSummary nextStep={nextStep}/>
+                <CartSummary nextStep={nextStep} />
               </div>
             </section>
           </div>
@@ -78,7 +97,9 @@ const CartPage = () => {
 
               {/* Payment Method */}
               <div className="payment-method mb-6">
-                <h3 className="text-lg font-bold mb-2 mt-4">Начин на плащане</h3>
+                <h3 className="text-lg font-bold mb-2 mt-4">
+                  Начин на плащане
+                </h3>
                 <div className="border rounded-lg p-4">
                   <label className="flex items-center">
                     <input
@@ -116,4 +137,3 @@ const CartPage = () => {
 };
 
 export default CartPage;
-

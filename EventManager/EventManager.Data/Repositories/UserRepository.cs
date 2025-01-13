@@ -69,6 +69,7 @@ namespace EventManager.Data.Repositories
         {
             return await _userManager.Users
                 .Include(u => u.Roles)
+                .Include(u => u.ProfilePicture)
                 .FirstOrDefaultAsync(x => x.UserName == username);
         }
 
@@ -102,16 +103,16 @@ namespace EventManager.Data.Repositories
         #endregion
 
         #region Authentication
-        public async Task<bool> ResetPassword(string email, string token, string newPassword)
+        public async Task<IdentityResult> ResetPassword(string email, string token, string newPassword)
         {
             var user = await _userManager.FindByEmailAsync(email);
 
             if (user == null)
-                return false;
+                throw new UserNotFoundException(string.Format(ExceptionConstants.NotFound, "User with the email"));
 
             var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
 
-            return result.Succeeded;
+            return result;
         }
 
         public async Task<User> LoginAsync(string userName, string password)
@@ -129,7 +130,7 @@ namespace EventManager.Data.Repositories
             var user = await _userManager.FindByEmailAsync(email);
 
             if (user == null)
-                throw new DatabaseException(string.Format(ExceptionConstants.NotFound, "user"));
+                throw new UserNotFoundException(string.Format(ExceptionConstants.NotFound, "User with the email"));
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
@@ -147,7 +148,7 @@ namespace EventManager.Data.Repositories
             var user = await _userManager.FindByEmailAsync(email);
 
             if (user == null)
-                throw new DatabaseException(string.Format(ExceptionConstants.NotFound, "user"));
+                throw new UserNotFoundException(string.Format(ExceptionConstants.NotFound, "User with the email"));
 
 
             return await _userManager.GeneratePasswordResetTokenAsync(user);
