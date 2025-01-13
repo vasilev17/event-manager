@@ -213,6 +213,10 @@ namespace EventManager.Data.Repositories
             var existingTicket = await DbContext.Tickets
                                        .FirstOrDefaultAsync(e => e.Id == ticketId);
 
+            if (existingTicket == null)
+                throw new CreationDatabaseException(string.Format(ExceptionConstants.NotFound, "ticket"));
+
+
             if (existingTicket.UserId != null)
             {
                 if (existingTicket.UserId == userId)
