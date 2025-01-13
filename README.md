@@ -1,12 +1,21 @@
 # Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+A project about finding Evends and Activities
 
 # Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+1.  Create a appsettings.Development.json file
+2.	Copy the connection string part from appsettings.json into it
+3.	Enter the missing values from the connection string for your MySQL server instalation
+4.	Run Update-Database command to update your database
+5.  Set up JWT
+    5.1 Copy the "Jwt" section from appsettings.json to appsettings.Develoment.json
+    5.2 Generate a signing key and put it in your appsettings.Development.json
+    5.3 Put token duration in time span format
+    5.4 Issuer and audience are the localhost adreses of the back-end and front-end
+6.  Set up the email sender
+    6.1 Go to (https://www.twilio.com/en-us/blog/send-emails-using-the-sendgrid-api-with-dotnetnet-6-and-csharp) and follow the steps for creating an api key
+    6.2 Copy the "EmailSender" section from appsettings.json to appsettings.Develoment.json 
+    6.3 Ener the needed keys.
+
 
 # Build and Test
 TODO: Describe and show how to build your code and run the tests. 
