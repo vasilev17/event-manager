@@ -41,9 +41,9 @@ namespace EventManager.Services.Decorators.Event
             }
         }
 
-        public Task DeleteEventAsync(Guid eventId)
+        public Task DeleteEventAsync(Guid eventId, Guid userId, bool isAdmin)
         {
-            return _parent.DeleteEventAsync(eventId);
+            return _parent.DeleteEventAsync(eventId, userId, isAdmin);
         }
 
         public Task<List<EventGridViewDTO>> GetFilteredEventsAsync(EventFilterServiceModel filter, PaginationServiceModel paginationModel)
@@ -65,7 +65,7 @@ namespace EventManager.Services.Decorators.Event
         {
             if (paginationModel.PageNumber <= 0 || paginationModel.PageSize <= 0)
             {
-                throw new ArgumentException(ExceptionConstants.InvalidPaginationDataInput);
+                throw new ArgumentException(ExceptionConstants.InvalidPaginationValues);
             }
         }
 
@@ -104,10 +104,10 @@ namespace EventManager.Services.Decorators.Event
             return _parent.BookTicketAsync(ticketId, userId);
         }
 
-        public Task CreateEventTicketAsync(EventTicketServiceModel ticketModel)
+        public Task CreateEventTicketAsync(EventTicketServiceModel ticketModel, Guid creatorId, bool isAdmin)
         {
             ValidateTicketModel(ticketModel);
-            return _parent.CreateEventTicketAsync(ticketModel);
+            return _parent.CreateEventTicketAsync(ticketModel, creatorId, isAdmin);
         }
 
         public void ValidateTicketModel(EventTicketServiceModel ticketModel)

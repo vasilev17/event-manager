@@ -16,8 +16,10 @@ namespace EventManager.Data.Repositories.Interfaces
         /// Deletes an event from the database
         /// </summary>
         /// <param name="eventId">Id of the event to be deleted</param>
+        /// <param name="userId">Id of the user deleting the event</param>
+        /// <param name="isAdmin">Info whether the caller is admin</param>
         /// <returns>True if the event is deleted correctly</returns>
-        Task<bool> DeleteAsync(Guid eventId);
+        Task<bool> DeleteAsync(Guid eventId, Guid userId, bool isAdmin);
 
         /// <summary>
         /// Gets an event from the database
@@ -27,11 +29,17 @@ namespace EventManager.Data.Repositories.Interfaces
         Task<Event> GetSingleEventAsync(Guid eventId);
 
         /// <summary>
-        /// Gets all events from the database
+        /// Gets all events from the database with pagination
         /// </summary>
         /// <param name="pagination">Pagination data for the retrieval</param>
-        /// <returns>List of all Events</returns>
+        /// <returns>List of paginated Events</returns>
         Task<List<Event>> GetAllEventsAsync(Pagination pagination);
+
+        /// <summary>
+        /// Overloaded method for getting all events in the DB (without pagination)
+        /// </summary>
+        /// <returns>List of all Events</returns>
+        Task<List<Event>> GetAllEventsAsync();
 
         /// <summary>
         /// Adds a rating to the database
@@ -74,8 +82,10 @@ namespace EventManager.Data.Repositories.Interfaces
         /// Creates a new ticket in the database
         /// </summary>
         /// <param name="newTicket">Model containg the new ticket data</param>
+        /// <param name="creatorId">Id of the user trying to create the ticket</param>
+        /// <param name="isAdmin">Info whether the caller is admin</param>
         /// <returns>True if the ticket is created correctly</returns>
-        Task<bool> AddTicketAsync(Ticket newTicket);
+        Task<bool> AddTicketAsync(Ticket newTicket, Guid creatorId, bool isAdmin);
 
         /// <summary>
         /// Gets all events by organizer

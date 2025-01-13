@@ -17,7 +17,9 @@ namespace EventManager.Services.Services.Interfaces
         /// Deletes an event
         /// </summary>
         /// <param name="eventId">Id of the event to be deleted</param>
-        Task DeleteEventAsync(Guid eventId);
+        /// <param name="userId">Id of the user trying to delete the event</param>
+        /// <param name="isAdmin">Info whether the caller is admin</param>
+        Task DeleteEventAsync(Guid eventId, Guid userId, bool isAdmin);
 
         /// <summary>
         /// Gets events based on applied filters
@@ -60,7 +62,9 @@ namespace EventManager.Services.Services.Interfaces
         /// Creates a new event ticket
         /// </summary>
         /// <param name="ticketModel">Model containing the ticket data</param>
-        Task CreateEventTicketAsync(EventTicketServiceModel ticketModel);
+        /// <param name="creatorId">Id of the user trying to create the ticket</param>
+        /// <param name="isAdmin">Info whether the caller is admin</param>
+        Task CreateEventTicketAsync(EventTicketServiceModel ticketModel, Guid creatorId, bool isAdmin);
 
 
 

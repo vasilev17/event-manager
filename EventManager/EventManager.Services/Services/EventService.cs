@@ -56,9 +56,9 @@ namespace EventManager.Services.Services
             await _eventRepository.AddAsync(newEvent);
         }
 
-        public async Task DeleteEventAsync(Guid eventId)
+        public async Task DeleteEventAsync(Guid eventId, Guid userId, bool isAdmin)
         {
-            var result = await _eventRepository.DeleteAsync(eventId);
+            var result = await _eventRepository.DeleteAsync(eventId, userId, isAdmin);
 
             if (!result)
                 throw new DatabaseException(string.Format(ExceptionConstants.FailedToDelete, "event"));
@@ -75,18 +75,29 @@ namespace EventManager.Services.Services
             return result;
         }
 
-        public async Task CreateEventTicketAsync(EventTicketServiceModel ticketModel)
+        public async Task CreateEventTicketAsync(EventTicketServiceModel ticketModel, Guid creatorId, bool isAdmin)
         {
             var newTicket = _mapper.Map<Ticket>(ticketModel);
 
-            await _eventRepository.AddTicketAsync(newTicket);
+            await _eventRepository.AddTicketAsync(newTicket, creatorId, isAdmin);
         }
 
-        public async Task<List<EventGridViewDTO>> GetFilteredEventsAsync(EventFilterServiceModel filter, PaginationServiceModel paginationModel)
+        public async Task<List<EventGridViewDTO>> GetFilteredEventsAsync(EventFilterServiceModel filter, PaginationServiceModel? paginationModel)
         {
             var pagination = _mapper.Map<Pagination>(paginationModel);
+            List<Event> events;
 
-            var events = await _eventRepository.GetAllEventsAsync(pagination);
+
+            //Check if pagination is passed
+            if (pagination.PageNumber == null && pagination.PageSize == null)
+                events = await _eventRepository.GetAllEventsAsync();
+
+            else if ((pagination.PageNumber == null && pagination.PageSize != null) || (pagination.PageNumber != null && pagination.PageSize == null))
+                throw new InvalidRequestParametersException(ExceptionConstants.InvalidPaginationInput);
+           
+            else
+                events = await _eventRepository.GetAllEventsAsync(pagination);
+
 
             List<EventDTO> eventDTOs = _mapper.Map<List<EventDTO>>(events);
 

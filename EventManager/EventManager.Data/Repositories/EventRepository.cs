@@ -88,8 +88,8 @@ namespace EventManager.Data.Repositories
             .Include(e => e.User)
             .Include(e => e.Types)
             .Include(e => e.AvailableTickets)
-            .Skip((pagination.PageNumber - 1) * pagination.PageSize)
-            .Take(pagination.PageSize)
+            .Skip((pagination.PageNumber.Value - 1) * pagination.PageSize.Value)
+            .Take(pagination.PageSize.Value)
             .ToListAsync();
 
             return events;
@@ -267,10 +267,16 @@ namespace EventManager.Data.Repositories
             return true;
         }
 
-        public async Task<bool> AddTicketAsync(Ticket newTicket)
+        public async Task<bool> AddTicketAsync(Ticket newTicket, Guid creatorId, bool isAdmin)
         {
             //Check if the event exists
             var existingEvent = await GetByIdAsync(newTicket.EventId);
+
+            //Check if the user adding the ticket is the event creator (owner)
+            if (existingEvent.UserId != creatorId && isAdmin == false)
+            {
+                throw new UnauthorizedAccessException(ExceptionConstants.Unauthorized);
+            }
 
             newTicket.CreationDate = DateTime.Now;
 
@@ -311,13 +317,18 @@ namespace EventManager.Data.Repositories
             return result;
         }
 
-        public async Task<bool> DeleteAsync(Guid eventId)
+        public async Task<bool> DeleteAsync(Guid eventId, Guid userId, bool isAdmin)
         {
             var eventInDb = await GetByIdAsync(eventId);
 
             if (eventInDb == null)
             {
                 throw new DatabaseException(ExceptionConstants.NotFound + "event");
+            }
+
+            if (eventInDb.UserId != userId && isAdmin == false)
+            {
+                throw new UnauthorizedAccessException(ExceptionConstants.Unauthorized);
             }
 
             return await base.DeleteAsync(eventInDb);

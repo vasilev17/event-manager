@@ -75,14 +75,16 @@ namespace EventManager.Web.Controllers
         /// End point for creating a new event in the platform
         /// </summary>
         /// <param name="eventId">Id of the event to be deleted</param>
-        /// <param name="userId">The id of the user deleting the event</param>
         /// <param name="authorization">JWT authorization token</param>
         /// <returns>Action result status</returns>
         [HttpDelete("DeleteEvent/{eventId}")]
         [Authorize(Roles = RoleConstants.Creators)]
         public async Task<IActionResult> DeleteEvent(Guid eventId, [FromHeader] string authorization)
         {
-            await _eventService.DeleteEventAsync(eventId);
+            var userId = _jwtService.GetId(authorization);
+            var isAdmin = User.IsInRole(Roles.Admin.ToString());
+
+            await _eventService.DeleteEventAsync(eventId, userId, isAdmin);
 
             return Ok();
         }
@@ -173,8 +175,10 @@ namespace EventManager.Web.Controllers
         public async Task<IActionResult> CreateEventTicket([FromForm] EventTicketWebModel ticketModel, [FromHeader] string authorization)
         {
             var ticket = _mapper.Map<EventTicketServiceModel>(ticketModel);
+            var creatorId = _jwtService.GetId(authorization);
+            var isAdmin = User.IsInRole(Roles.Admin.ToString());
 
-            await _eventService.CreateEventTicketAsync(ticket);
+            await _eventService.CreateEventTicketAsync(ticket, creatorId, isAdmin);
             return Ok();
         }
 
