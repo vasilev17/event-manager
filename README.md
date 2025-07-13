@@ -1,29 +1,70 @@
-# Introduction 
-A project about finding Evends and Activities
 
-# Getting Started
-1.  Create a appsettings.Development.json file
-2.	Copy the connection string part from appsettings.json into it
-3.	Enter the missing values from the connection string for your MySQL server instalation
-4.	Run Update-Database command to update your database
-5.  Set up JWT
-    5.1 Copy the "Jwt" section from appsettings.json to appsettings.Develoment.json
-    5.2 Generate a signing key and put it in your appsettings.Development.json
-    5.3 Put token duration in time span format
-    5.4 Issuer and audience are the localhost adreses of the back-end and front-end
-6.  Set up the email sender
-    6.1 Go to (https://www.twilio.com/en-us/blog/send-emails-using-the-sendgrid-api-with-dotnetnet-6-and-csharp) and follow the steps for creating an api key
-    6.2 Copy the "EmailSender" section from appsettings.json to appsettings.Develoment.json 
+<div align="center">
+  
+<h1>🎟🗃 Event Manager — Events & Activities</h1>
+  
+<p>A Full-Stack Web Application for discovering, creating and attending events and activities.<br> 
+It ships with an ASP.NET Core REST API Backend, a React Front-End styled with Tailwind CSS, and MySQL Data Persistence.</p>
+
+<img src="https://img.shields.io/badge/Team%20-%20Project%20-%20gray?logo=codecrafters&labelColor=orange" style="height: 30px; width: auto;">
+
+</div>
+
+---
+
+## ✨ Key Features
+
+- **Browse & Search** - Explore and filter events by ***name, price bracket, date range, address, user and/or category***
+
+- **Engage with Postings** - Set and change your **attendance status**, as well as **give ratings** to events/activities
+
+- **Organizer Tools (Create / Delete)** - Share and let other people know and attend events you are organizing by ***uploading images, sharing ticket types and prices and listing important information***
+
+- **Ticket Operations** - ***Create, remove and book*** tickets
+
+- **Email Notifications** - Recieve personal account management **confirmation emails**
+
+---
+
+## 🛠 Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+|**Front-End**|React, Vite, React-Router, Axios|
+|**Styling**|Tailwind CSS|
+|**Backend**|ASP.NET Core Web API, Entity Framework Core, MySQL, Cloudinary|
+|**Security**|JWT Bearer Tokens|
+|**E-mail**|[SendGrid REST API](https://sendgrid.com)|
+
+---
+
+## 🚀 Getting Started (Development)
+
+### Backend setup
+1.  Create a `appsettings.Development.json` file
+2.	Copy the connection string part from `appsettings.json` into it
+3.	Enter the missing values from the connection string for your MySQL server installation
+4.	Run `Update-Database` command to update your database
+5.  Set up JWT    
+    5.1 Copy the "Jwt" section from `appsettings.json` to `appsettings.Develoment.json`    
+    5.2 Generate a signing key and put it in your `appsettings.Development.json`    
+    5.3 Put token duration in time span format    
+    5.4 Issuer and audience are the localhost addresses of the back-end and front-end
+6.  Set up the email sender    
+    6.1 Go to [Emails with C# & SendGrid API](https://www.twilio.com/en-us/blog/send-emails-using-the-sendgrid-api-with-dotnetnet-6-and-csharp) and follow the steps for creating an API key    
+    6.2 Copy the "EmailSender" section from `appsettings.json` to `appsettings.Develoment.json`    
     6.3 Ener the needed keys.
+    
+### Front-End setup
+```bash
+git clone https://github.com/vasilev17/event-manager.git
+cd event-manager/FrontEndApp
+npm install
+npm run dev
+```
 
+---
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+## 🧪 Testing
+Unit and Integration tests are available in the `/EventManager/EventManager.Tests` directory
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
-
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
