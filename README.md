@@ -65,6 +65,15 @@ npm run dev
 
 ---
 
+## 🎬 Showcase
+
+### Backend API
+<img width="1000" height="600" alt="Event Manager API Postman" src="https://github.com/user-attachments/assets/39f0f045-bdbe-4275-9592-7a011da80609" />
+
+### Front-End
+<img width="1000" height="600" alt="Event Manager FrontEnd" src="https://github.com/user-attachments/assets/ff88874e-72e8-46c2-8b65-6f46d1e285e6" />
+
+---
+
 ## 🧪 Testing
 Unit and Integration tests are available in the `/EventManager/EventManager.Tests` directory
-
