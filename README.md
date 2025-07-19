@@ -40,6 +40,12 @@ It ships with an ASP.NET Core REST API Backend, a React Front-End styled with Ta
 
 ## 🚀 Getting Started (Development)
 
+### Clone
+
+```bash
+git clone https://github.com/vasilev17/event-manager.git
+```
+
 ### Backend setup
 1.  Create a `appsettings.Development.json` file
 2.	Copy the connection string part from `appsettings.json` into it
@@ -57,7 +63,6 @@ It ships with an ASP.NET Core REST API Backend, a React Front-End styled with Ta
     
 ### Front-End setup
 ```bash
-git clone https://github.com/vasilev17/event-manager.git
 cd event-manager/FrontEndApp
 npm install
 npm run dev
