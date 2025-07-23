@@ -14,19 +14,19 @@ It ships with an ASP.NET Core REST API Backend, a React Front-End styled with Ta
 
 ## ✨ Key Features
 
-- **Browse & Search** - Explore and filter events by ***name, price bracket, date range, address, user and/or category***
+- **Browse & Search** - Explore and filter events by ***name, price bracket, date range, address, user and/or category***.
 
-- **Engage with Postings** - Set and change your **attendance status**, as well as **give ratings** to events/activities
+- **Engage with Postings** - Set and change your **attendance status**, as well as **give ratings** to events/activities.
 
-- **Organizer Tools (Create / Delete)** - Share and let other people know and attend events you are organizing by ***uploading images, sharing ticket types and prices and listing important information***
+- **Organizer Tools (Create / Delete)** - Share and let other people know and attend events you are organizing by ***uploading images, sharing ticket types and prices and listing important information***.
 
-- **Ticket Operations** - ***Create, remove and book*** tickets
+- **Ticket Operations** - ***Create, remove and book*** tickets.
 
-- **Email Notifications** - Recieve personal account management **confirmation emails**
+- **Email Notifications** - Recieve personal account management **confirmation emails**.
 
 ---
 
-## 🛠 Tech Stack
+## 🏗️ Tech Stack
 
 | Layer | Technology |
 |-------|------------|
